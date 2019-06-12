@@ -12,6 +12,7 @@
       "element",
       "eikos",
       "kebab-case"
-    ]
+    ],
+    "quotemark": [false],
   }
 }

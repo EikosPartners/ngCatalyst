@@ -2,12 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import {BarChartComponent} from 'ngcatalyst';
+import {BubbleChartComponent} from 'ngcatalyst';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BarChartComponent
+    BubbleChartComponent
+    // BarChartComponent
   ],
   imports: [
     BrowserModule
