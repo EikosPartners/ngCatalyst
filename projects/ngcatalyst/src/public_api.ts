@@ -7,3 +7,4 @@ export * from './lib/ngcatalyst.component';
 export * from './lib/ngcatalyst.module';
 export * from './lib/bar-chart.component';
 export * from './lib/bubble-chart.component';
+export * from './lib/line-plot.component';

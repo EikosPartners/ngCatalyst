@@ -7,68 +7,37 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ngcatalyst-tester';
-  data = [
+  data =[
     {
-      "x": 2.1333333333333333,
-      "y": 83.3333333333333,
-      "value": 6,
-      "label": "tier_1_cat_9"
+      "date": "2017-06-01",
+      "value": 120
     },
     {
-      "x": 2.5833333333333335,
-      "y": 50,
-      "value": 2,
-      "label": "tier_1_cat_8"
+      "date": "2017-09-01",
+      "value": -21
     },
     {
-      "x": 1.9333333333333333,
-      "y": 80,
-      "value": 5,
-      "label": "tier_1_cat_7"
+      "date": "2017-04-01",
+      "value": 193
     },
     {
-      "x": 0.75,
-      "y": 28.571428571428598,
-      "value": 7,
-      "label": "tier_1_cat_6"
+      "date": "2017-02-01",
+      "value": 313
     },
     {
-      "x": 0.8166666666666667,
-      "y": 50,
-      "value": 8,
-      "label": "tier_1_cat_5"
+      "date": "2017-01-01",
+      "value": 340
     },
     {
-      "x": 1.9666666666666666,
-      "y": 55.5555555555556,
-      "value": 9,
-      "label": "tier_1_cat_4"
+      "date": "2017-07-01",
+      "value": 200
     },
     {
-      "x": 1.2333333333333334,
-      "y": 57.142857142857096,
-      "value": 7,
-      "label": "tier_1_cat_3"
-    },
-    {
-      "x": 1.0166666666666666,
-      "y": 66.6666666666667,
-      "value": 6,
-      "label": "tier_1_cat_2"
-    },
-    {
-      "x": 1.4666666666666666,
-      "y": 60,
-      "value": 5,
-      "label": "tier_1_cat_10"
-    },
-    {
-      "x": 1.2333333333333334,
-      "y": 25,
-      "value": 8,
-      "label": "tier_1_cat_1"
+      "date": "2017-08-01",
+      "value": -100
     }
   ]
+
 
 
 }
