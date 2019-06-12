@@ -2,12 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import {PieChartComponent} from 'ngcatalyst';
+import { PunchCardComponent } from 'ngcatalyst';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PieChartComponent
+    PunchCardComponent
+    // PieChartComponent
     // LinePlotComponent
     // BubbleChartComponent
     // BarChartComponent
