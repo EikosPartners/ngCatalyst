@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngcatalyst": [
+        "dist/ngcatalyst"
+      ],
+      "ngcatalyst/*": [
+        "dist/ngcatalyst/*"
+      ]
+    }
   }
 }
