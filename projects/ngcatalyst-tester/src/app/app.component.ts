@@ -8,35 +8,19 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'ngcatalyst-tester';
   data =[
-    {
-      "date": "2017-06-01",
-      "value": 120
-    },
-    {
-      "date": "2017-09-01",
-      "value": -21
-    },
-    {
-      "date": "2017-04-01",
-      "value": 193
-    },
-    {
-      "date": "2017-02-01",
-      "value": 313
-    },
-    {
-      "date": "2017-01-01",
-      "value": 340
-    },
-    {
-      "date": "2017-07-01",
-      "value": 200
-    },
-    {
-      "date": "2017-08-01",
-      "value": -100
-    }
+    {"label":"Cambridge","value":55},
+    {"label":"Gloves","value":48},
+    {"label":"Auto","value":45},
+    {"label":"Planner","value":50},
+    {"label":"Granite","value":55},
+    {"label":"Canterbury","value":54},
+    {"label":"Architect","value":48},
+    {"label":"Markets","value":46},
+    {"label":"Cotton","value":52},
+    {"label":"Agent","value":47}
   ]
+  donutWidth: 250;
+
 
 
 

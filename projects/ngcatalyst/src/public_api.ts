@@ -8,3 +8,4 @@ export * from './lib/ngcatalyst.module';
 export * from './lib/bar-chart.component';
 export * from './lib/bubble-chart.component';
 export * from './lib/line-plot.component';
+export * from './lib/pie-chart.component';
