@@ -58,7 +58,8 @@
               "projects/ngcatalyst-tester/src/assets"
             ],
             "styles": [
-              "projects/ngcatalyst-tester/src/styles.css"
+              "projects/ngcatalyst-tester/src/styles.css",
+              "projects/ngcatalyst/src/lib/styles.css"
             ],
             "scripts": []
           },

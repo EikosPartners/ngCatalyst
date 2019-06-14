@@ -1,7 +1,57 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center; height: 1000px; width: 1000px;">
-  <h1>hello</h1>
-  <eikos-sunburst [data]="data"> </eikos-sunburst>
+<div class="flexbox-container">
+
+  <eikos-bar-chart
+    [data]="barData"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [propID]="barPropID"
+    [color]="barColor"
+    [title]="barTitle"
+    [xAxisAngle]="axisAngle"
+    [yAxisAngle]="axisAngle"
+  >
+  </eikos-bar-chart>
+
+  <eikos-bubble-chart
+    [data]="bubbleData"
+    [propID]="bubblePropID"
+    [title]="bubbleTitle"
+    [isTime]="falseVar"
+    [isDate]="falseVar"
+    [themeColors]="bubbleColors"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+  ></eikos-bubble-chart>
+
+  <eikos-line-plot
+    [data]="lineData"
+    [propID]="linePropID"
+    [title]="lineTitle"
+    [color]="lineColor"
+    [xAxisLabel]="xAxisLabelDate"
+    [yAxisLabel]="yAxisLabel"
+  ></eikos-line-plot>
+
+  <eikos-pie-chart
+    [data]="pieData"
+    [donutWidth]="donutWidth"
+    [propID]="piePropID"
+    [colors]="pieColors"
+    [title]="pieTitle"
+  ></eikos-pie-chart>
+
+  <eikos-punch-card
+    [data]="punchData"
+    [propID]="punchPropID"
+    [colors]="punchColors"
+    [title]="punchTitle"
+    [axisColors]="axisColor"
+  ></eikos-punch-card>
+
+  <eikos-sunburst
+    [data]="sunburstData"
+    [propID]="sunburstPropID"
+    [title]="sunburstTitle"
+  ></eikos-sunburst>
 
 </div>
-

@@ -1,27 +1,17 @@
-# Ngcatalyst
+# How to use ngcatalyst 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.2.
+## Check out the test repo
 
-## Development server
+`npm install` from root directory 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+`ng serve` 
 
-## Code scaffolding
+check out [http://localhost:4200](http://localhost:4200) to see the visualizations in action
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+to explore how the various @Input properties behave, modify them in `projects/ngcatalyst-tester/src/app/app.component.ts`
 
-## Build
+## Use from npm 
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+`npm install --save ngcatalyst`
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+then: go to angular.json, and add `"node_modules/ngcatalyst/lib/styles.css"` to the "styles" array (under "architect": "build")

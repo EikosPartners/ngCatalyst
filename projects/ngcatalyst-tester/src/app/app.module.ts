@@ -1,18 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
-import { SunburstComponent } from 'ngcatalyst';
+import { SunburstComponent, PunchCardComponent, PieChartComponent, LinePlotComponent, BubbleChartComponent, BarChartComponent } from 'ngcatalyst';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SunburstComponent
-    // PunchCardComponent
-    // PieChartComponent
-    // LinePlotComponent
-    // BubbleChartComponent
-    // BarChartComponent
+    SunburstComponent,
+    PunchCardComponent,
+    PieChartComponent,
+    LinePlotComponent,
+    BubbleChartComponent,
+    BarChartComponent,
   ],
   imports: [
     BrowserModule

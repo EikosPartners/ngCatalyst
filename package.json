@@ -8,11 +8,14 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "copy-license": "cp ./LICENSE ./dist/ngcatalyst",
+    "copy-readme": "cp ./README.md ./dist/ngcatalyst",
+    "copy-files": "npm run copy-license && npm run copy-readme",
     "build_lib": "ng build ngcatalyst && ng-packagr -p ./projects/ngcatalyst/ng-package.json && cp -r ./projects/ngcatalyst/src/lib/styles.css ./dist/ngcatalyst/lib/styles.css",
     "npm_pack": "cd dist/ngcatalyst && npm pack",
-    "package": "npm run build_lib && npm run npm_pack"
+    "package": "npm run build_lib && npm run copy-files && npm run npm_pack"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "~7.2.0",
     "@angular/common": "~7.2.0",
@@ -35,9 +38,9 @@
     "@angular/cli": "~7.2.2",
     "@angular/compiler-cli": "~7.2.0",
     "@angular/language-service": "~7.2.0",
-    "@types/node": "~8.9.4",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^8.10.49",
     "codelyzer": "~4.5.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
