@@ -9,6 +9,8 @@
     [title]="barTitle"
     [xAxisAngle]="axisAngle"
     [yAxisAngle]="axisAngle"
+    [divHeight]="height"
+    [divWidth]="width"
   >
   </eikos-bar-chart>
 
@@ -21,11 +23,17 @@
     [themeColors]="bubbleColors"
     [xAxisLabel]="xAxisLabel"
     [yAxisLabel]="yAxisLabel"
+    [divHeight]="height"
+    [divWidth]="width"
+
   ></eikos-bubble-chart>
 
   <eikos-heat-map
     [data]="heatData"
     [colors]="pieColors"
+    [divHeight]="height"
+    [divWidth]="width"
+
   ></eikos-heat-map>
 
   <eikos-heat-map
@@ -34,6 +42,9 @@
     [colors]="pieColors"
     [propID]="heatPropID"
     [xAxisAngle]="xAxisAngle"
+    [divHeight]="height"
+    [divWidth]="width"
+
   ></eikos-heat-map>
 
   <eikos-line-plot
@@ -43,6 +54,9 @@
     [color]="lineColor"
     [xAxisLabel]="xAxisLabelDate"
     [yAxisLabel]="yAxisLabel"
+    [divHeight]="height"
+    [divWidth]="width"
+
   ></eikos-line-plot>
 
   <eikos-pie-chart
@@ -51,6 +65,9 @@
     [propID]="piePropID"
     [colors]="pieColors"
     [title]="pieTitle"
+    [divHeight]="height"
+    [divWidth]="width"
+
   ></eikos-pie-chart>
 
   <eikos-punch-card
@@ -65,6 +82,8 @@
     [data]="sunburstData"
     [propID]="sunburstPropID"
     [title]="sunburstTitle"
+    [divHeight]="height"
+    [divWidth]="width"
   ></eikos-sunburst>
 
 </div>

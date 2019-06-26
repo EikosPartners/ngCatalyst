@@ -6,7 +6,7 @@ import luxon from 'luxon';
   selector: 'eikos-bubble-chart',
   template: `
 <h2>{{title}}</h2>
-<div style="height: 750px; width: 750px;" >
+<div [ngStyle]="area" >
     <div [id]="propID" style="width:100%;height:100%"> </div>
 </div>
   `
@@ -22,10 +22,18 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
   // need 8 hex colors;
   @Input() yAxisLabel = 'Value';
   @Input() xAxisLabel = 'Date';
+  @Input() divHeight = 750;
+  @Input() divWidth = 750;
   dateFormat = '%Y-%m-%d';
   margin = { top: 20, right: 10, bottom: 30, left: 20 };
 
   constructor() { }
+
+  get area () {
+    let height = this.divHeight + "px";
+    let width = this.divWidth + "px";
+    return {height: height, width: width}
+  }
 
   get processedData() {
     const data = this.data;

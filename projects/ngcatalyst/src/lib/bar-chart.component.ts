@@ -5,7 +5,7 @@ import * as d3 from 'd3';
   selector: 'eikos-bar-chart',
   template: `
   <h2>{{title}}</h2>
-    <div style="height: 750px; width: 750px;" >
+    <div [ngStyle]="area" >
       <div [id]="propID" style="width:100%;height:100%">
       </div>
     </div>
@@ -20,6 +20,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
   @Input() xAxisAngle = 45;
   @Input() yAxisAngle = 45;
   @Input() title = "Bar Chart";
+  @Input() divHeight = 750;
+  @Input() divWidth = 750;
 
   constructor() { }
 
@@ -28,6 +30,13 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
       return {x: item.name, y: item.value};
     });
   }
+
+  get area () {
+    let height = this.divHeight + "px";
+    let width = this.divWidth + "px";
+    return {height: height, width: width}
+  }
+
 
   ngAfterViewInit() {
     this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel, this.mouseover_callback);

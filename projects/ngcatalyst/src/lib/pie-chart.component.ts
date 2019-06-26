@@ -5,7 +5,7 @@ import * as d3 from 'd3';
   selector: 'eikos-pie-chart',
   template: `
   <h2>{{title}}</h2>
-  <div style="height: 750px; width: 750px;" >
+  <div [ngStyle]="area" >
       <div [id]="propID" style="width:100%;height:100%"> </div>
   </div>
 `
@@ -15,14 +15,22 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() propID = 'pie';
   @Input() data: [{label: string, value: number}];
   @Input() title: 'Pie Chart';
-  @Input() donutWidth = 0; // in pixels
   @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
-    // need 10 hex colors;
+  // need 10 hex colors;
+  @Input() donutWidth = 0; // in pixels
+  @Input() divHeight = 750;
+  @Input() divWidth = 750;
+  // note that if the donutWidth is too big, the pie chart will stretch outside the div area - HTK check for that
   savedColors = {};
   total = 0;
 
   constructor() { }
 
+  get area () {
+    let height = this.divHeight + "px";
+    let width = this.divWidth + "px";
+    return {height: height, width: width}
+  }
   // you might need a method like this to reformat given data with the appropriate field names,
   // get dataModel() {
   //   return this.data.map(item => {

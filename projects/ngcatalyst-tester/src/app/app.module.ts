@@ -15,7 +15,7 @@ import { SunburstComponent, PunchCardComponent, PieChartComponent, LinePlotCompo
     BarChartComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

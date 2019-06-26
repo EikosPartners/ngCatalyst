@@ -5,7 +5,7 @@ import * as d3 from 'd3';
   selector: 'eikos-sunburst',
   template: `
   <h2>{{title}}</h2>
-  <div style="height: 750px; width: 750px;" >
+  <div [ngStyle]="area" >
       <div [id]="propID" style="width:100%;height:100%"> </div>
   </div>
 `
@@ -15,8 +15,16 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() propID = 'line';
   @Input() data: [{name: string, children: [{name: string, size: number}, {name: string, children: []}]}];
   @Input() title: string;
+  @Input() divHeight = 750;
+  @Input() divWidth = 750;
 
   constructor() { }
+
+  get area () {
+    let height = this.divHeight + "px";
+    let width = this.divWidth + "px";
+    return {height: height, width: width}
+  }
 
   // you might need a method like this to reformat given data with the appropriate field names,
   // get dataModel() {

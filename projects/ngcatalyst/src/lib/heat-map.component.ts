@@ -5,7 +5,7 @@ import * as d3 from 'd3';
   selector: 'eikos-heat-map',
   template: `
 <h2>{{title}}</h2>
-<div style="height: 300px; width: 900px;" >
+<div [ngStyle]="area">
     <div [id]="propID" style="width:100%;height:100%"> </div>
 </div>
   `
@@ -18,8 +18,18 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() alertText = "magnitude";
   @Input() data = [{}]; // {x: String, y: String, magnitude: Number} || {date: String, volume: Number} - can use dataModel getter/computer to reformat as needed
   @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"]; // need 10 hex colors;
+  @Input() divHeight = 300;
+  @Input() divWidth = 750; 
+  // should maybe have a min-width or min-height to prevent it from going SUPER TINY? 
+  // also since it's preserveAspectRatio maybe only @Input one of the dimensions? HTK 
 
   constructor() {
+  }
+
+  get area () {
+    let height = this.divHeight + "px";
+    let width = this.divWidth + "px";
+    return {height: height, width: width}
   }
 
   ngOnInit() {

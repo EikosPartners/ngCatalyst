@@ -26,6 +26,8 @@ export class AppComponent {
   barPropID = 'angularbar';
   barTitle = 'Bar Chart';
   barColor = '#57a71c';
+  height = 500;
+  width = 600;
 
   bubbleData = bubbleData;
   bubblePropID = 'angularbubble';
@@ -47,7 +49,7 @@ export class AppComponent {
   piePropID = 'angularpie';
   pieTitle = 'Pie Chart';
   pieColors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
-  donutWidth = 250;
+  donutWidth = 150;
 
   punchData = punchData;
   punchPropID = 'angularpunch';
