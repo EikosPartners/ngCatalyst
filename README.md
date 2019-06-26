@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/ngcatalyst.svg)](https://badge.fury.io/js/ngcatalyst)
+
 # How to use ngcatalyst 
 
 ## Check out the test repo
