@@ -3,6 +3,8 @@ const sunburstData = require('../assets/sunburstData.json');
 const punchData = require('../assets/punchData.json');
 const pieData = require('../assets/pieData.json');
 const lineData = require('../assets/lineData.json');
+const heatData = require('../assets/heatDataCal.json');
+const heatData2 = require('../assets/heatData.json');
 const bubbleData = require('../assets/bubbleData.json');
 const barData = require('../assets/barData.json');
 
@@ -29,6 +31,12 @@ export class AppComponent {
   bubblePropID = 'angularbubble';
   bubbleTitle = 'Bubble Chart';
   bubbleColors = ["#4F1E71", "#7C388E", "#A93B8D", "#BA5288", "#F38595", "#EDB7A7", "#F06292", "#C2185B"];
+
+  heatData = heatData;
+  heatData2 = heatData2;
+  heatPropID = "heat2";
+  xAxisAngle = "45";
+  dataType = "other";
 
   lineData = lineData;
   linePropID = 'angularlines';

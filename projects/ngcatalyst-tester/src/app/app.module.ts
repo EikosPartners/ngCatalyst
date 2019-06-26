@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { SunburstComponent, PunchCardComponent, PieChartComponent, LinePlotComponent, BubbleChartComponent, BarChartComponent } from 'ngcatalyst';
+import { SunburstComponent, PunchCardComponent, PieChartComponent, LinePlotComponent, HeatMapComponent, BubbleChartComponent, BarChartComponent } from 'ngcatalyst';
 
 @NgModule({
   declarations: [
@@ -10,6 +10,7 @@ import { SunburstComponent, PunchCardComponent, PieChartComponent, LinePlotCompo
     PunchCardComponent,
     PieChartComponent,
     LinePlotComponent,
+    HeatMapComponent,
     BubbleChartComponent,
     BarChartComponent,
   ],

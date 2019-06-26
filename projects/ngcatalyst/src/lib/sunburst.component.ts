@@ -30,7 +30,9 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.drawSunburst();
+    if (!changes.propID.firstChange) {
+      this.drawSunburst();
+    }
   }
 
   ngAfterViewInit() {

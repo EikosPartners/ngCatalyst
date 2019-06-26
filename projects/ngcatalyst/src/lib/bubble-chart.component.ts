@@ -44,7 +44,9 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.drawBubbleChart(this.processedData);
+    if (!changes.propID.firstChange) {
+      this.drawBubbleChart(this.processedData);
+    }
   }
 
   ngAfterViewInit() {

@@ -33,7 +33,9 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.drawLinePlot(this.data, "#" + this.propID, this.color);
+    if (!changes.propID.firstChange) {
+      this.drawLinePlot(this.data, "#" + this.propID, this.color);
+    }
   }
 
   ngAfterViewInit() {

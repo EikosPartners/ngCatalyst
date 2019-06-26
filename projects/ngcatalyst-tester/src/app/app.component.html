@@ -23,6 +23,19 @@
     [yAxisLabel]="yAxisLabel"
   ></eikos-bubble-chart>
 
+  <eikos-heat-map
+    [data]="heatData"
+    [colors]="pieColors"
+  ></eikos-heat-map>
+
+  <eikos-heat-map
+    [data]="heatData2"
+    [dataType]="dataType"
+    [colors]="pieColors"
+    [propID]="heatPropID"
+    [xAxisAngle]="xAxisAngle"
+  ></eikos-heat-map>
+
   <eikos-line-plot
     [data]="lineData"
     [propID]="linePropID"

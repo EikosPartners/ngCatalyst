@@ -35,7 +35,9 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.drawPieChart();
+    if (!changes.propID.firstChange) {
+      this.drawPieChart();
+    }
   }
 
   ngAfterViewInit() {
