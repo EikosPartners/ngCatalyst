@@ -14,7 +14,7 @@ import luxon from 'luxon';
 export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() propID = 'bubble';
-  @Input() data: [{label: string, value: number}];
+  @Input() data: [{label: string, value: number, x: number, y: number}];
   @Input() title = 'Bubble Chart';
   @Input() isTime = false;
   @Input() isDate = false;
@@ -24,8 +24,8 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() xAxisLabel = 'Date';
   @Input() divHeight = 750;
   @Input() divWidth = 750;
+  @Input() margin = { top: 40, right: 20, bottom: 40, left: 20 };
   dateFormat = '%Y-%m-%d';
-  margin = { top: 20, right: 10, bottom: 30, left: 20 };
 
   constructor() { }
 
@@ -52,7 +52,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.propID.firstChange) {
+    if (!changes.data.firstChange) {
       this.drawBubbleChart(this.processedData);
     }
   }
@@ -83,10 +83,11 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
     return (max_value_size >= cutoff) ? max_pixels : min_bubble_size * max_value_size + 25;
   }
 
-  get_bubble_sizes(max_value_size) {
+  get_bubble_sizes(max_value_size, divHeight, divWidth) {
     const cutoff = 10,
       min_pixels = 5,
-      max_pixels = 125;
+      max_pixels = ((divHeight + divWidth) / 2) / 6;
+
     const min_bubble_size = (max_value_size < min_pixels) ? min_pixels : this.get_min_bubble_size(max_value_size, cutoff, min_pixels);
     return {
       'min': min_bubble_size,
@@ -193,7 +194,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
     const max_value_size = Math.sqrt(d3.max(data, function(d) {
       return +d.value;
     }));
-    const bubble_sizes = this.get_bubble_sizes(max_value_size);
+    const bubble_sizes = this.get_bubble_sizes(max_value_size, this.divHeight, this.divWidth);
     const min_bubble_size = bubble_sizes['min'];
     const max_bubble_size = bubble_sizes['max'];
 

@@ -30,9 +30,18 @@ export class AppComponent {
   width = 600;
 
   bubbleData = bubbleData;
+  bbcData = [
+    { x: 1, y: 1, label: "Value 1", value: 100 },
+    { x: 4, y: 5, label: "Value 2", value: 150 },
+    { x: 7, y: -3, label: "Value 3", value: 300 },
+    { x: 12, y: 5, label: "Value 4", value: 200 },
+    { x: 1, y: 33, label: "Value 5", value: 250 }
+  ];
   bubblePropID = 'angularbubble';
   bubbleTitle = 'Bubble Chart';
   bubbleColors = ["#4F1E71", "#7C388E", "#A93B8D", "#BA5288", "#F38595", "#EDB7A7", "#F06292", "#C2185B"];
+  bbcDivHeight = 300;
+  bbcDivWidth = 400;
 
   heatData = heatData;
   heatData2 = heatData2;
