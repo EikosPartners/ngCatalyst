@@ -18,14 +18,24 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() color = "#000";
   @Input() yAxisLabel = 'Value';
   @Input() xAxisLabel = 'Date';
-  @Input() divHeight = 750;
-  @Input() divWidth = 750;
+  @Input() divHeight: any = 750; // for a % you need a container div with a non-% height and width 
+  @Input() divWidth: any = 750;
+  @Input() axisFontSize: any = "14px";
+  @Input() margins = { top: 20, right: 30, bottom: 45, left: 40 };
+  // @Input() xAxisAngle = 45;
+  // @Input() yAxisAngle = 45;
 
   constructor() { }
 
   get area () {
-    let height = this.divHeight + "px";
-    let width = this.divWidth + "px";
+    let height, width;
+    if (typeof this.divHeight == "number") {
+      height = this.divHeight + "px";
+      width = this.divWidth + "px";
+    } else {
+      height = this.divHeight;
+      width = this.divWidth;
+    }
     return {height: height, width: width}
   }
   // you might need a method like this to reformat given data with the appropriate field names,
@@ -90,7 +100,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
       element = selected[0];
     }
 
-    const margin = { top: 20, right: 30, bottom: 45, left: 40 },
+    const margin = this.margins,
       width = element.clientWidth - margin.left - margin.right;
     let height = element.clientHeight - margin.top - margin.bottom;
 
@@ -138,8 +148,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
     const yAxis = d3.axisLeft()
       .scale(yScale)
       // .tickValues([-200, -150, -100, -50, 0, 50, 100, 150, 200, 250, 300, 350])
-      .tickSizeInner(-width)
-      .tickFormat(format_attribute);
+      .tickSizeInner(-(width /1.6) - margin.right - 4);
 
     const line = d3.line()
       .x(xMap)
@@ -175,7 +184,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("y", 25)
       .attr("dy", ".71em")
       .style("text-anchor", "middle")
-      .attr("font-size", "16px")
+      .attr("font-size", this.axisFontSize)
       .text(this.xAxisLabel);
 
     svg
@@ -188,7 +197,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("y", -margin.left)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .attr("font-size", "16px")
+      .attr("font-size", this.axisFontSize)
       .text(this.yAxisLabel);
 
     const clip_id = "clip-" + this.propID;
@@ -267,12 +276,12 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
           .attr("opacity", 0);
       });
 
-    svg
-      .selectAll(".tick")
-      .filter(function(d) {
-        return d === 0;
-      })
-      .remove();
+    // svg
+    //   .selectAll(".tick")
+    //   .filter(function(d) {
+    //     return d === 0;
+    //   })
+    //   .remove();
 
   }
 

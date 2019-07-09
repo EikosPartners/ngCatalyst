@@ -11,7 +11,7 @@ import luxon from 'luxon';
   `],
   template: `
   <h2>{{title}}</h2>
-  <div style="height: 750px; width: 1500px; margin-left: 3%" >
+  <div style="margin-left: 3%" [ngStyle]="area">
       <div [id]="propID" style="width:100%;height:100%"> </div>
   </div>
 `
@@ -24,18 +24,33 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() axisColors = ["#e5b1a5", "#ff2b2b"];
   @Input() axisLabel = 'Date';
   @Input() colors =  ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
-  // @Input() divHeight = 750;
-  // @Input() divWidth = 750;
+  @Input() divHeight = 750;
+  @Input() divWidth = 750;
   // tslint:disable-next-line:max-line-length
   labelsX = ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"];
 
+  get area () {
+    let height = this.divHeight + "px";
+    let width = this.divWidth + "px";
+    return {height: height, width: width}
+  }
+  get xLabelHeight () {
+    let no = this.data.length;
+
+    return this.divHeight / no;
+  }
+
+  get yLabelWidth () {
+    let no = d3.max(
+      this.data.map(function(d) {
+        return d.hour_volumes.length;
+      }));
+    return this.divWidth / no;
+  }
+
   constructor() { }
 
-  // get area () {
-  //   let height = this.divHeight + "px";
-  //   let width = this.divWidth + "px";
-  //   return {height: height, width: width}
-  // }
+
 
   ngOnInit() {
     this.drawPunchCard();
@@ -105,8 +120,8 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
 
     const margin = { top: 40, right: 75, bottom: 40, left: 15 };
     const padding = 3;
-    const xLabelHeight = 30;
-    const yLabelWidth = 30;
+    const xLabelHeight = this.xLabelHeight;
+    const yLabelWidth = this.yLabelWidth;
     const borderWidth = 1;
     // const width = 500;
     // const height = 181;
@@ -116,7 +131,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
     const selected = document.querySelectorAll(elementName);
 
     if (selected[0] == null) {
-      element = [{clientWidth: 1000, clientHeight: 500}];
+      element = {clientWidth: 1000, clientHeight: 500};
     } else {
 
       element = selected[0];
@@ -137,7 +152,8 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .append("svg")
       .attr("width", "100%")
       .attr("data-height", "0.5678")
-      .attr("viewBox", `0 0 ${width / 2.1} ${height * 2}`)
+      // try xLabelHeight?
+      .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height}`)
       .attr("preserveAspectRatio", "xMaxYMax meet")
       // .attr("width", width + margin.left + margin.right + 2 * yLabelWidth)
       // .attr("height", height + margin.top + margin.bottom + 2 * xLabelHeight)
@@ -157,12 +173,16 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
         return d.hour_volumes.length;
       })
     );
+    // let yLabelWidth = width / maxWidth;
+
     // maximum radius for bubble.
     const maxR =
       d3.min([
         (width - yLabelWidth) / maxWidth,
         (height - xLabelHeight) / data.length
       ]) / 2;
+
+    // let xLabelHeight = height / maxR;
 
     // sort data and translate into human-readable
     data.sort(function(a, b) {
@@ -229,7 +249,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("x", yLabelWidth)
       .attr("y", xLabelHeight + 2 * maxR)
       .attr("width", 2 * maxR)
-      .attr("height", height - xLabelHeight)
+      .attr("height", (height - 6.5) / 2)
       .attr("stroke-width", 2)
       .attr("stroke", "grey")
       .attr("fill", "transparent")
@@ -248,8 +268,9 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("shape-rendering", "crispEdges")
       .attr("class", "punch-border, foo-bar");
 
+      debugger
     // creates rows according to data labels
-    const rows = chart.selectAll(".row").data(data, function(d) {
+      const rows = chart.selectAll(".row").data(data, function(d) {
         return d.day_of_week;
       })
       .enter()
@@ -703,7 +724,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
         return maxR * i * 2 + yLabelWidth + 2 * maxR;
       })
       .attr("y1", xLabelHeight + borderWidth / 2)
-      .attr("y2", height + 2 * maxR)
+      .attr("y2", height - (maxR * 4) + 2)
       .style("stroke-opacity", function(d, i) {
         return i ? 0.5 : 0;
       });
@@ -722,10 +743,10 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .style("stroke-opacity", 0)
       .attr("x2", (maxR * 25 * 2) + yLabelWidth)
       .attr("y1", function(d, i) {
-        return i * maxR * 2 + xLabelHeight + 2 * maxR;
+        return (i * (maxR * 2)) + (maxR* maxR) - (2*maxR) + 2;
       })
       .attr("y2", function(d, i) {
-        return i * maxR * 2 + xLabelHeight + 2 * maxR;
+        return (i * (maxR * 2)) + (maxR* maxR) - (2*maxR) + 2;
       })
       .style("stroke-opacity", function(d, i) {
         return i ? 0.5 : 0;
@@ -736,11 +757,11 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .append("line")
       .attr("x1", yLabelWidth + borderWidth / 2)
       .attr("y1", function(d, i) {
-        return (i * maxR * 2 + 2 * maxR) + height;
+        return height - (maxR * 4) + 2;
       })
       .attr("x2", maxR * 25 * 2 + yLabelWidth)
       .attr("y2", function(d, i) {
-        return (i * maxR * 2 + 2 * maxR) + height;
+        return height - (maxR * 4) + 2;
       })
       .attr("stroke-width", 2)
       .attr("shape-rendering", "crispEdges")
@@ -757,7 +778,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
         return (maxR * 25 * 2) + yLabelWidth //+ width;
       })
       .attr("y1", xLabelHeight + borderWidth / 2)
-      .attr("y2", height + 2 * maxR)
+      .attr("y2", height - (maxR * 4) + 2)
       .attr("stroke-width", 2)
       .style("shape-rendering", "crispEdges")
       .attr("stroke", "grey")

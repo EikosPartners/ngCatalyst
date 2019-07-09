@@ -70,11 +70,9 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
     let data = this.dataModel.slice();
     const selection_string = "#" + this.propID;
     const component = this;
-    const width = this.divWidth,
-      height = this.divHeight,
-      cellSize = ((13 / 900) * (this.divWidth)); // cell size
-      console.log(cellSize);
-      // debugger
+    const width = 900,
+      height = 150,
+      cellSize = 13; // cell size
     const week_days = [ ,"Mon", ,"Wed", ,"Fri"];
     // const week_days = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
     const month = [
@@ -129,7 +127,7 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
     const xScale = d3.scaleBand()
                   .domain(x_elems)
                   .range([0, x_elems.length * cellSize]);
-    // debugger
+
     const yScale = d3.scaleBand()
                   .domain(y_elems)
                   .range([0, y_elems.length * cellSize]);
@@ -142,23 +140,17 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
       .append("svg")
       .attr("width", "100%")
       .attr("data-height", "0.5678")
-      .attr("viewBox", `0 0 ${width} ${height}`)
-      .attr("preserveAspectRatio", "xMidYmin slice")
+      .attr("viewBox", "0 0 900 300")
+      .attr("preserveAspectRatio", "xMaxYMax meet")
       // http://tutorials.jenkov.com/svg/svg-viewport-view-box.html
       // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
       // http://jonibologna.com/svg-viewbox-and-viewport/
       .attr("class", "RdYlGn")
       // .style('fill', 'black')
       .append("g")
-      .attr("class", "g-class")
       .attr(
-        "transform", function(d) {
-          if (localThis.dataType == "calendar"){
-            return "translate(30,50)"
-          } else{
-            return "translate(100, 50)"
-          }
-        }
+        "transform",
+        "translate(100,100)"
       );
 
     svg
@@ -234,7 +226,7 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("class", "legend")
       .attr("transform", function(d, i) {
         if (localThis.dataType === 'calendar') {
-          return "translate(" + ((i + 1) * (cellSize / .24)) + ",0)";
+          return "translate(" + ((i + 1) * 53) + ",0)";
         } else {
           let size = i * cellSize;
           if (localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) {

@@ -11,8 +11,7 @@ import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
-    NgcatalystComponent,
-    BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent],
+    NgcatalystComponent, BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent],
   imports: [
     CommonModule
   ],
