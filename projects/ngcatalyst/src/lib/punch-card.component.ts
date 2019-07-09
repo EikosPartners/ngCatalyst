@@ -268,7 +268,6 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("shape-rendering", "crispEdges")
       .attr("class", "punch-border, foo-bar");
 
-      debugger
     // creates rows according to data labels
       const rows = chart.selectAll(".row").data(data, function(d) {
         return d.day_of_week;

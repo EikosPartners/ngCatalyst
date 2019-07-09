@@ -70,9 +70,10 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
     let data = this.dataModel.slice();
     const selection_string = "#" + this.propID;
     const component = this;
-    const width = 900,
-      height = 150,
-      cellSize = 13; // cell size
+    const width = this.divWidth,
+      height = this.divHeight,
+      cellSize = ((13 / 900) * (this.divWidth)); // cell size
+      console.log(cellSize);
     const week_days = [ ,"Mon", ,"Wed", ,"Fri"];
     // const week_days = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
     const month = [
@@ -103,7 +104,7 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
     // calendar, get the range of years to display
     if ( data !== undefined && data.length > 0 && localThis.dataType === 'calendar') {
       data.forEach(function(datum) {
-        if (parseDate(datum['x']) == null) {debugger}
+        if (parseDate(datum['x']) == null) {console.log('why')}
 
         const date_year = parseDate(datum['x']).getFullYear();
         min_value = date_year < min_value ? date_year : min_value;
@@ -127,7 +128,6 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
     const xScale = d3.scaleBand()
                   .domain(x_elems)
                   .range([0, x_elems.length * cellSize]);
-
     const yScale = d3.scaleBand()
                   .domain(y_elems)
                   .range([0, y_elems.length * cellSize]);
@@ -140,17 +140,23 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
       .append("svg")
       .attr("width", "100%")
       .attr("data-height", "0.5678")
-      .attr("viewBox", "0 0 900 300")
-      .attr("preserveAspectRatio", "xMaxYMax meet")
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("preserveAspectRatio", "xMidYmin slice")
       // http://tutorials.jenkov.com/svg/svg-viewport-view-box.html
       // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
       // http://jonibologna.com/svg-viewbox-and-viewport/
       .attr("class", "RdYlGn")
       // .style('fill', 'black')
       .append("g")
+      .attr("class", "g-class")
       .attr(
-        "transform",
-        "translate(100,100)"
+        "transform", function(d) {
+          if (localThis.dataType == "calendar"){
+            return "translate(30,50)"
+          } else{
+            return "translate(100, 50)"
+          }
+        }
       );
 
     svg
@@ -226,7 +232,7 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("class", "legend")
       .attr("transform", function(d, i) {
         if (localThis.dataType === 'calendar') {
-          return "translate(" + ((i + 1) * 53) + ",0)";
+          return "translate(" + ((i + 1) * (cellSize / .24)) + ",0)";
         } else {
           let size = i * cellSize;
           if (localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) {

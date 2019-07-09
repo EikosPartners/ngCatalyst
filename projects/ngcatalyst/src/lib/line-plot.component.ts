@@ -144,18 +144,16 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
     yScale.domain(d3.extent(data, yValue)).nice();
 
     // yScale.domain([d3.min(data, yValue), d3.max(data, yValue)]);
-
-    const yAxis = d3.axisLeft()
-      .scale(yScale)
-      // .tickValues([-200, -150, -100, -50, 0, 50, 100, 150, 200, 250, 300, 350])
-      .tickSizeInner(-(width /1.6) - margin.right - 4);
+    var tickSize = (typeof this.divWidth == "string") ? (-(width / 1.6) - margin.right) : (-(width) + margin.right- 4);
+    var yAxis = d3.axisLeft()
+        .scale(yScale)
+        .tickSizeInner(tickSize);
 
     const line = d3.line()
       .x(xMap)
       .y(yMap)
       .curve(d3.curveLinear);
 
-    // debugger
 
     const svg = d3
       .select(selection_string)
