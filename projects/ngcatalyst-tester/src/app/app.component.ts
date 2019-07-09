@@ -53,7 +53,7 @@ export class AppComponent {
   linePropID = 'angularlines';
   lineTitle = 'Line Plot';
   lineColor = "#5c2197";
-  plotPct = "76%"
+  plotPct = "76%";
 
   pieData = pieData;
   piePropID = 'angularpie';

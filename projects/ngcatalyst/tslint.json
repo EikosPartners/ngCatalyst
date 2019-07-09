@@ -13,6 +13,6 @@
       "eikos",
       "kebab-case"
     ],
-    "quotemark": [false]
+    "quotemark": false
   }
 }

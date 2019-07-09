@@ -18,7 +18,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() color = "#000";
   @Input() yAxisLabel = 'Value';
   @Input() xAxisLabel = 'Date';
-  @Input() divHeight: any = 750; // for a % you need a container div with a non-% height and width 
+  @Input() divHeight: any = 750; // for a % you need a container div with a non-% height and width;
   @Input() divWidth: any = 750;
   @Input() axisFontSize: any = "14px";
   @Input() margins = { top: 20, right: 30, bottom: 45, left: 40 };
@@ -29,14 +29,14 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
 
   get area () {
     let height, width;
-    if (typeof this.divHeight == "number") {
+    if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
       width = this.divWidth + "px";
     } else {
       height = this.divHeight;
       width = this.divWidth;
     }
-    return {height: height, width: width}
+    return {height: height, width: width};
   }
   // you might need a method like this to reformat given data with the appropriate field names,
   // get dataModel() {
@@ -144,8 +144,8 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
     yScale.domain(d3.extent(data, yValue)).nice();
 
     // yScale.domain([d3.min(data, yValue), d3.max(data, yValue)]);
-    var tickSize = (typeof this.divWidth == "string") ? (-(width / 1.6) - margin.right) : (-(width) + margin.right- 4);
-    var yAxis = d3.axisLeft()
+    const tickSize = (typeof this.divWidth === "string") ? (-(width / 1.6) - margin.right) : (-(width) + margin.right - 4);
+    const yAxis = d3.axisLeft()
         .scale(yScale)
         .tickSizeInner(tickSize);
 

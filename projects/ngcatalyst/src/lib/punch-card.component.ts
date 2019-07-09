@@ -30,18 +30,18 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
   labelsX = ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"];
 
   get area () {
-    let height = this.divHeight + "px";
-    let width = this.divWidth + "px";
-    return {height: height, width: width}
+    const height = this.divHeight + "px";
+    const width = this.divWidth + "px";
+    return {height: height, width: width};
   }
   get xLabelHeight () {
-    let no = this.data.length;
+    const no = this.data.length;
 
     return this.divHeight / no;
   }
 
   get yLabelWidth () {
-    let no = d3.max(
+    const no = d3.max(
       this.data.map(function(d) {
         return d.hour_volumes.length;
       }));
@@ -186,7 +186,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
 
     // sort data and translate into human-readable
     data.sort(function(a, b) {
-      parseInt(a["day_of_week"]) > parseInt(b["day_of_week"]);
+     return parseInt(a["day_of_week"]) > parseInt(b["day_of_week"]);
     });
 
     data.push(data.shift());
@@ -742,10 +742,10 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .style("stroke-opacity", 0)
       .attr("x2", (maxR * 25 * 2) + yLabelWidth)
       .attr("y1", function(d, i) {
-        return (i * (maxR * 2)) + (maxR* maxR) - (2*maxR) + 2;
+        return (i * (maxR * 2)) + (maxR * maxR) - (2 * maxR) + 2;
       })
       .attr("y2", function(d, i) {
-        return (i * (maxR * 2)) + (maxR* maxR) - (2*maxR) + 2;
+        return (i * (maxR * 2)) + (maxR * maxR) - (2 * maxR) + 2;
       })
       .style("stroke-opacity", function(d, i) {
         return i ? 0.5 : 0;
@@ -771,10 +771,10 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
     chart
       .append("line")
       .attr("x1", function(d, i) {
-        return (maxR * 25 * 2) + yLabelWidth //+ width;
+        return (maxR * 25 * 2) + yLabelWidth; // +  width;
       })
       .attr("x2", function(d, i) {
-        return (maxR * 25 * 2) + yLabelWidth //+ width;
+        return (maxR * 25 * 2) + yLabelWidth; // + width;
       })
       .attr("y1", xLabelHeight + borderWidth / 2)
       .attr("y2", height - (maxR * 4) + 2)
