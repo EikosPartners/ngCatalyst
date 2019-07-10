@@ -11,6 +11,10 @@ import luxon from 'luxon';
 </div>
   `
 })
+
+// HTK - the bubbles sometimes go outside the margins because of their radius, should we pin radius to margin size as well?
+// also found a use case where the graph didn't render because #s ended up too small because margins were bigger than dimensions themselves - is this a real bug?
+
 export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() propID = 'bubble';
@@ -22,17 +26,23 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
   // need 8 hex colors;
   @Input() yAxisLabel = 'Value';
   @Input() xAxisLabel = 'Date';
-  @Input() divHeight = 750;
-  @Input() divWidth = 750;
-  @Input() margin = { top: 40, right: 20, bottom: 40, left: 20 };
+  @Input() divHeight: any = 750; // for a % you need a container div with a non-% height and width;
+  @Input() divWidth: any = 750;
+  @Input() margin = { top: 40, right: 20, bottom: 40, left: 20 }; // maybe make this a calc based on radius so if x or y is 0 it will show whole bubble?;
   dateFormat = '%Y-%m-%d';
 
   constructor() { }
 
   get area () {
-    let height = this.divHeight + "px";
-    let width = this.divWidth + "px";
-    return {height: height, width: width}
+    let height, width;
+    if (typeof this.divHeight === "number") {
+      height = this.divHeight + "px";
+      width = this.divWidth + "px";
+    } else {
+      height = this.divHeight;
+      width = this.divWidth;
+    }
+    return {height: height, width: width};
   }
 
   get processedData() {
@@ -96,11 +106,11 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   get_duration_zoom_range(max_value_mins, min_zoom_mins = 1) {
-    return [1, max_value_mins / min_zoom_mins]
+    return [1, max_value_mins / min_zoom_mins];
   }
 
   get_x_zoom_range(asrs, xval, min_zoom_mins = 1) {
-    return this.get_duration_zoom_range(d3.max(asrs, xval), min_zoom_mins)
+    return this.get_duration_zoom_range(d3.max(asrs, xval), min_zoom_mins);
   }
 
   drawBubbleChart(data) {
@@ -123,7 +133,6 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
       element = selected[0];
     }
 
-
     const margin = this.margin;
     const elementWidth = element.clientWidth;
     const elementHeight = element.clientHeight;
@@ -135,7 +144,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
     const colors = this.themeColors;
 
     // Account for panel heading height if title exists.
-    if (this.title) {
+    if (this.title && height > 50) {
       height -= 40;
     }
 
@@ -194,7 +203,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
     const max_value_size = Math.sqrt(d3.max(data, function(d) {
       return +d.value;
     }));
-    const bubble_sizes = this.get_bubble_sizes(max_value_size, this.divHeight, this.divWidth);
+    const bubble_sizes = this.get_bubble_sizes(max_value_size, height, width);
     const min_bubble_size = bubble_sizes['min'];
     const max_bubble_size = bubble_sizes['max'];
 
@@ -204,7 +213,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
     ]),
       zMap = function(d) { return zScale(Math.sqrt(zValue(d))); };
 
-    const cValue = function(d) {
+      const cValue = function(d) {
       return d.value;
     };
 
@@ -241,13 +250,13 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
     // Subtract half the min value from min and add one fourth
     // of the max to the max so that the bubbles never go outside of the graph
     xScale.domain([xMin, xMax]);
-    yScale.domain([yMin - yMin/2, yMax + yMax/4]);
+    yScale.domain([yMin - yMin / 2, yMax + yMax / 4]);
     svg = d3.select(containerId)
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     svg.append("rect")
       .attr("fill-opacity", "0")
@@ -310,14 +319,14 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
           .duration(50)
           .style("opacity", 1);
       })
-      .on("mouseout", function(d){
-        const tooltip = d3.select(`.${localThis.propID}_tooltip`);
+      .on("mouseout", function(d) {
+        // const tooltip = d3.select(`.${localThis.propID}_tooltip`);
           tooltip.transition().duration(300).style("opacity", 0);
           d3.select(tooltip[0])
             .transition()
             .duration(200)
             .style("opacity", 0);
-      })
+      });
   }
 
 
