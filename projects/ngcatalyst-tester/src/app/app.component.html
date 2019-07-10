@@ -1,18 +1,21 @@
 <div class="flexbox-container">
-<!--
-  <eikos-bar-chart
-    [data]="barData"
-    [xAxisLabel]="xAxisLabel"
-    [yAxisLabel]="yAxisLabel"
-    [propID]="barPropID"
-    [color]="barColor"
-    [title]="barTitle"
-    [xAxisAngle]="axisAngle"
-    [yAxisAngle]="axisAngle"
-    [divHeight]="height"
-    [divWidth]="width"
-  >
-  </eikos-bar-chart> -->
+
+  <div style="height: 225px; width: 300px">
+    
+    <eikos-bar-chart
+      [data]="barData"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [propID]="barPropID"
+      [color]="barColor"
+      [title]="barTitle"
+      [xAxisAngle]="axisAngle"
+      [yAxisAngle]="axisAngle"
+      [divHeight]="height"
+      [divWidth]="width"
+    >
+    </eikos-bar-chart>
+  </div>
 <!--
   <eikos-bubble-chart
     [data]="bbcData"
@@ -46,7 +49,7 @@
     [divWidth]="width"
 
   ></eikos-heat-map> -->
-<div style="height: 225px; width: 300px">
+<!-- <div style="height: 225px; width: 300px">
   <eikos-line-plot
     [data]="lineData"
     [propID]="linePropID"
@@ -58,7 +61,7 @@
     [divWidth]="bbcDivWidth"
 
   ></eikos-line-plot>
-</div>
+</div> -->
   <!-- <eikos-pie-chart
     [data]="pieData"
     [donutWidth]="donutWidth"

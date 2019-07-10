@@ -20,8 +20,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
   @Input() xAxisAngle = 45;
   @Input() yAxisAngle = 45;
   @Input() title = "Bar Chart";
-  @Input() divHeight = 750;
-  @Input() divWidth = 750;
+  @Input() divHeight: any = 750; // for a % you need a container div with a non-% height and width;
+  @Input() divWidth: any = 750;
 
   constructor() { }
 
@@ -32,9 +32,15 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
   }
 
   get area () {
-    let height = this.divHeight + "px";
-    let width = this.divWidth + "px";
-    return {height: height, width: width}
+    let height, width;
+    if (typeof this.divHeight === "number") {
+      height = this.divHeight + "px";
+      width = this.divWidth + "px";
+    } else {
+      height = this.divHeight;
+      width = this.divWidth;
+    }
+    return {height: height, width: width};
   }
 
 
@@ -123,13 +129,13 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
 
         chart
           .append("g")
-          .attr("class", "x axis")
+          .attr("class", "x axis xaxis")
           .attr("transform", "translate(0," +  (height - margin. bottom) + ")")
           .call(xAxis)
           .append("text")
           .attr("class", "label")
-          .attr("x", width / 2 + margin.right)
-          .attr("y", 30)
+          .attr("x", (width / 3) + margin.right)
+          .attr("y", 0)
           .style("text-anchor", "middle")
           .text(xaxisvalue);
 
@@ -141,15 +147,34 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
                 .style("text-anchor", "middle");
 
             const dimensions = text.node().getBBox();
+            const array = Array.from(text._groups[0]).map((item, index) => item.getBBox().width);
+            // const dimwid = d3.max(array);
 
-            if (this.xAxisAngle === 45) {
-              text.attr("x", 15)
-                  .attr("y", dimensions.height * 2);
+            if (this.xAxisAngle < 45) {
+              text.attr("x", function(a, b, c, d) {
+                    if (array[b] < margin.bottom) {
+                      return dimensions.width / 2;
+                    } else {
+                      return dimensions.width / 1.5;
+                    }
+                  })
+                  .attr("y", dimensions.height - margin.top);
+            }
+
+            if (this.xAxisAngle >= 45) {
+              text.attr("x", function(a, b, c, d) {
+                    if (array[b] < margin.bottom) {
+                      return dimensions.width - 15;
+                    } else {
+                      return dimensions.width - 10;
+                    }
+                  })
+                  .attr("y", dimensions.height - 10);
             }
 
             if (this.xAxisAngle === 90) {
-              text.attr("x", dimensions.width - 10)
-                  .attr("y", 0);
+              text.attr("x", dimensions.width)
+                  .attr("y", -margin.left / 2 - 5);
             }
         }
 

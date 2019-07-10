@@ -20,7 +20,7 @@ export class AppComponent {
   xAxisLabelDate = 'Date of Thing';
   xAxisLabel = 'Quantity';
   falseVar = false;
-  axisAngle = 45;
+  axisAngle = 25;
 
   barData = barData;
   barPropID = 'angularbar';
