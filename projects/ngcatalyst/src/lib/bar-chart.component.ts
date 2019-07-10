@@ -11,6 +11,7 @@ import * as d3 from 'd3';
     </div>
   `
 })
+
 export class BarChartComponent implements OnChanges, AfterViewInit {
   @Input() data: [{name: string, value: number}];
   @Input() propID = 'barchart';
@@ -147,7 +148,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
                 .style("text-anchor", "middle");
 
             const dimensions = text.node().getBBox();
-            const array = Array.from(text._groups[0]).map((item, index) => item.getBBox().width);
+            const array = Array.from(text._groups[0]).map((item: any, index: number) => item.getBBox().width);
             // const dimwid = d3.max(array);
 
             if (this.xAxisAngle < 45) {
@@ -191,6 +192,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
           .text(yaxisvalue);
 
           function hex2rgb(hex) {
+            // tslint:disable-next-line:no-bitwise
             return [<any>'0x' + hex[1] + hex[2] | 0, <any>'0x' + hex[3] + hex[4] | 0, <any>'0x' + hex[5] + hex[6] | 0];
           }
 

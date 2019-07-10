@@ -13,5 +13,9 @@
             "app",
             "kebab-case"
         ]
-    }
+    },
+    "max-line-length": [
+      true,
+      180
+    ]
 }
