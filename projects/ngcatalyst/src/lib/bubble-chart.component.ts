@@ -37,9 +37,12 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
-      width = this.divWidth + "px";
     } else {
       height = this.divHeight;
+    }
+    if (typeof this.divWidth === "number" ) {
+      width = this.divWidth + "px";
+    } else {
       width = this.divWidth;
     }
     return {height: height, width: width};

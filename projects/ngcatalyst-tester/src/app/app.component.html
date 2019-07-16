@@ -62,34 +62,34 @@
   [divWidth]="width"
 
 ></eikos-line-plot> -->
-<div style="height: 1000px; width: 1000px">
-  <eikos-pie-chart
-    [data]="pieData"
-    [donutWidth]="donutWidth"
-    [propID]="piePropID"
-    [colors]="pieColors"
-    [title]="pieTitle"
-    [divHeight]="bbcDivHeight"
-    [divWidth]="bbcDivHeight"
+<!-- <eikos-pie-chart
+  [data]="pieData"
+  [donutWidth]="donutWidth"
+  [propID]="piePropID"
+  [colors]="pieColors"
+  [title]="pieTitle"
+  [divHeight]="bbcDivHeight"
+  [divWidth]="bbcDivHeight"
 
-  ></eikos-pie-chart>
-
-</div>
+></eikos-pie-chart> -->
 <!--
-  <eikos-punch-card
-    [data]="punchData"
-    [propID]="punchPropID"
-    [colors]="punchColors"
-    [title]="punchTitle"
-    [axisColors]="axisColor"
-  ></eikos-punch-card> -->
+    <eikos-punch-card
+      [data]="punchData"
+      [propID]="punchPropID"
+      [colors]="punchColors"
+      [title]="punchTitle"
+      [axisColors]="axisColor"
+    ></eikos-punch-card> -->
+<div style="height: 1000px; width: 1000px">
 
-  <!-- <eikos-sunburst
+  <eikos-sunburst
     [data]="sunburstData"
     [propID]="sunburstPropID"
     [title]="sunburstTitle"
-    [divHeight]="height"
-    [divWidth]="width"
-  ></eikos-sunburst> -->
+    [divHeight]="donutWidthPct"
+    [divWidth]="plotPct"
+    ></eikos-sunburst>
+</div>
+
 
 </div>

@@ -26,10 +26,24 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
   constructor() {
   }
 
-  get area () {
-    let height = this.divHeight + "px";
-    let width = this.divWidth + "px";
-    return {height: height, width: width}
+  // get area () {
+  //   let height = this.divHeight + "px";
+  //   let width = this.divWidth + "px";
+  //   return {height: height, width: width}
+  // }
+    get area () {
+    let height, width;
+    if (typeof this.divHeight === "number") {
+      height = this.divHeight + "px";
+    } else {
+      height = this.divHeight;
+    }
+    if (typeof this.divWidth === "number" ) {
+      width = this.divWidth + "px";
+    } else {
+      width = this.divWidth;
+    }
+    return {height: height, width: width};
   }
 
   ngOnInit() {

@@ -3,12 +3,12 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 // import { SunburstComponent, PunchCardComponent, PieChartComponent, LinePlotComponent, HeatMapComponent, BubbleChartComponent, BarChartComponent } from 'ngcatalyst';
 // import {NgcatalystModule} from 'ngcatalyst';
-import {PieChartComponent} from '../../../../projects/ngcatalyst/src/lib/pie-chart.component';
+import {SunburstComponent} from '../../../../projects/ngcatalyst/src/lib/sunburst.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PieChartComponent
+    SunburstComponent
   ],
   imports: [
     BrowserModule,

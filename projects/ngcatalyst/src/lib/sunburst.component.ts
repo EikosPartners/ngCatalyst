@@ -6,7 +6,7 @@ import * as d3 from 'd3';
   template: `
   <h2>{{title}}</h2>
   <div [ngStyle]="area" >
-      <div [id]="propID" style="width:100%;height:100%"> </div>
+      <div [id]="propID" [ngStyle]="area"> </div>
   </div>
 `
 })
@@ -17,15 +17,24 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() title: string;
   @Input() divHeight = 750;
   @Input() divWidth = 750;
+  // htk it seems that when one is bigger than the other that affects posiitioning in the div instead of actual size
 
   constructor() { }
 
   get area () {
-    let height = this.divHeight + "px";
-    let width = this.divWidth + "px";
-    return {height: height, width: width}
+    let height, width;
+    if (typeof this.divHeight === "number") {
+      height = this.divHeight + "px";
+    } else {
+      height = this.divHeight;
+    }
+    if (typeof this.divWidth === "number" ) {
+      width = this.divWidth + "px";
+    } else {
+      width = this.divWidth;
+    }
+    return {height: height, width: width};
   }
-
   // you might need a method like this to reformat given data with the appropriate field names,
   // get dataModel() {
   //   return this.data.map(item => {
@@ -62,7 +71,6 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
         } else {
           element = selected[0];
         }
-
         const	width = element.clientWidth;
         let	height = element.clientHeight;
 
@@ -80,10 +88,10 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
 
         const formatNumber = d3.format(",d");
 
-        let x = d3.scaleLinear()
+        const x = d3.scaleLinear()
             .range([0, 2 * Math.PI]);
 
-        let y = d3.scaleSqrt()
+        const y = d3.scaleSqrt()
             .range([0, radius]);
 
         const partition = d3.partition();
