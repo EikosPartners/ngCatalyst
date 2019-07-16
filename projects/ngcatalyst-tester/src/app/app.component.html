@@ -50,29 +50,31 @@
     [divWidth]="width"
 
   ></eikos-heat-map> -->
-<div style="height: 1000px; width: 1000px">
+<!--
   <eikos-line-plot
-    [data]="lineData"
-    [propID]="linePropID"
-    [title]="lineTitle"
-    [color]="lineColor"
-    [xAxisLabel]="xAxisLabelDate"
-    [yAxisLabel]="yAxisLabel"
-    [divHeight]="plotPct"
-    [divWidth]="width"
+  [data]="lineData"
+  [propID]="linePropID"
+  [title]="lineTitle"
+  [color]="lineColor"
+  [xAxisLabel]="xAxisLabelDate"
+  [yAxisLabel]="yAxisLabel"
+  [divHeight]="plotPct"
+  [divWidth]="width"
 
-  ></eikos-line-plot>
-</div>
-  <!-- <eikos-pie-chart
+></eikos-line-plot> -->
+<div style="height: 1000px; width: 1000px">
+  <eikos-pie-chart
     [data]="pieData"
     [donutWidth]="donutWidth"
     [propID]="piePropID"
     [colors]="pieColors"
     [title]="pieTitle"
-    [divHeight]="height"
-    [divWidth]="width"
+    [divHeight]="bbcDivHeight"
+    [divWidth]="bbcDivHeight"
 
-  ></eikos-pie-chart> -->
+  ></eikos-pie-chart>
+
+</div>
 <!--
   <eikos-punch-card
     [data]="punchData"

@@ -27,9 +27,18 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
   constructor() { }
 
   get area () {
-    let height = this.divHeight + "px";
-    let width = this.divWidth + "px";
-    return {height: height, width: width}
+    let height, width;
+    if (typeof this.divHeight === "number") {
+      height = this.divHeight + "px";
+    } else {
+      height = this.divHeight;
+    }
+    if (typeof this.divWidth === "number" ) {
+      width = this.divWidth + "px";
+    } else {
+      width = this.divWidth;
+    }
+    return {height: height, width: width};
   }
   // you might need a method like this to reformat given data with the appropriate field names,
   // get dataModel() {
@@ -81,7 +90,12 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
       width = element.clientWidth - margin.left - margin.right,
       height = element.clientHeight - margin.top - margin.bottom,
       radius = height > width ?  width / 2 : height / 2;
-
+    let donutWidth = this.donutWidth;
+    if (typeof donutWidth === "string") {
+      donutWidth = (parseInt(donutWidth.split('%')[0]) / 100) * radius;
+    } else if (radius < donutWidth) {
+      donutWidth = (donutWidth / radius) * 10;
+    }
     const svg = d3.select(selection_string)
       .append("svg")
       .data([this.data], function(d) {
@@ -94,12 +108,6 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
       .append("g")
       // sets the center of the piechart to center of container
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-    svg
-      .append("text")
-      .attr('font-size', '4em')
-      .attr('y', 20)
-      .attr('x', -50)
-      .text(localThis.total);
 
     // add tooltip div to the DOM
     const tooltip = d3
@@ -113,9 +121,8 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
       .value(function(d) { return d.value; });
 
     // Declare an arc generator function
-    const donut = this.donutWidth;
     const arc = d3.arc()
-      .innerRadius(donut)
+      .innerRadius(donutWidth)
       .outerRadius(radius);
 
     // Select paths, use arc generator to draw
@@ -124,6 +131,16 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
       .enter()
         .append("g")
         .attr("class", "slice");
+
+  // adds total # of data values to the center of the pie
+      svg
+      .append("text")
+      .attr("class", "total")
+      .attr("id", "centerText")
+      .attr('font-size', '1em')
+      .attr("transform", "translate(" + (-radius / 10) + "," + (radius / 13.75) + ")")
+      .text(localThis.total);
+      // this starts at cennter so the translate is back a few px and up a few px, gotta be a better way to calc HTK
 
     // add tooltip on mouseover of slice
     arcs.on("mouseover", function(d) {
