@@ -15,8 +15,8 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() propID = 'line';
   @Input() data: [{name: string, children: [{name: string, size: number}, {name: string, children: []}]}];
   @Input() title: string;
-  @Input() divHeight = 750;
-  @Input() divWidth = 750;
+  @Input() divHeight: any = "100%";
+  @Input() divWidth: any = "100%";
   // htk it seems that when one is bigger than the other that affects posiitioning in the div instead of actual size
 
   constructor() { }
@@ -159,7 +159,7 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
                 return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
               })
             .selectAll("path")
-              .attrTween("d", function(d) { return function() { return arc(d); }; });
+              .attrTween("d", function(d2) { return function() { return arc(d2); }; });
         }
 
         d3.select(self.frameElement).style("height", height + "px");

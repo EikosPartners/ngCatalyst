@@ -26,8 +26,8 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
   // need 8 hex colors;
   @Input() yAxisLabel = 'Value';
   @Input() xAxisLabel = 'Date';
-  @Input() divHeight: any = 750; // for a % you need a container div with a non-% height and width;
-  @Input() divWidth: any = 750;
+  @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
+  @Input() divWidth: any = "100%";
   @Input() margin = { top: 40, right: 20, bottom: 40, left: 20 }; // maybe make this a calc based on radius so if x or y is 0 it will show whole bubble?;
   dateFormat = '%Y-%m-%d';
 

@@ -21,8 +21,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
   @Input() xAxisAngle = 45;
   @Input() yAxisAngle = 45;
   @Input() title = "Bar Chart";
-  @Input() divHeight: any = 750; // for a % you need a container div with a non-% height and width;
-  @Input() divWidth: any = 750;
+  @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
+  @Input() divWidth: any = "100%";
 
   constructor() { }
 

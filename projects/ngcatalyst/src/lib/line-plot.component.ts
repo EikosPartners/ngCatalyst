@@ -18,8 +18,8 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() color = "#000";
   @Input() yAxisLabel = 'Value';
   @Input() xAxisLabel = 'Date';
-  @Input() divHeight: any = 750; // for a % you need a container div with a non-% height and width;
-  @Input() divWidth: any = 750;
+  @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
+  @Input() divWidth: any = "100%";
   @Input() axisFontSize: any = "14px";
   @Input() margins = { top: 20, right: 30, bottom: 45, left: 40 };
   // @Input() xAxisAngle = 45;
@@ -203,7 +203,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
 
     const clip_id = "clip-" + this.propID;
 
-    const tickWidth = document.getElementsByClassName('xaxis')[0].getBBox().width;
+    const tickWidth = d3.select('.xaxis')._groups[0][0].getBBox().width;
     d3.selectAll('.yaxis').selectAll('g.tick line').attr('x1', 0).attr('x2', tickWidth - margin.right / 2);
     // svg
     //   .append("clipPath")

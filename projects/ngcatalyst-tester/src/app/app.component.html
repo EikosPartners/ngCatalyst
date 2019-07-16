@@ -1,7 +1,6 @@
 <div class="flexbox-container">
 
-  <!-- <div style="height: 225px; width: 300px">
-
+  <div style="height: 500px; width: 500px">
     <eikos-bar-chart
       [data]="barData"
       [xAxisLabel]="xAxisLabel"
@@ -11,85 +10,93 @@
       [title]="barTitle"
       [xAxisAngle]="axisAngle"
       [yAxisAngle]="axisAngle"
-      [divHeight]="height"
-      [divWidth]="width"
+      [divHeight]="plotPct"
+      [divWidth]="plotPct"
     >
     </eikos-bar-chart>
+  </div>
+
+  <div style="height: 500px; width: 500px">
+    <eikos-bubble-chart
+      [data]="bbcData"
+      [propID]="bubblePropID"
+      [title]="bubbleTitle"
+      [isTime]="falseVar"
+      [isDate]="falseVar"
+      [themeColors]="bubbleColors"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [divHeight]="bbcDivHeight"
+      [divWidth]="donutWidthPct"
+    ></eikos-bubble-chart>
+  </div>
+<!--
+  <div style="height: 500px; width: 500px">
+    <eikos-heat-map
+      [data]="heatData"
+      [colors]="pieColors"
+      [divHeight]="plotPct"
+      [divWidth]="plotPct"
+    ></eikos-heat-map>
   </div> -->
-  <!-- <div style="height: 1000px; width: 1000px"> -->
-<!--
-  <eikos-bubble-chart
-    [data]="bbcData"
-    [propID]="bubblePropID"
-    [title]="bubbleTitle"
-    [isTime]="falseVar"
-    [isDate]="falseVar"
-    [themeColors]="bubbleColors"
-    [xAxisLabel]="xAxisLabel"
-    [yAxisLabel]="yAxisLabel"
-    [divHeight]="'100%'"
-    [divWidth]="'100%'"
 
-  ></eikos-bubble-chart> -->
-<!--
-  <eikos-heat-map
-    [data]="heatData"
-    [colors]="pieColors"
-    [divHeight]="height"
-    [divWidth]="width"
+  <div style="height: 500px; width: 500px">
+    <eikos-heat-map
+      [data]="heatData2"
+      [dataType]="dataType"
+      [colors]="pieColors"
+      [propID]="heatPropID"
+      [xAxisAngle]="xAxisAngle"
+      [divHeight]="height"
+      [divWidth]="width"
+    ></eikos-heat-map>
+  </div>
 
-  ></eikos-heat-map> -->
-<!--
-  <eikos-heat-map
-    [data]="heatData2"
-    [dataType]="dataType"
-    [colors]="pieColors"
-    [propID]="heatPropID"
-    [xAxisAngle]="xAxisAngle"
-    [divHeight]="height"
-    [divWidth]="width"
+  <div style="height: 500px; width: 500px">
+    <eikos-line-plot
+      [data]="lineData"
+      [propID]="linePropID"
+      [title]="lineTitle"
+      [color]="lineColor"
+      [xAxisLabel]="xAxisLabelDate"
+      [yAxisLabel]="yAxisLabel"
+      [divHeight]="plotPct"
+      [divWidth]="plotPct"
+    ></eikos-line-plot>
+  </div>
 
-  ></eikos-heat-map> -->
-<!--
-  <eikos-line-plot
-  [data]="lineData"
-  [propID]="linePropID"
-  [title]="lineTitle"
-  [color]="lineColor"
-  [xAxisLabel]="xAxisLabelDate"
-  [yAxisLabel]="yAxisLabel"
-  [divHeight]="plotPct"
-  [divWidth]="width"
+  <div style="height: 500px; width: 500px">
+    <eikos-pie-chart
+      [data]="pieData"
+      [donutWidth]="donutWidth"
+      [propID]="piePropID"
+      [colors]="pieColors"
+      [title]="pieTitle"
+      [divHeight]="bbcDivHeight"
+      [divWidth]="bbcDivHeight"
+    ></eikos-pie-chart>
+  </div>
 
-></eikos-line-plot> -->
-<!-- <eikos-pie-chart
-  [data]="pieData"
-  [donutWidth]="donutWidth"
-  [propID]="piePropID"
-  [colors]="pieColors"
-  [title]="pieTitle"
-  [divHeight]="bbcDivHeight"
-  [divWidth]="bbcDivHeight"
-
-></eikos-pie-chart> -->
-<!--
+  <div style="height: 600px; width: 500px">
     <eikos-punch-card
       [data]="punchData"
       [propID]="punchPropID"
       [colors]="punchColors"
       [title]="punchTitle"
       [axisColors]="axisColor"
-    ></eikos-punch-card> -->
-<div style="height: 1000px; width: 1000px">
+      [divHeight]="plotPct"
+      [divWidth]="plotPct"
+    ></eikos-punch-card>
+  </div>
 
-  <eikos-sunburst
-    [data]="sunburstData"
-    [propID]="sunburstPropID"
-    [title]="sunburstTitle"
-    [divHeight]="donutWidthPct"
-    [divWidth]="plotPct"
+  <div style="height: 500px; width: 500px">
+    <eikos-sunburst
+      [data]="sunburstData"
+      [propID]="sunburstPropID"
+      [title]="sunburstTitle"
+      [divHeight]="plotPct"
+      [divWidth]="plotPct"
     ></eikos-sunburst>
-</div>
-
+  </div>
 
 </div>

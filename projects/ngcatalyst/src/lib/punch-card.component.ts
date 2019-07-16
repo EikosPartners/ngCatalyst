@@ -24,8 +24,8 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() axisColors = ["#e5b1a5", "#ff2b2b"];
   @Input() axisLabel = 'Date';
   @Input() colors =  ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
-  @Input() divHeight = "100%";
-  @Input() divWidth = "100%";
+  @Input() divHeight: any = "100%";
+  @Input() divWidth: any = "100%";
   // tslint:disable-next-line:max-line-length
   labelsX = ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"];
 
@@ -144,9 +144,9 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
     element.clientHeight / 24 * 7 +
       2 * xLabelHeight - margin.top - margin.bottom;
 
-    console.log(selected)
-    console.log(element.clientWidth)
-    console.log(element.clientHeight)
+    console.log(selected);
+    console.log(element.clientWidth);
+    console.log(element.clientHeight);
 
 
     //   if (this..changeHeight !== undefined ) {
@@ -766,7 +766,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       })
       .attr("x2", maxR * 25 * 2 + yLabelWidth)
       .attr("y2", function(d, i) {
-        return xLabelHeight / .34 +1; // element.clientHeight - (maxR * 16) - xLabelHeight;
+        return xLabelHeight / .34 + 1; // element.clientHeight - (maxR * 16) - xLabelHeight;
       })
       .attr("stroke-width", 3)
       .attr("shape-rendering", "crispEdges")

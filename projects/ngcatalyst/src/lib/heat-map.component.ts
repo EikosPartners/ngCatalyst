@@ -18,19 +18,14 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() alertText = "magnitude";
   @Input() data = [{}]; // {x: String, y: String, magnitude: Number} || {date: String, volume: Number} - can use dataModel getter/computer to reformat as needed
   @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"]; // need 10 hex colors;
-  @Input() divHeight = 300;
-  @Input() divWidth = 750;
+  @Input() divHeight: any = "100%";
+  @Input() divWidth: any = "100%";
   // should maybe have a min-width or min-height to prevent it from going SUPER TINY?
   // also since it's preserveAspectRatio maybe only @Input one of the dimensions? HTK
 
   constructor() {
   }
 
-  // get area () {
-  //   let height = this.divHeight + "px";
-  //   let width = this.divWidth + "px";
-  //   return {height: height, width: width}
-  // }
     get area () {
     let height, width;
     if (typeof this.divHeight === "number") {
@@ -61,34 +56,33 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   get dataModel() {
-    const returner = this.data.map(item=> {
+    const returner = this.data.map(item => {
       const newItem = {x: item['date'] ? item['date'] : item['x'], magnitude: item['volume'] ? item['volume'] : item['magnitude']};
       if (item['y']) {
         newItem['y'] = item['y'];
       }
       return newItem;
     }
-    )
-    returner.forEach(item=>{
-      if (item.magnitude == undefined) {
-        console.log(item)
-        console.log(this.data)
-        // console.log(this.data.filter(item=> item['date'] == item['x'] || item['x'] == item['x'] ))
+    );
+    // returner.forEach(item => {
+    //   if (item.magnitude === undefined) {
+    //     // console.log(this.data.filter(item=> item['date'] == item['x'] || item['x'] == item['x'] ))
 
-      }
-    })
-    return returner
+    //   }
+    // })
+    return returner;
   }
 
   draw () {
-    let data = this.dataModel.slice();
+    const data = this.dataModel.slice();
     const selection_string = "#" + this.propID;
-    const component = this;
-    const width = this.divWidth,
-      height = this.divHeight,
-      cellSize = ((13 / 900) * (this.divWidth)); // cell size
+    // const component = this;
+    const component = document.querySelectorAll(selection_string)[0];
+    const width = (typeof this.divWidth === "string") ? component.clientWidth : this.divWidth,
+      height = (typeof this.divHeight === "string") ? component.clientHeight : this.divHeight,
+      cellSize = ((13 / 900) * (width)); // cell size
       console.log(cellSize);
-    const week_days = [ ,"Mon", ,"Wed", ,"Fri"];
+    const week_days = [ , "Mon", , "Wed", , "Fri"];
     // const week_days = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
     const month = [
       "Jan",
@@ -118,7 +112,7 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
     // calendar, get the range of years to display
     if ( data !== undefined && data.length > 0 && localThis.dataType === 'calendar') {
       data.forEach(function(datum) {
-        if (parseDate(datum['x']) == null) {console.log('why')}
+        if (parseDate(datum['x']) == null) {console.log('why'); }
 
         const date_year = parseDate(datum['x']).getFullYear();
         min_value = date_year < min_value ? date_year : min_value;
@@ -165,10 +159,10 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("class", "g-class")
       .attr(
         "transform", function(d) {
-          if (localThis.dataType == "calendar"){
-            return "translate(30,50)"
-          } else{
-            return "translate(100, 50)"
+          if (localThis.dataType === "calendar") {
+            return "translate(30,50)";
+          } else {
+            return "translate(100, 50)";
           }
         }
       );
@@ -334,8 +328,8 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
           d = { x: d };
         }
 
-      const item = localThis.dataModel.filter(function(item) {
-        return item['x'] === d.x;
+      const item = localThis.dataModel.filter(function(item2) {
+        return item2['x'] === d.x;
       })[0];
 
       let tooltipText = "Occurrences: " + "<b>" + item['magnitude'] + "</b>" + "<br>X: " + "<b>" + d.x + "</b></br>";
@@ -370,11 +364,11 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
           .select(this)
           .transition()
           .duration(100)
-          .attr("fill", function(d) {
+          .attr("fill", function(d2) {
             if (localThis.dataType === 'calendar') {
               return color(ndata['$' + d]);
             } else {
-              return color(d.magnitude);
+              return color(d2.magnitude);
             }
           });
         tooltip
