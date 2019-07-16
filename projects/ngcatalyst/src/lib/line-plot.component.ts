@@ -31,9 +31,12 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
-      width = this.divWidth + "px";
     } else {
       height = this.divHeight;
+    }
+    if (typeof this.divWidth === "number" ) {
+      width = this.divWidth + "px";
+    } else {
       width = this.divWidth;
     }
     return {height: height, width: width};
@@ -144,10 +147,10 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
     yScale.domain(d3.extent(data, yValue)).nice();
 
     // yScale.domain([d3.min(data, yValue), d3.max(data, yValue)]);
-    const tickSize = (typeof this.divWidth === "string") ? (-(width / 1.6) - margin.right) : (-(width) + margin.right - 4);
+    // const tickSize = (typeof this.divWidth === "string") ? (-(width / 1) - margin.right) : (-(width) + margin.right - 4);
     const yAxis = d3.axisLeft()
-        .scale(yScale)
-        .tickSizeInner(tickSize);
+        .scale(yScale);
+        // .tickSizeInner(tickSize);
 
     const line = d3.line()
       .x(xMap)
@@ -187,7 +190,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
 
     svg
       .append("g")
-      .attr("class", "y axis axis-line-plot")
+      .attr("class", "y axis yaxis axis-line-plot")
       .style("fill", "black")
       .call(yAxis)
       .append("text")
@@ -200,6 +203,8 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
 
     const clip_id = "clip-" + this.propID;
 
+    const tickWidth = document.getElementsByClassName('xaxis')[0].getBBox().width;
+    d3.selectAll('.yaxis').selectAll('g.tick line').attr('x1', 0).attr('x2', tickWidth - margin.right / 2);
     // svg
     //   .append("clipPath")
     //   .attr("id", clip_id)
