@@ -29,23 +29,25 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
   // tslint:disable-next-line:max-line-length
   labelsX = ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"];
 
+  // get area () {
+  //   const height = this.divHeight + "px";
+  //   const width = this.divWidth + "px";
+  //   return {height: height, width: width};
+  // }
+
   get area () {
-    const height = this.divHeight + "px";
-    const width = this.divWidth + "px";
+    let height, width;
+    if (typeof this.divHeight === "number") {
+      height = this.divHeight + "px";
+    } else {
+      height = this.divHeight;
+    }
+    if (typeof this.divWidth === "number" ) {
+      width = this.divWidth + "px";
+    } else {
+      width = this.divWidth;
+    }
     return {height: height, width: width};
-  }
-  get xLabelHeight () {
-    const no = this.data.length;
-
-    return this.divHeight / no;
-  }
-
-  get yLabelWidth () {
-    const no = d3.max(
-      this.data.map(function(d) {
-        return d.hour_volumes.length;
-      }));
-    return this.divWidth / no;
   }
 
   constructor() { }
@@ -120,11 +122,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
 
     const margin = { top: 40, right: 75, bottom: 40, left: 15 };
     const padding = 3;
-    const xLabelHeight = this.xLabelHeight;
-    const yLabelWidth = this.yLabelWidth;
     const borderWidth = 1;
-    // const width = 500;
-    // const height = 181;
 
     let element: any;
 
@@ -133,9 +131,16 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
     if (selected[0] == null) {
       element = {clientWidth: 1000, clientHeight: 500};
     } else {
-
       element = selected[0];
     }
+
+
+    const xLabelHeight = element.clientHeight / this.data.length;
+    const yLabelWidth = element.clientWidth / d3.max(
+      this.data.map(function(d) {
+        return d.hour_volumes.length;
+      }));
+
 
     const width =
       element.clientWidth - margin.left - margin.right - yLabelWidth;
@@ -143,7 +148,12 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
     element.clientHeight / 24 * 7 +
       2 * xLabelHeight - margin.top - margin.bottom;
 
-//   if (this..changeHeight !== undefined ) {
+    console.log(selected)
+    console.log(element.clientWidth)
+    console.log(element.clientHeight)
+
+
+    //   if (this..changeHeight !== undefined ) {
 //       this..changeHeight(height + margin.top + margin.bottom + 2 * xLabelHeight);
 //  }
 
@@ -249,12 +259,12 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("x", yLabelWidth)
       .attr("y", xLabelHeight + 2 * maxR)
       .attr("width", 2 * maxR)
-      .attr("height", (height - 6.5) / 2)
+      .attr("height", (height - 9.5) / 2)
       .attr("stroke-width", 2)
       .attr("stroke", "grey")
       .attr("fill", "transparent")
       .attr("shape-rendering", "crispEdges")
-      .attr("class", "punch-border");
+      .attr("class", "punch-border, border-right");
     // xAxis Border
     chart
       .append("rect")
@@ -266,7 +276,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("stroke", "grey")
       .attr("fill", "transparent")
       .attr("shape-rendering", "crispEdges")
-      .attr("class", "punch-border, foo-bar");
+      .attr("class", "punch-border, border-top");
 
     // creates rows according to data labels
       const rows = chart.selectAll(".row").data(data, function(d) {
@@ -723,7 +733,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
         return maxR * i * 2 + yLabelWidth + 2 * maxR;
       })
       .attr("y1", xLabelHeight + borderWidth / 2)
-      .attr("y2", height - (maxR * 4) + 2)
+      .attr("y2", height - (maxR * 5) + 10)
       .style("stroke-opacity", function(d, i) {
         return i ? 0.5 : 0;
       });
@@ -742,10 +752,10 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .style("stroke-opacity", 0)
       .attr("x2", (maxR * 25 * 2) + yLabelWidth)
       .attr("y1", function(d, i) {
-        return (i * (maxR * 2)) + (maxR * maxR) - (2 * maxR) + 2;
+        return ((i + 1) * (maxR * 2)) + xLabelHeight;
       })
       .attr("y2", function(d, i) {
-        return (i * (maxR * 2)) + (maxR * maxR) - (2 * maxR) + 2;
+        return ((i + 1) * (maxR * 2)) + xLabelHeight;
       })
       .style("stroke-opacity", function(d, i) {
         return i ? 0.5 : 0;
@@ -756,13 +766,13 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
       .append("line")
       .attr("x1", yLabelWidth + borderWidth / 2)
       .attr("y1", function(d, i) {
-        return height - (maxR * 4) + 2;
+        return xLabelHeight / .34 + 1; // element.clientHeight - (maxR * 16) - xLabelHeight;
       })
       .attr("x2", maxR * 25 * 2 + yLabelWidth)
       .attr("y2", function(d, i) {
-        return height - (maxR * 4) + 2;
+        return xLabelHeight / .34 +1; // element.clientHeight - (maxR * 16) - xLabelHeight;
       })
-      .attr("stroke-width", 2)
+      .attr("stroke-width", 3)
       .attr("shape-rendering", "crispEdges")
       .attr("stroke", "grey")
       .attr('class', 'punch-border');
@@ -777,7 +787,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
         return (maxR * 25 * 2) + yLabelWidth; // + width;
       })
       .attr("y1", xLabelHeight + borderWidth / 2)
-      .attr("y2", height - (maxR * 4) + 2)
+      .attr("y2", height - (maxR * 5) + 10)
       .attr("stroke-width", 2)
       .style("shape-rendering", "crispEdges")
       .attr("stroke", "grey")
