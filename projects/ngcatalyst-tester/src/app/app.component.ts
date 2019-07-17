@@ -75,8 +75,29 @@ export class AppComponent {
   sunburstPropID = "angularsunburst";
   sunburstTitle = 'Sunburst';
 
+  get lineData2() {
+    return this.lineData.map((item, index) => {
+      item.value = this.randomNumber(0, 5);
+      return item;
+    });
+  }
 
+  get pieData2() {
+    return this.pieData.map((item, index) => {
+      item.value = this.randomNumber(0, 50);
+      return item;
+    });
+  }
 
+  onclickfn () {
+    this.lineData = this.lineData.map((item, index) => {
+      item.value = this.randomNumber(0, 200);
+      return item;
+    });
+  }
 
+  randomNumber(min, max) {
+    return Math.floor(Math.random() * max) + min;
+  }
 
 }

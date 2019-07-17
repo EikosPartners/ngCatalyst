@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
+import { iSEqual } from 'lodash';
 
 @Component({
   selector: 'eikos-pie-chart',
@@ -17,7 +18,7 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() title: 'Pie Chart';
   @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
   // need 10 hex colors;
-  @Input() donutWidth: any = "10%"; // in pixels or %
+  @Input() donutWidth: any = 0; // in pixels or %
   @Input() divHeight: any = "100%";
   @Input() divWidth: any = "100%";
   // note that if the donutWidth is too big, the pie chart will stretch outside the div area - HTK check for that
@@ -48,11 +49,11 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
   // }
 
   ngOnInit() {
-    this.drawPieChart();
+    // this.drawPieChart();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.data.firstChange) {
+    if (!changes.data.firstChange && !iSEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawPieChart();
     }
   }
@@ -133,14 +134,16 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
         .attr("class", "slice");
 
   // adds total # of data values to the center of the pie
-      svg
-      .append("text")
-      .attr("class", "total")
-      .attr("id", "centerText")
-      .attr('font-size', '1em')
-      .attr("transform", "translate(" + (-radius / 10) + "," + (radius / 13.75) + ")")
-      .text(localThis.total);
-      // this starts at cennter so the translate is back a few px and up a few px, gotta be a better way to calc HTK
+  if (this.donutWidth !== 0 && this.donutWidth !== "0%") {
+    svg
+        .append("text")
+        .attr("class", "total")
+        .attr("id", "centerText")
+        .attr('font-size', '1em')
+        .attr("transform", "translate(" + (-radius / 10) + "," + (radius / 13.75) + ")")
+        .text(localThis.total);
+        // this starts at cennter so the translate is back a few px and up a few px, gotta be a better way to calc HTK
+  }
 
     // add tooltip on mouseover of slice
     arcs.on("mouseover", function(d) {

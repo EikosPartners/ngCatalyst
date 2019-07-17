@@ -1,3 +1,5 @@
+<!-- <button (click)="onclickfn()">Button</button> -->
+
 <div class="flexbox-container">
 <!--
   <div style="height: 500px; width: 500px">
@@ -31,7 +33,7 @@
     ></eikos-bubble-chart>
   </div> -->
 
-  <div style="height: 500px; width: 500px">
+  <!-- <div style="height: 500px; width: 500px">
     <eikos-heat-map
       [data]="heatData"
       [colors]="pieColors"
@@ -51,8 +53,9 @@
       [divWidth]="plotPct"
     ></eikos-heat-map>
   </div>
+-->
 
-  <!-- <div style="height: 500px; width: 500px">
+   <div style="height: 500px; width: 500px">
     <eikos-line-plot
       [data]="lineData"
       [propID]="linePropID"
@@ -60,8 +63,21 @@
       [color]="lineColor"
       [xAxisLabel]="xAxisLabelDate"
       [yAxisLabel]="yAxisLabel"
-      [divHeight]="plotPct"
-      [divWidth]="plotPct"
+      [divHeight]="hundoPct"
+      [divWidth]="hundoPct"
+    ></eikos-line-plot>
+  </div>
+
+
+  <div style="height: 500px; width: 500px">
+    <eikos-line-plot
+      [data]="lineData2"
+      [title]="lineTitle"
+      [color]="lineColor"
+      [xAxisLabel]="xAxisLabelDate"
+      [yAxisLabel]="yAxisLabel"
+      [divHeight]="fiftyPct"
+      [divWidth]="hundoPct"
     ></eikos-line-plot>
   </div>
 
@@ -77,6 +93,17 @@
     ></eikos-pie-chart>
   </div>
 
+
+  <div style="height: 500px; width: 500px">
+    <eikos-pie-chart
+      [data]="pieData2"
+      [colors]="pieColors"
+      [title]="pieTitle"
+      [divHeight]="plotPct"
+      [divWidth]="hundoPct"
+    ></eikos-pie-chart>
+  </div>
+<!--
   <div style="height: 600px; width: 500px">
     <eikos-punch-card
       [data]="punchData"

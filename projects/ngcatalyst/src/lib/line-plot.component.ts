@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
+import { iSEqual } from 'lodash';
 
 @Component({
   selector: 'eikos-line-plot',
@@ -10,6 +11,7 @@ import * as d3 from 'd3';
   </div>
 `
 })
+
 export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() propID = 'line';
@@ -49,11 +51,11 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
   // }
 
   ngOnInit() {
-    this.drawLinePlot(this.data, "#" + this.propID, this.color);
+    // this.drawLinePlot(this.data, "#" + this.propID, this.color);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.data.firstChange) {
+    if (!changes.data.firstChange && !iSEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawLinePlot(this.data, "#" + this.propID, this.color);
     }
   }
@@ -135,8 +137,6 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
       },
       yScale = d3.scaleLinear().range([height, 0]),
       yMap = function(d) {
-        console.log("y scale is " + yScale(yValue(d)));
-        console.log(d);
         return yScale(yValue(d));
       },
       yAxisScale = d3.scaleLinear()
@@ -203,6 +203,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
 
     const clip_id = "clip-" + this.propID;
 
+    console.log(this.propID);
     const tickWidth = d3.select('.xaxis')._groups[0][0].getBBox().width;
     d3.selectAll('.yaxis').selectAll('g.tick line').attr('x1', 0).attr('x2', tickWidth - margin.right / 2);
     // svg
