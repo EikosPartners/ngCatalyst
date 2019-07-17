@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked, DoCheck } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -10,10 +10,10 @@ import * as d3 from 'd3';
 </div>
   `
 })
-export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
+export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked, DoCheck {
   @Input() dataType = "calendar"; // alternately, "other"
   @Input() title = "Heat Map";
-  @Input() propID = 'heat';
+  @Input() propID = 'heat-map';
   @Input() xAxisAngle = 0;
   @Input() alertText = "magnitude";
   @Input() data = [{}]; // {x: String, y: String, magnitude: Number} || {date: String, volume: Number} - can use dataModel getter/computer to reformat as needed
@@ -26,7 +26,7 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
   constructor() {
   }
 
-    get area () {
+  get area () {
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
@@ -42,11 +42,19 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit() {
-    this.draw();
+    // this.draw();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.data.firstChange) {
+    // const keys = Object.keys(changes);
+
+    // for (let i = 0; i < keys.length; i++) {
+    //   if (changes[keys[i]].previousValue) {
+    //     this.draw();
+    //     break;
+    //   }
+    // }
+    if (changes.data.previousValue) {
       this.draw();
     }
   }
@@ -76,12 +84,11 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
   draw () {
     const data = this.dataModel.slice();
     const selection_string = "#" + this.propID;
-    // const component = this;
     const component = document.querySelectorAll(selection_string)[0];
+    // console.log(selection_string);
     const width = (typeof this.divWidth === "string") ? component.clientWidth : this.divWidth,
       height = (typeof this.divHeight === "string") ? component.clientHeight : this.divHeight,
       cellSize = ((13 / 900) * (width)); // cell size
-      console.log(cellSize);
     const week_days = [ , "Mon", , "Wed", , "Fri"];
     // const week_days = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
     const month = [
@@ -149,7 +156,7 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("width", "100%")
       .attr("data-height", "0.5678")
       .attr("viewBox", `0 0 ${width} ${height}`)
-      .attr("preserveAspectRatio", "xMidYmin slice")
+      .attr("preserveAspectRatio", "xMidYmid slice")
       // http://tutorials.jenkov.com/svg/svg-viewport-view-box.html
       // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
       // http://jonibologna.com/svg-viewbox-and-viewport/
@@ -181,11 +188,15 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
       .attr("class", `d3_visuals_tooltip ${this.propID}_tooltip`)
       .style("opacity", 0);
 
+    const area = (width + height) / 2;
+    const fontsize = area > 525 ? "12px" : "9px";
+
     // "y" axis values
     for (let i = 0; i < y_elems.length; i++) {
       svg
         .append("text")
-        .style("font-size", "12px")
+        .style("font-size", fontsize)
+        .attr("class", "y-axis-label axis-label")
         .attr("transform", "translate(-5," + cellSize * (i + 1) + ")")
         .style("text-anchor", "end")
         .attr("dy", "-.25em")
@@ -208,7 +219,7 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
       .append("rect")
       .attr("stroke-width", ".5")
       .attr("class", "day")
-      .style("font-size", "12px")
+      .style("font-size", fontsize)
       .attr("width", cellSize)
       .attr("height", cellSize)
       .attr("x", function(d, i) {
@@ -252,13 +263,14 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
 
       })
       .append("text")
+      .attr("class", "x-axis-label axis-label")
       .attr("class", function(d, i) {
         return x_elems[i];
       })
       .style("text-anchor", `${(localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) ? 'start' : 'end'}`)
       .attr("transform", `rotate(${localThis.xAxisAngle})`)
       .attr("dy", "-.25em")
-      .style("font-size", "12px")
+      .style("font-size", fontsize)
       .text(function(d, i) {
         return x_elems[i];
       });

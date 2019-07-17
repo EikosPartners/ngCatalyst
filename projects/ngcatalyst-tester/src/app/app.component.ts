@@ -53,7 +53,9 @@ export class AppComponent {
   linePropID = 'angularlines';
   lineTitle = 'Line Plot';
   lineColor = "#5c2197";
-  plotPct = "100%";
+  plotPct = "200%";
+  hundoPct = "100%";
+  fiftyPct = "50%";
   margin = {};
 
   pieData = pieData;
@@ -61,7 +63,7 @@ export class AppComponent {
   pieTitle = 'Pie Chart';
   pieColors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
   donutWidth = 100;
-  donutWidthPct = "50%";
+  donutWidthPct = "10%";
 
   punchData = punchData;
   punchPropID = 'angularpunch';

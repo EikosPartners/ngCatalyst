@@ -1,5 +1,5 @@
 <div class="flexbox-container">
-
+<!--
   <div style="height: 500px; width: 500px">
     <eikos-bar-chart
       [data]="barData"
@@ -29,8 +29,8 @@
       [divHeight]="bbcDivHeight"
       [divWidth]="donutWidthPct"
     ></eikos-bubble-chart>
-  </div>
-<!--
+  </div> -->
+
   <div style="height: 500px; width: 500px">
     <eikos-heat-map
       [data]="heatData"
@@ -38,7 +38,7 @@
       [divHeight]="plotPct"
       [divWidth]="plotPct"
     ></eikos-heat-map>
-  </div> -->
+  </div>
 
   <div style="height: 500px; width: 500px">
     <eikos-heat-map
@@ -47,12 +47,12 @@
       [colors]="pieColors"
       [propID]="heatPropID"
       [xAxisAngle]="xAxisAngle"
-      [divHeight]="height"
-      [divWidth]="width"
+      [divHeight]="plotPct"
+      [divWidth]="plotPct"
     ></eikos-heat-map>
   </div>
 
-  <div style="height: 500px; width: 500px">
+  <!-- <div style="height: 500px; width: 500px">
     <eikos-line-plot
       [data]="lineData"
       [propID]="linePropID"
@@ -97,6 +97,6 @@
       [divHeight]="plotPct"
       [divWidth]="plotPct"
     ></eikos-sunburst>
-  </div>
+  </div> -->
 
 </div>
