@@ -102,7 +102,7 @@ export class AppComponent {
       if (item["children"]) {
         subject["children"] = this.metaCollect(item["children"]);
       } else {
-        subject["size"] = item["size"] //this.randomNumber(500, 20000);
+        subject["size"] = this.randomNumber(500, 20000);
       }
       collector.push(subject);
     });
@@ -115,9 +115,7 @@ export class AppComponent {
       kids = this.shuffleMap(collector, "children");
     }
 
-
     const randomized = [];
-    // kids = shuffle(kids);
     names.forEach((item, index, arr) => {
       const subtree = {name: item};
       if (kids.length > 0) {
@@ -126,10 +124,6 @@ export class AppComponent {
       if (collector.some(i2 => i2["name"] === item)) {
         subtree["size"] = sizes[index];
       }
-      // if (!subtree["children"]) {
-      //   subtree["size"] = this.randomNumber(500, 20000);
-      // }
-
       randomized.push(subtree);
     });
 
