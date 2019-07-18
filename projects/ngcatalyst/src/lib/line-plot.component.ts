@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
-import { iSEqual } from 'lodash';
+import { isEqual } from 'lodash';
 
 @Component({
   selector: 'eikos-line-plot',
@@ -55,17 +55,19 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.data.firstChange && !iSEqual(changes.data.previousValue, changes.data.currentValue)) {
-      this.drawLinePlot(this.data, "#" + this.propID, this.color);
+    debugger
+    if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
+      this.drawLinePlot();
     }
   }
 
   ngAfterViewInit() {
-    this.drawLinePlot(this.data, "#" + this.propID, this.color);
+    this.drawLinePlot();
   }
 
-  drawLinePlot(dataArray, selection_string, color) {
+  drawLinePlot() {
     const localThis = this;
+    const selection_string = "#" + this.propID, color = this.color;
 
     d3.selectAll(`.${this.propID}_tooltip`).remove();
     if (document.querySelectorAll(selection_string + " svg")[0] != null) {
@@ -73,7 +75,8 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
     }
     // make copy of the original data so we do not mutate it
     const data = [];
-    dataArray.forEach(el => data.push(Object.assign({}, el)));
+    console.log(this.data)
+    this.data.forEach(el => data.push(Object.assign({}, el)));
 
     const parseDate = d3.timeParse('%Y-%m-%d');
     const formatDate = d3.timeFormat('%B %-d %Y');

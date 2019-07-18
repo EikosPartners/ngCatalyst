@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
-import { iSEqual } from 'lodash';
+import { isEqual } from 'lodash';
 
 @Component({
   selector: 'eikos-sunburst',
@@ -48,7 +48,7 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.data.firstChange && !iSEqual(changes.data.previousValue, changes.data.currentValue)) {
+    if (changes.data && !changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawSunburst();
     }
   }
