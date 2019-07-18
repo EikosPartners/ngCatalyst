@@ -1,18 +1,19 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
+import { iSEqual } from 'lodash';
 
 @Component({
   selector: 'eikos-sunburst',
   template: `
   <h2>{{title}}</h2>
   <div [ngStyle]="area" >
-      <div [id]="propID" [ngStyle]="area"> </div>
+      <div [id]="propID" style="width:100%;height:100%"> </div>
   </div>
 `
 })
 export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @Input() propID = 'line';
+  @Input() propID = 'burst';
   @Input() data: [{name: string, children: [{name: string, size: number}, {name: string, children: []}]}];
   @Input() title: string;
   @Input() divHeight: any = "100%";
@@ -43,11 +44,11 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
   // }
 
   ngOnInit() {
-    this.drawSunburst();
+    // this.drawSunburst();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.data.firstChange) {
+    if (!changes.data.firstChange && !iSEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawSunburst();
     }
   }
@@ -71,13 +72,14 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
         } else {
           element = selected[0];
         }
+        // debugger
         const	width = element.clientWidth;
         let	height = element.clientHeight;
 
         // Account for panel heading height if it exists.
-        if (this.title) {
-          height -= 40;
-        }
+        // if (this.title) {
+        //   height -= 40;
+        // }
 
         if ( height === undefined || height === 0 ) {
           height = width / 4;

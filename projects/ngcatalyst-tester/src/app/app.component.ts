@@ -21,6 +21,10 @@ export class AppComponent {
   xAxisLabel = 'Quantity';
   falseVar = false;
   axisAngle = 25;
+  plotPct = "200%";
+  hundoPct = "100%";
+  fiftyPct = "50%";
+  margin = {};
 
   barData = barData;
   barPropID = 'angularbar';
@@ -53,10 +57,6 @@ export class AppComponent {
   linePropID = 'angularlines';
   lineTitle = 'Line Plot';
   lineColor = "#5c2197";
-  plotPct = "200%";
-  hundoPct = "100%";
-  fiftyPct = "50%";
-  margin = {};
 
   pieData = pieData;
   piePropID = 'angularpie';
@@ -88,6 +88,25 @@ export class AppComponent {
       return item;
     });
   }
+
+  get sunburstData2() {
+    return this.sunburstData.map((item, index) => {
+      item["children"] = this.childMap(item);
+      return item;
+    });
+  }
+
+  childMap(obj) {
+    return obj["children"].map((item, index) => {
+      if (item["children"]) {
+        item["children"] = this.childMap(item);
+      } else {
+        item["size"] = this.randomNumber(500, 18000);
+      }
+      return item;
+    });
+  }
+
 
   onclickfn () {
     this.lineData = this.lineData.map((item, index) => {
