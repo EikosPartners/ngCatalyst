@@ -7,7 +7,7 @@ const heatData = require('../assets/heatDataCal.json');
 const heatData2 = require('../assets/heatData.json');
 const bubbleData = require('../assets/bubbleData.json');
 const barData = require('../assets/barData.json');
-
+import { shuffle } from 'lodash';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -90,21 +90,54 @@ export class AppComponent {
   }
 
   get sunburstData2() {
-    return this.sunburstData.map((item, index) => {
-      item["children"] = this.childMap(item);
-      return item;
-    });
+    const foo = this.metaCollect(this.sunburstData);
+
+    return foo;
   }
 
-  childMap(obj) {
-    return obj["children"].map((item, index) => {
+  metaCollect(obj) {
+    const collector = [];
+    obj.forEach((item, index) => {
+      const subject = {"name": item["name"]};
       if (item["children"]) {
-        item["children"] = this.childMap(item);
+        subject["children"] = this.metaCollect(item["children"]);
       } else {
-        item["size"] = this.randomNumber(500, 18000);
+        subject["size"] = item["size"] //this.randomNumber(500, 20000);
       }
-      return item;
+      collector.push(subject);
     });
+    console.log(collector);
+    const names = this.shuffleMap(collector, "name");
+    const sizes = this.shuffleMap(collector, "size");
+
+    let kids = [];
+    if (collector.some(i2 => i2["children"])) {
+      kids = this.shuffleMap(collector, "children");
+    }
+
+
+    const randomized = [];
+    // kids = shuffle(kids);
+    names.forEach((item, index, arr) => {
+      const subtree = {name: item};
+      if (kids.length > 0) {
+        subtree["children"] = kids[index];
+      }
+      if (collector.some(i2 => i2["name"] === item)) {
+        subtree["size"] = sizes[index];
+      }
+      // if (!subtree["children"]) {
+      //   subtree["size"] = this.randomNumber(500, 20000);
+      // }
+
+      randomized.push(subtree);
+    });
+
+    return randomized;
+  }
+
+  shuffleMap(arr, arg) {
+    return shuffle(arr.map(item => item[arg]));
   }
 
 
