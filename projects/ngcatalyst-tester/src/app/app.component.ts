@@ -53,6 +53,7 @@ export class AppComponent implements OnInit {
 
   heatData = heatDataJson;
   heatData2 = heatData2Json;
+  heatColors = this.bubbleColors;
   heatPropID = "heat2";
   xAxisAngle = "45";
   dataType = "other";
@@ -100,7 +101,6 @@ export class AppComponent implements OnInit {
       }
       collector.push(subject);
     });
-    console.log(collector);
     const names = this.shuffleMap(collector, "name");
     const sizes = this.shuffleMap(collector, "size");
 
@@ -143,7 +143,14 @@ export class AppComponent implements OnInit {
     this.bubbleData = this.bubbleData.map(item => item.label).map(item2=>{
       return {x: this.randomNumber(0, 2, false), y: this.randomNumber(20, 90, false), label: item2, value: this.randomNumber(1, 15, true)};
     });
-
+    this.heatData = this.heatData.map(item => item.date).map(item2=>{
+      return {date: item2, volume: this.randomNumber(0, 30, true)};
+    });
+    // this.heatColors = this.pieColors;
+    // this.heatData2 = this.heatData.map(item => item.date).map(item2=>{
+    //   return {date: item2, volume: this.randomNumber(0, 30, true)};
+    // });
+    // this.dataType = "calendar";
   }
 
   randomNumber(min, max, int) {

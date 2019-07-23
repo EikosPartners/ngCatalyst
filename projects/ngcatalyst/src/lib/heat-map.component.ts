@@ -10,7 +10,7 @@ import * as d3 from 'd3';
 </div>
   `
 })
-export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked, DoCheck {
+export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit, DoCheck {
   @Input() dataType = "calendar"; // alternately, "other"
   @Input() title = "Heat Map";
   @Input() propID = 'heat-map';
@@ -42,19 +42,12 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit, After
   }
 
   ngOnInit() {
-    // this.draw();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // const keys = Object.keys(changes);
-
-    // for (let i = 0; i < keys.length; i++) {
-    //   if (changes[keys[i]].previousValue) {
-    //     this.draw();
-    //     break;
-    //   }
-    // }
-    if (changes.data.previousValue) {
+    if (changes.data && changes.data.previousValue) {
+      this.draw();
+    } else if (changes.colors && changes.colors.previousValue) {
       this.draw();
     }
   }
@@ -85,7 +78,6 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit, After
     const data = this.dataModel.slice();
     const selection_string = "#" + this.propID;
     const component = document.querySelectorAll(selection_string)[0];
-    // console.log(selection_string);
     const width = (typeof this.divWidth === "string") ? component.clientWidth : this.divWidth,
       height = (typeof this.divHeight === "string") ? component.clientHeight : this.divHeight,
       cellSize = ((13 / 900) * (width)); // cell size

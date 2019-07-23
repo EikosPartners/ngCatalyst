@@ -8,6 +8,7 @@ import {BarChartComponent} from '../../../../projects/ngcatalyst/src/lib/bar-cha
 import {SunburstComponent} from '../../../../projects/ngcatalyst/src/lib/sunburst.component';
 import {PieChartComponent} from '../../../../projects/ngcatalyst/src/lib/pie-chart.component';
 import {BubbleChartComponent} from '../../../../projects/ngcatalyst/src/lib/bubble-chart.component';
+import {HeatMapComponent} from '../../../../projects/ngcatalyst/src/lib/heat-map.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {BubbleChartComponent} from '../../../../projects/ngcatalyst/src/lib/bubb
     SunburstComponent,
     LinePlotComponent,
     PieChartComponent,
+    HeatMapComponent,
     BubbleChartComponent
   ],
   imports: [
