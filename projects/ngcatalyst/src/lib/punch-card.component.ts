@@ -55,7 +55,9 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.data.firstChange) {
+    if (changes.data && !changes.data.firstChange) {
+      this.drawPunchCard();
+    } else if (changes.color && !changes.color.firstChange) {
       this.drawPunchCard();
     }
   }

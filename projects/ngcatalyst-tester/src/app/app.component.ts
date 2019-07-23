@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
   dataType = "other";
 
   lineData = lineDataJson;
-  lineDataA = this.lineData.slice(0).map(item => item.date).map(item2 => {
+  lineDataA = this.lineData.map(item => item.date).map(item2 => {
     return {date: item2, value: this.randomNumber(0, 1000, true)};
   });
   linePropID = 'angularlines';
@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
   lineColor = "#5c2197";
 
   pieData = pieDataJson;
-  pieData2 = this.pieData.slice(0).map(item => item.label).map(item2 => {
+  pieData2 = this.pieData.map(item => item.label).map(item2 => {
     return {label: item2, value: this.randomNumber(0, 30000, true)};
   });
   piePropID = 'angularpie';
@@ -77,6 +77,10 @@ export class AppComponent implements OnInit {
   donutWidthPct = "10%";
 
   punchData = punchDataJson;
+  punchData2 = this.punchData.map(item => item["day_of_week"]).map(item2 => {
+    return {"day_of_week": item2, "hour_volumes": Array.apply(null, Array(24)).map(item => this.randomNumber(1, 11, true))};
+  });
+
   punchPropID = 'angularpunch';
   punchTitle = 'Punch Card';
   punchColors =  ["#641E16", "#7B241C", "#922B21", "#A93226", "#C0392B", "#CD6155", "#D98880", "#E6B0AA", "#E57373", "#B71C1C"];
@@ -131,12 +135,7 @@ export class AppComponent implements OnInit {
 
   onclickfn () {
     console.log('clicked');
-    this.pieData = this.pieData.map(item => item.label).map(item2 => {
-      return {label: item2, value: this.randomNumber(0, 30000, true)};
-    });
-    this.lineData = this.lineData.map(item => item.date).map(item2 => {
-      return {date: item2, value: this.randomNumber(0, 30000, true)};
-    });
+
     this.barData = this.barData.map(item => item.name).map(item2 => {
       return {name: item2, value: this.randomNumber(0, 30000, true)};
     });
@@ -146,7 +145,17 @@ export class AppComponent implements OnInit {
     this.heatData = this.heatData.map(item => item.date).map(item2=>{
       return {date: item2, volume: this.randomNumber(0, 30, true)};
     });
-    // this.heatColors = this.pieColors;
+    this.lineData = this.lineData.map(item => item.date).map(item2 => {
+      return {date: item2, value: this.randomNumber(0, 30000, true)};
+    });
+    this.pieData = this.pieData.map(item => item.label).map(item2 => {
+      return {label: item2, value: this.randomNumber(0, 30000, true)};
+    });
+    this.punchData = this.punchData.map(item => item["day_of_week"]).map(item2 => {
+      return {"day_of_week": item2, "hour_volumes": Array.apply(null, Array(24)).map(item => this.randomNumber(1, 11, true))};
+    });
+    this.sunburstData = this.metaCollect(this.sunburstData);
+    // this.punchColors = this.pieColors;
     // this.heatData2 = this.heatData.map(item => item.date).map(item2=>{
     //   return {date: item2, volume: this.randomNumber(0, 30, true)};
     // });

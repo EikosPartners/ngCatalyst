@@ -9,6 +9,7 @@ import {SunburstComponent} from '../../../../projects/ngcatalyst/src/lib/sunburs
 import {PieChartComponent} from '../../../../projects/ngcatalyst/src/lib/pie-chart.component';
 import {BubbleChartComponent} from '../../../../projects/ngcatalyst/src/lib/bubble-chart.component';
 import {HeatMapComponent} from '../../../../projects/ngcatalyst/src/lib/heat-map.component';
+import {PunchCardComponent} from '../../../../projects/ngcatalyst/src/lib/punch-card.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {HeatMapComponent} from '../../../../projects/ngcatalyst/src/lib/heat-map
     LinePlotComponent,
     PieChartComponent,
     HeatMapComponent,
-    BubbleChartComponent
+    BubbleChartComponent,
+    PunchCardComponent
   ],
   imports: [
     BrowserModule,
