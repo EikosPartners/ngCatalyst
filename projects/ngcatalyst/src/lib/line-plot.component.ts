@@ -158,7 +158,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
     yScale.domain(d3.extent(data, yValue)).nice();
 
     // yScale.domain([d3.min(data, yValue), d3.max(data, yValue)]);
-    // const tickSize = (typeof this.divWidth === "string") ? (-(width / 1) - margin.right) : (-(width) + margin.right - 4);
+    // const tickSize = (typeof this.divWidth === "string") ? (-(width / 1.6) - margin.right) : (-(width) + margin.right - 4);
     const yAxis = d3.axisLeft()
         .scale(yScale);
         // .tickSizeInner(tickSize);
@@ -186,7 +186,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
     svg.style("fill", "transparent");
     svg
       .append("g")
-      .attr("class", "x axis xaxis axis-line-plot1")
+      .attr("class", "x axis xaxis axis-line-plot")
       .attr("transform", "translate(0," + height + ")")
       .style('fill', 'black')
       .style("font-size", "14px")
@@ -215,8 +215,8 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
     const clip_id = "clip-" + this.propID;
 
     console.log(this.propID);
-    const tickWidth = d3.select('.xaxis')._groups[0][0].getBBox().width;
-    d3.selectAll('.yaxis').selectAll('g.tick line').attr('x1', 0).attr('x2', tickWidth - margin.right / 2);
+    const tickWidth = d3.select('.xaxis.axis-line-plot') ._groups[0][0].getBBox().width;
+    d3.selectAll('.yaxis.axis-line-plot').selectAll('g.tick line').attr('x1', 0).attr('x2', tickWidth);
     // svg
     //   .append("clipPath")
     //   .attr("id", clip_id)
