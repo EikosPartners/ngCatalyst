@@ -14,7 +14,7 @@ import { isEqual } from 'lodash';
 export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Input() propID = 'pie';
-  @Input() data: [{label: string, value: number}];
+  @Input() data: Array<{}>;
   @Input() title: 'Pie Chart';
   @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
   // need 10 hex colors;
@@ -53,7 +53,10 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
+    if (!changes.data.firstChange && changes.colors && !isEqual(changes.colors.previousValue, changes.colors.currentValue)) {
+      this.savedColors = {};
+      this.drawPieChart();
+    } else if (!changes.data.firstChange && changes.data && !isEqual(changes.data.previousValue, changes.data.currentValue) ) {
       this.drawPieChart();
     }
   }
@@ -74,6 +77,10 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
     }
     let element: any;
     const selected = document.querySelectorAll(selection_string);
+    let colors: Array<String>;
+    colors = this.colors;
+    console.log(colors);
+
 
     if (selected[0] == null) {
       element = {clientWidth: 500, clientHeight: 500};
@@ -189,8 +196,6 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
         });
       });
 
-    const colors = this.colors;
-
     // add colors to each slice
     arcs.append("path")
       .attr("fill", function (d, i) {
@@ -250,7 +255,7 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
         .attr("font-size", 14)
         .style("text-anchor", "start")
         .text(function(d, i) {
-          return localThis.data[i].label;
+          return localThis.data[i]["label"];
         });
 
 

@@ -14,7 +14,7 @@ import { isEqual } from 'lodash';
 })
 
 export class BarChartComponent implements OnChanges, AfterViewInit {
-  @Input() data: [{name: string, value: number}];
+  @Input() data: Array<{}>;
   @Input() propID = 'barchart';
   @Input() color = '#2DA8C9';
   @Input() yAxisLabel = 'y';
@@ -28,9 +28,13 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
   constructor() { }
 
   get dataModel() {
-    return this.data.map(item => {
-      return {x: item.name, y: item.value};
-    });
+    if (this.data[0]["name"]) {
+      return this.data.map(item => {
+        return {x: item["name"], y: item["value"]};
+      });
+    } else if (this.data[0]["x"]) {
+      return this.data;
+    }
   }
 
   get area () {
@@ -81,9 +85,11 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
         if (this.xAxisAngle > 0) {
           margin.bottom += (this.xAxisAngle / 2);
         }
-        const width = element.clientWidth - margin.left - margin.right,
-          height = element.clientHeight - margin.top - margin.bottom;
-
+        const width = element.clientWidth - margin.left - margin.right;
+        let height = element.clientHeight - margin.top - margin.bottom;
+        if (this.title) {
+          height = height - 48;
+        }
         const x = d3.scaleBand()
           .range([0, width])
           .paddingInner(.2)

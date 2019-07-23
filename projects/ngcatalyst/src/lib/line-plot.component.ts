@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, DoCheck, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -12,7 +12,7 @@ import { isEqual } from 'lodash';
 `
 })
 
-export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
+export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewInit {
 
   @Input() propID = 'line';
   @Input() data: [{date: string, value: number}];
@@ -55,17 +55,25 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    debugger
+    console.log(this.propID);
     if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawLinePlot();
     }
+    // else if (isEqual(changes.data.previousValue, changes.data.currentValue)) {
+    //   debugger;
+    // }
   }
 
   ngAfterViewInit() {
     this.drawLinePlot();
   }
 
+  ngDoCheck() {
+    console.log(this.propID, this.data);
+  }
+
   drawLinePlot() {
+    console.log('drawing ', this.propID);
     const localThis = this;
     const selection_string = "#" + this.propID, color = this.color;
 
@@ -75,7 +83,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit {
     }
     // make copy of the original data so we do not mutate it
     const data = [];
-    console.log(this.data)
+    // console.log(this.data)
     this.data.forEach(el => data.push(Object.assign({}, el)));
 
     const parseDate = d3.timeParse('%Y-%m-%d');
