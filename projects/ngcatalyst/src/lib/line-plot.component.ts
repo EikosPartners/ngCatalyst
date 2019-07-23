@@ -23,7 +23,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
   @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
   @Input() divWidth: any = "100%";
   @Input() axisFontSize: any = "14px";
-  @Input() margins = { top: 20, right: 30, bottom: 45, left: 40 };
+  @Input() margins = { top: 20, right: 30, bottom: 45, left: 50 };
   // @Input() xAxisAngle = 45;
   // @Input() yAxisAngle = 45;
 

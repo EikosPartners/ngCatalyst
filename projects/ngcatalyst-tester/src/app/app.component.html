@@ -3,7 +3,7 @@
 <div class="flexbox-container">
 
 
-  <div style="height: 500px; width: 500px">
+  <!-- <div style="height: 500px; width: 500px">
       <eikos-bar-chart
       [data]="barData"
       [xAxisLabel]="xAxisLabel"
@@ -31,11 +31,11 @@
       [divWidth]="hundoPct"
       >
     </eikos-bar-chart>
-  </div>
-<!--
+  </div> -->
+
   <div style="height: 500px; width: 500px">
     <eikos-bubble-chart
-      [data]="bbcData"
+      [data]="bubbleData"
       [propID]="bubblePropID"
       [title]="bubbleTitle"
       [isTime]="falseVar"
@@ -43,11 +43,25 @@
       [themeColors]="bubbleColors"
       [xAxisLabel]="xAxisLabel"
       [yAxisLabel]="yAxisLabel"
-      [divHeight]="bbcDivHeight"
-      [divWidth]="donutWidthPct"
+      [divHeight]="hundoPct"
+      [divWidth]="hundoPct"
     ></eikos-bubble-chart>
   </div>
 
+  <div style="height: 500px; width: 500px">
+      <eikos-bubble-chart
+        [data]="bubbleData2"
+        [title]="bubbleTitle"
+        [isTime]="falseVar"
+        [isDate]="falseVar"
+        [themeColors]="bubbleColors"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [divHeight]="bbcDivHeight"
+        [divWidth]="hundoPct"
+      ></eikos-bubble-chart>
+    </div>
+<!--
   <div style="height: 500px; width: 500px">
     <eikos-heat-map
       [data]="heatData"
@@ -71,7 +85,7 @@
 -->
 
 
-<div style="height: 500px; width: 500px">
+<!-- <div style="height: 500px; width: 500px">
     <eikos-line-plot
     [data]="lineData"
     [propID]="linePropID"
@@ -95,10 +109,10 @@
       [divHeight]="fiftyPct"
       [divWidth]="hundoPct"
       ></eikos-line-plot>
-    </div>
+    </div> -->
 
 
-
+<!--
   <div style="height: 500px; width: 500px">
     <eikos-pie-chart
       [data]="pieData"
@@ -120,7 +134,7 @@
       [divHeight]="plotPct"
       [divWidth]="hundoPct"
     ></eikos-pie-chart>
-  </div>
+  </div> -->
 
     <!--
 

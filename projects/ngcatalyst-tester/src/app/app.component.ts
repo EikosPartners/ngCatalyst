@@ -2,16 +2,11 @@ import { Component, OnInit } from '@angular/core';
 const sunburstDataJson = require('../assets/sunburstData.json');
 const punchDataJson = require('../assets/punchData.json');
 const pieDataJson = require('../assets/pieData.json');
-// const pieDataJson2 = require('../assets/pieData2.json');
-
 const lineDataJson = require('../assets/lineData.json');
-const lineDataJson2 = require('../assets/lineData2.json');
-
 const heatDataJson = require('../assets/heatDataCal.json');
 const heatData2Json = require('../assets/heatData.json');
 const bubbleDataJson = require('../assets/bubbleData.json');
 const barDataJson = require('../assets/barData.json');
-const barDataJson2 = require('../assets/barData2.json');
 
 import { shuffle } from 'lodash';
 
@@ -36,7 +31,7 @@ export class AppComponent implements OnInit {
 
   barData = barDataJson;
   barDataA = this.barData.map(item => item.name).map(item2 => {
-    return {x: item2, y: this.randomNumber(0, 30000)};
+    return {x: item2, y: this.randomNumber(5000, 10000, true)};
   });
   // barDataA = barDataJson2;
 
@@ -47,13 +42,9 @@ export class AppComponent implements OnInit {
   width = 600;
 
   bubbleData = bubbleDataJson;
-  // bbcData = [
-  //   { x: 1, y: 1, label: "Value 1", value: 100 },
-  //   { x: 4, y: 5, label: "Value 2", value: 150 },
-  //   { x: 7, y: -3, label: "Value 3", value: 300 },
-  //   { x: 12, y: 5, label: "Value 4", value: 200 },
-  //   { x: 1, y: 33, label: "Value 5", value: 250 }
-  // ];
+  bubbleData2 = this.bubbleData.map(item => item.label).map(item2=>{
+    return {x: this.randomNumber(0, 2, false), y: this.randomNumber(20, 90, false), label: item2, value: this.randomNumber(1, 15, true)};
+  });
   bubblePropID = 'angularbubble';
   bubbleTitle = 'Bubble Chart';
   bubbleColors = ["#4F1E71", "#7C388E", "#A93B8D", "#BA5288", "#F38595", "#EDB7A7", "#F06292", "#C2185B"];
@@ -68,7 +59,7 @@ export class AppComponent implements OnInit {
 
   lineData = lineDataJson;
   lineDataA = this.lineData.slice(0).map(item => item.date).map(item2 => {
-    return {date: item2, value: this.randomNumber(0, 30000)};
+    return {date: item2, value: this.randomNumber(0, 1000, true)};
   });
   linePropID = 'angularlines';
   lineTitle = 'Line Plot';
@@ -76,7 +67,7 @@ export class AppComponent implements OnInit {
 
   pieData = pieDataJson;
   pieData2 = this.pieData.slice(0).map(item => item.label).map(item2 => {
-    return {label: item2, value: this.randomNumber(0, 30000)};
+    return {label: item2, value: this.randomNumber(0, 30000, true)};
   });
   piePropID = 'angularpie';
   pieTitle = 'Pie Chart';
@@ -105,7 +96,7 @@ export class AppComponent implements OnInit {
       if (item["children"]) {
         subject["children"] = this.metaCollect(item["children"]);
       } else {
-        subject["size"] = this.randomNumber(500, 20000);
+        subject["size"] = this.randomNumber(500, 20000, true);
       }
       collector.push(subject);
     });
@@ -141,32 +132,26 @@ export class AppComponent implements OnInit {
   onclickfn () {
     console.log('clicked');
     this.pieData = this.pieData.map(item => item.label).map(item2 => {
-      return {label: item2, value: this.randomNumber(0, 30000)};
+      return {label: item2, value: this.randomNumber(0, 30000, true)};
     });
     this.lineData = this.lineData.map(item => item.date).map(item2 => {
-      return {date: item2, value: this.randomNumber(0, 30000)};
+      return {date: item2, value: this.randomNumber(0, 30000, true)};
     });
     this.barData = this.barData.map(item => item.name).map(item2 => {
-      return {name: item2, value: this.randomNumber(0, 30000)};
+      return {name: item2, value: this.randomNumber(0, 30000, true)};
     });
+    this.bubbleData = this.bubbleData.map(item => item.label).map(item2=>{
+      return {x: this.randomNumber(0, 2, false), y: this.randomNumber(20, 90, false), label: item2, value: this.randomNumber(1, 15, true)};
+    });
+
   }
 
-  randomNumber(min, max) {
-    return Math.floor(Math.random() * max) + min;
-  }
-
-  createValue() {
-    // console.log("before", this.lineData);
-
-    const returner = [];
-
-    this.barData.slice().forEach((item, index) => {
-      item.value = this.randomNumber(0, 300);
-      returner.push(item);
-    });
-    // console.log("pushed", returner);
-
-    return returner;
+  randomNumber(min, max, int) {
+    if (int) {
+      return Math.floor(Math.random() * max) + min;
+    } else {
+      return (Math.random() * max) + min;
+    }
   }
 
 }
