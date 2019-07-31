@@ -243,7 +243,31 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
       // .attr("stroke", function (d) {
       //   return (d.value > 50) ? 'green' : 'red';
       // });
+      const defs = svg.append("defs");
 
+      const gradient = defs.append("linearGradient")
+        .attr("id", "gradient")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr("x1", "0%")
+        .attr("x2", "100%");
+
+      gradient.append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "red");
+
+      gradient.append("stop")
+        .attr("offset", (4) + "%")
+        .attr("stop-color", "red");
+
+      gradient.append("stop")
+        .attr("offset",  (55) + "%")
+        .attr("stop-color", "green");
+
+      svg.append('path')
+        .datum(data)
+        .attr('class', 'sparkline')
+        .attr('d', line)
+        .style("stroke", "url(#gradient)");
     svg
       .selectAll(".dot")
       .data(data)
