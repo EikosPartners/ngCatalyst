@@ -232,6 +232,25 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
     //   .attr("width", element.clientWidth)
     //   .attr("height", height)
     //   .attr("clip-path", "url(#" + clip_id + ")");
+    svg.append("clipPath")
+        .attr("id", "clip-above")
+        .append("rect")
+        .attr("width", width)
+        .attr("height", yScale(55));
+        // function(a, b, c, d) {
+        //   console.log(yMap(55));
+        //   console.log(yScale(55));
+        //   console.log(yValue(55));
+        //   console.log(yAxisScale(55));
+        //   debugger;
+        // });
+
+    svg.append("clipPath")
+        .attr("id", "clip-below")
+        .append("rect")
+        .attr("y", yScale(55))
+        .attr("width", width)
+        .attr("height", height - yScale(55));
 
     svg
       .append("path")
@@ -243,31 +262,15 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
       // .attr("stroke", function (d) {
       //   return (d.value > 50) ? 'green' : 'red';
       // });
-      const defs = svg.append("defs");
+// https://bl.ocks.org/mbostock/4062844
+  svg.selectAll(".line")
+      .data(["above", "below"])
+      .enter().append("path")
+      .attr("class", function(d) { return "line " + d; })
+      .attr("clip-path", function(d) { return "url(#clip-" + d + ")"; })
+      .datum(data)
+      .attr("d", line);
 
-      const gradient = defs.append("linearGradient")
-        .attr("id", "gradient")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .attr("x1", "0%")
-        .attr("x2", "100%");
-
-      gradient.append("stop")
-        .attr("offset", "0%")
-        .attr("stop-color", "red");
-
-      gradient.append("stop")
-        .attr("offset", (4) + "%")
-        .attr("stop-color", "red");
-
-      gradient.append("stop")
-        .attr("offset",  (55) + "%")
-        .attr("stop-color", "green");
-
-      svg.append('path')
-        .datum(data)
-        .attr('class', 'sparkline')
-        .attr('d', line)
-        .style("stroke", "url(#gradient)");
     svg
       .selectAll(".dot")
       .data(data)
