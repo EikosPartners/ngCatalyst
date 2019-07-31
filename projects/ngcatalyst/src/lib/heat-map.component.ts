@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked, DoCheck } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -10,7 +10,7 @@ import * as d3 from 'd3';
 </div>
   `
 })
-export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit, DoCheck {
+export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() dataType = "calendar"; // alternately, "other"
   @Input() title = "Heat Map";
   @Input() propID = 'heat-map';
@@ -112,7 +112,6 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit, DoChe
     if ( data !== undefined && data.length > 0 && localThis.dataType === 'calendar') {
       data.forEach(function(datum) {
         if (parseDate(datum['x']) == null) {console.log('why'); }
-
         const date_year = parseDate(datum['x']).getFullYear();
         min_value = date_year < min_value ? date_year : min_value;
         max_value = date_year > max_value ? date_year : max_value;
