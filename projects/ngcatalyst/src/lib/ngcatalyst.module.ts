@@ -3,6 +3,8 @@ import { NgcatalystComponent } from './ngcatalyst.component';
 import { BarChartComponent } from './bar-chart.component';
 import { BubbleChartComponent } from './bubble-chart.component';
 import { LinePlotComponent } from './line-plot.component';
+import { AltLinePlotComponent } from './alt-line-plot.component';
+
 import { PieChartComponent } from './pie-chart.component';
 import { PunchCardComponent } from './punch-card.component';
 import { SunburstComponent } from './sunburst.component';
@@ -11,7 +13,8 @@ import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
-    NgcatalystComponent, BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent],
+    NgcatalystComponent,
+    AltLinePlotComponent, BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent],
   imports: [
     CommonModule
   ],

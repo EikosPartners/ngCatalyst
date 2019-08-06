@@ -86,6 +86,22 @@
 -->
 
  <div style="height: 500px; width: 500px">
+    <eikos-line-plot-alt
+    [data]="lineData"
+    [propID]="linePropID"
+    [title]="lineTitle"
+    [color]="lineColor"
+    [xAxisLabel]="xAxisLabelDate"
+    [yAxisLabel]="yAxisLabel"
+    [divHeight]="hundoPct"
+    [divWidth]="hundoPct"
+    ></eikos-line-plot-alt>
+  </div>
+
+
+
+<!--
+ <div style="height: 500px; width: 500px">
     <eikos-line-plot
     [data]="lineData"
     [propID]="linePropID"
@@ -110,7 +126,6 @@
       [divWidth]="hundoPct"
       ></eikos-line-plot>
     </div>
-<!--
 
 
   <div style="height: 500px; width: 500px">

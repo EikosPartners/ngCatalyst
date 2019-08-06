@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
   width = 600;
 
   bubbleData = bubbleDataJson;
-  bubbleData2 = this.bubbleData.map(item => item.label).map(item2=>{
+  bubbleData2 = this.bubbleData.map(item => item.label).map(item2 => {
     return {x: this.randomNumber(0, 2, false), y: this.randomNumber(20, 90, false), label: item2, value: this.randomNumber(1, 15, true)};
   });
   bubblePropID = 'angularbubble';
@@ -135,16 +135,19 @@ export class AppComponent implements OnInit {
 
   onclickfn () {
     console.log('clicked');
-
     this.barData = this.barData.map(item => item.name).map(item2 => {
       return {name: item2, value: this.randomNumber(0, 30000, true)};
     });
-    this.bubbleData = this.bubbleData.map(item => item.label).map(item2=>{
+    this.bubbleData = this.bubbleData.map(item => item.label).map(item2 => {
       return {x: this.randomNumber(0, 2, false), y: this.randomNumber(20, 90, false), label: item2, value: this.randomNumber(1, 15, true)};
     });
-    this.heatData = this.heatData.map(item => item.date).map(item2=>{
+    this.heatData = this.heatData.map(item => item.date).map(item2 => {
       return {date: item2, volume: this.randomNumber(0, 30, true)};
     });
+    // this.heatData2 = this.heatData.map(item => item.date).map(item2=>{
+    //   return {date: item2, volume: this.randomNumber(0, 30, true)};
+    // });
+    // this.dataType = "calendar";
     this.lineData = this.lineData.map(item => item.date).map(item2 => {
       return {date: item2, value: this.randomNumber(0, 30000, true)};
     });
@@ -154,12 +157,8 @@ export class AppComponent implements OnInit {
     this.punchData = this.punchData.map(item => item["day_of_week"]).map(item2 => {
       return {"day_of_week": item2, "hour_volumes": Array.apply(null, Array(24)).map(item => this.randomNumber(1, 11, true))};
     });
-    this.sunburstData = this.metaCollect(this.sunburstData);
     // this.punchColors = this.pieColors;
-    // this.heatData2 = this.heatData.map(item => item.date).map(item2=>{
-    //   return {date: item2, volume: this.randomNumber(0, 30, true)};
-    // });
-    // this.dataType = "calendar";
+    this.sunburstData = this.metaCollect(this.sunburstData);
   }
 
   randomNumber(min, max, int) {
