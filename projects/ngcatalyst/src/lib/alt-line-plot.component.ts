@@ -91,7 +91,9 @@ export class AltLinePlotComponent implements DoCheck, OnInit, OnChanges, AfterVi
         d.date = parseDate(d.date);
       });
     }
-
+    data.sort(function(a, b) {
+      return a.date - b.date;
+    });
     let element: any;
 
     const selected = document.querySelectorAll(selection_string);
@@ -121,97 +123,58 @@ export class AltLinePlotComponent implements DoCheck, OnInit, OnChanges, AfterVi
     const yValue = function(d) {
       return d.value;
     };
-    const xScale = d3.scaleTime().range([0, width - margin.right]).domain(d3.extent(data, xValue)).nice();
-    const yScale = d3.scaleLinear().range([height, 0]).domain(d3.extent(data, yValue)).nice();
+    const x = d3.scaleTime().range([0, width - margin.right]);
+    const y = d3.scaleLinear().range([height, 0]);
 
-    const svg = d3
-      .select(selection_string)
-      .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    const xAxis = d3.axisBottom()
-      .scale(xScale)
-      .tickSizeInner(-height)
-      .ticks(6);
     const yAxis = d3.axisLeft()
-        .scale(yScale);
-    svg
-      .append("g")
-      .attr("class", "x axis xaxis axis-line-plot")
-      .attr("transform", "translate(0," + height + ")")
-      .style('fill', 'black')
-      .style("font-size", "14px")
-      .call(xAxis)
-      .append("text")
-      .attr("x", (width / 2))
-      .attr("y", 25)
-      .attr("dy", ".71em")
-      .style("text-anchor", "middle")
-      .attr("font-size", this.axisFontSize)
-      .text(this.xAxisLabel);
-
-    svg
-      .append("g")
-      .attr("class", "y axis yaxis axis-line-plot")
-      .style("fill", "black")
-      .call(yAxis)
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", -margin.left)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .attr("font-size", this.axisFontSize)
-      .text(this.yAxisLabel);
-
-    const gradient = {id: "blahblahblah"};
-
-    svg.append("linearGradient")
-      .attr("id", "blahblahblah")
-      .attr("gradientUnits", "userSpaceOnUse")
-      .attr("x1", 0)
-      .attr("y1", 0)
-      .attr("x2", 0)
-      .attr("y2", height)
-    .selectAll("stop")
-      .data([
-        {offset: 0, color: "red"},
-        {offset: yScale(d3.median(data, d => d.value)) / height, color: "red"},
-        {offset: yScale(d3.median(data, d => d.value)) / height, color: "black"},
-        {offset: 1, color: "black"}
-      ])
-    .join("stop")
-      .attr("offset", d => d.offset)
-      .attr("stop-color", d => d.color);
-    const xMap = function(d) {
-      return xScale(xValue(d));
-    };
-    const yMap = function(d) {
-      return yScale(yValue(d));
-    };
+        .scale(y),
+      xAxis = d3.axisBottom()
+        .scale(x);
     const line = d3.line()
-      .x(xMap)
-      .y(yMap)
-      .curve(d3.curveLinear);
+        .x(function(d) { return x(d.date); })
+        .y(function(d) { return y(d.value); });
+   const svg = d3
+        .select(selection_string)
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append("path")
-    .datum(data)
-    .attr("class", "line lineplotline")
-    .attr("d", line)
-    .attr("stroke-width", 3);
-
-
-
-    /* .append("path")
+    x.domain(d3.extent(data, xValue)).nice();
+    y.domain(d3.extent(data, yValue)).nice();
+    svg.append("linearGradient")
+    .attr("id", "gradient-gradient")
+    .attr("gradientUnits", "userSpaceOnUse")
+    .attr("x1", 0).attr("y1", y(0))
+    .attr("x2", 0).attr("y2", y(1))
+  .selectAll("stop")
+    .data([
+      {offset: "0%", color: "steelblue"},
+      {offset: "50%", color: "gray"},
+      {offset: "100%", color: "red"}
+    ])
+  .enter().append("stop")
+    .attr("offset", function(d) { return d.offset; })
+    .attr("stop-color", function(d) { return d.color; });
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
+  .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 6)
+    .attr("dy", ".71em")
+    .style("text-anchor", "end")
+    .text("Units");
+  svg.append("path")
       .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "black")
-      .attr("stroke-width", 1.5)
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-linecap", "round")
+      .attr("class", "line")
       .attr("d", line);
-*/
+
   }
 
 }

@@ -164,6 +164,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
         // .tickSizeInner(tickSize);
 
     const line = d3.line()
+      // .interpolate("basis")
       .x(xMap)
       .y(yMap)
       .curve(d3.curveLinear);
