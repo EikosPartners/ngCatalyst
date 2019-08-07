@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 // import {NgcatalystModule} from 'ngcatalyst';
-import {AltLinePlotComponent} from '../../../../projects/ngcatalyst/src/lib/alt-line-plot.component';
 
 import {LinePlotComponent} from '../../../../projects/ngcatalyst/src/lib/line-plot.component';
 // import {BarChartComponent} from '../../../../projects/ngcatalyst/src/lib/bar-chart.component';
@@ -17,7 +16,7 @@ import {LinePlotComponent} from '../../../../projects/ngcatalyst/src/lib/line-pl
     AppComponent,
     // BarChartComponent,
     // SunburstComponent,
-    AltLinePlotComponent,
+    LinePlotComponent
     // PieChartComponent,
     // HeatMapComponent,
     // BubbleChartComponent,

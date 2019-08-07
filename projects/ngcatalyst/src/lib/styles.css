@@ -11,18 +11,18 @@ text {
   stroke: #000;
   shape-rendering: crispEdges;
 }
-.x.axis path {
-  display: none;
-}
+
 .line {
   fill: none;
   stroke: url(#gradient-gradient);
   stroke-width: 1.5px;
 }
-
+/* .tick > line {
+  opacity: 0.2 !important;
+} */
 
 /* You can add global styles to this file, and also import other style files */
-/* h2 {
+ h2 {
   text-align: center;
 }
 
@@ -71,4 +71,3 @@ fill: blue;
   stroke-width: 1.5px;
 }
 
- */

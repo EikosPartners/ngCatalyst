@@ -7,7 +7,7 @@ import { isEqual } from 'lodash';
   template: `
   <h2>{{title}}</h2>
   <div [ngStyle]="area" >
-      <div [id]="propID" style="width:100%;height:100%"> </div>
+      <div  [id]="propID" style="width:100%;height:100%"> </div>
   </div>
 `
 })
@@ -24,6 +24,8 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
   @Input() divWidth: any = "100%";
   @Input() axisFontSize: any = "14px";
   @Input() margins = { top: 20, right: 30, bottom: 45, left: 50 };
+  // gradientId = 'gradient-' + this.propID;
+
   // @Input() xAxisAngle = 45;
   // @Input() yAxisAngle = 45;
 
@@ -73,7 +75,6 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
   }
 
   drawLinePlot() {
-    console.log('drawing ', this.propID);
     const localThis = this;
     const selection_string = "#" + this.propID, color = this.color;
 
@@ -95,17 +96,9 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
         d.date = parseDate(d.date);
       });
     }
-
     data.sort(function(a, b) {
       return a.date - b.date;
     });
-
-    const detected_percent =
-      d3.max(data, function(d) {
-        return d.value;
-      }) <= 1
-        ? true
-        : false;
     let element: any;
 
     const selected = document.querySelectorAll(selection_string);
@@ -124,208 +117,153 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
     if (this.title) {
       height -= 40;
     }
-
     const xValue = function(d) {
-        return d.date;
-      },
-      xScale = d3.scaleTime().range([0, width - margin.right]),
-      xMap = function(d) {
-        return xScale(xValue(d));
-      },
-      xAxis = d3.axisBottom()
-        .scale(xScale)
-        .tickSizeInner(-height)
-        .ticks(6);
-    let format_attribute;
-    if (detected_percent) {
-      format_attribute = d3.format("%");
-    } else {
-      format_attribute = d3.format("");
-    }
-
+      return d.date;
+    };
     const yValue = function(d) {
-        return d.value;
-      },
-      yScale = d3.scaleLinear().range([height, 0]),
-      yMap = function(d) {
-        return yScale(yValue(d));
-      },
-      yAxisScale = d3.scaleLinear()
-      .range([height - yScale(d3.min(data)), 0]);
+      return d.value;
+    };
+    const x = d3.scaleTime().range([0, width]).domain(d3.extent(data, xValue)).nice();
+    const y = d3.scaleLinear().range([height, 0]).domain(d3.extent(data, yValue)).nice();
+    // x;
+    // y.;
 
-
-    xScale.domain(d3.extent(data, xValue)).nice();
-    yScale.domain(d3.extent(data, yValue)).nice();
-
-    // yScale.domain([d3.min(data, yValue), d3.max(data, yValue)]);
-    // const tickSize = (typeof this.divWidth === "string") ? (-(width / 1.6) - margin.right) : (-(width) + margin.right - 4);
-    const yAxis = d3.axisLeft()
-        .scale(yScale);
-        // .tickSizeInner(tickSize);
-
-    const line = d3.line()
-      // .interpolate("basis")
-      .x(xMap)
-      .y(yMap)
-      .curve(d3.curveLinear);
-
-
-    const svg = d3
-      .select(selection_string)
-      .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     const tooltip = d3
-      .select("body")
-      .append("div")
-      .attr("class", `d3_visuals_tooltip ${this.propID}_tooltip`)
-      .style("opacity", 0);
+        .select("body")
+        .append("div")
+        .attr("class", `d3_visuals_tooltip ${this.propID}_tooltip`)
+        .style("opacity", 0);
 
-    svg.style("fill", "transparent");
-    svg
-      .append("g")
-      .attr("class", "x axis xaxis axis-line-plot")
-      .attr("transform", "translate(0," + height + ")")
-      .style('fill', 'black')
-      .style("font-size", "14px")
-      .call(xAxis)
+    const yAxis = d3.axisLeft()
+        .tickSizeInner(-width)
+        .scale(y),
+      xAxis = d3.axisBottom()
+        .tickSizeInner(-height)
+        .tickFormat(d3.timeFormat('%b'))
+        .scale(x),
+      line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function(d) { return x(d.date); })
+        .y(function(d) { return y(d.value); }),
+      svg = d3
+        .select(selection_string)
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.append("linearGradient")
+        .attr("id", "gradient-gradient")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr("x1", 0).attr("y1", y(0))
+        .attr("x2", 0).attr("y2", y(1))
+      .selectAll("stop")
+        .data([
+          {offset: "0%", color: "red"},
+          {offset: "50%", color: "green"}
+        ])
+      .enter().append("stop")
+        .attr("offset", function(d) {
+          debugger
+          return d.offset; })
+        .attr("stop-color", function(d) { return d.color; });
+
+    svg.append("g")
+        .attr("class", "x axis x-axis")
+        .style('fill', 'grey')
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+        .append("text")
+        .attr("x", (width / 2))
+        .attr("y", 25)
+        .attr("dy", ".71em")
+        .style("fill", "black")
+        .style("text-anchor", "middle")
+        .attr("font-size", this.axisFontSize)
+        .text(this.xAxisLabel);
+
+    svg.append("g")
+        .attr("class", "y axis y-axis")
+        .call(yAxis)
       .append("text")
-      .attr("x", (width / 2))
-      .attr("y", 25)
-      .attr("dy", ".71em")
-      .style("text-anchor", "middle")
-      .attr("font-size", this.axisFontSize)
-      .text(this.xAxisLabel);
+        .attr("transform", "rotate(-90)")
+        .attr("y", -margin.left)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .style("fill", "black")
+        .attr("font-size", this.axisFontSize)
+        .text(this.yAxisLabel);
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", line);
 
-    svg
-      .append("g")
-      .attr("class", "y axis yaxis axis-line-plot")
-      .style("fill", "black")
-      .call(yAxis)
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", -margin.left)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .attr("font-size", this.axisFontSize)
-      .text(this.yAxisLabel);
-
+    const xMap = function(d) {return  x(xValue(d)); };
+    const yMap = function(d) {return  y(yValue(d)); };
     const clip_id = "clip-" + this.propID;
 
-    console.log(this.propID);
-    const tickWidth = d3.select('.xaxis.axis-line-plot') ._groups[0][0].getBBox().width;
-    d3.selectAll('.yaxis.axis-line-plot').selectAll('g.tick line').attr('x1', 0).attr('x2', tickWidth);
-    // svg
-    //   .append("clipPath")
-    //   .attr("id", clip_id)
-    //   .append("rect")
-    //   .attr("x", 0)
-    //   .attr("y", 0)
-    //   .attr("width", width > 0 ? width : 0)
-    //   .attr("height", height > 0 ? height : 0);
+    // const detected_percent =
+    //   d3.max(data, function(d) {
+    //     return d.value;
+    //   }) <= 1
+    //     ? true
+    //     : false;
+    // let format_attribute;
 
-    // svg
-    //   .append("rect")
-    //   .attr("class", "pane")
-    //   .attr("width", element.clientWidth)
-    //   .attr("height", height)
-    //   .attr("clip-path", "url(#" + clip_id + ")");
-    svg.append("clipPath")
-        .attr("id", "clip-above")
-        .append("rect")
-        .attr("width", width)
-        .attr("height", yScale(55));
-        // function(a, b, c, d) {
-        //   console.log(yMap(55));
-        //   console.log(yScale(55));
-        //   console.log(yValue(55));
-        //   console.log(yAxisScale(55));
-        //   debugger;
-        // });
-
-    svg.append("clipPath")
-        .attr("id", "clip-below")
-        .append("rect")
-        .attr("y", yScale(55))
-        .attr("width", width)
-        .attr("height", height - yScale(55));
+    //   if (detected_percent) {
+    //     format_attribute = d3.format("%");
+    //   } else {
+    //     format_attribute = d3.format("");
+    //   }
 
     svg
-      .append("path")
-      .datum(data)
-      .attr("class", "line lineplotline")
-      .attr("d", line)
-      .attr("stroke-width", 3)
-      .attr("stroke", this.color);
-      // .attr("stroke", function (d) {
-      //   return (d.value > 50) ? 'green' : 'red';
-      // });
-// https://bl.ocks.org/mbostock/4062844
-  svg.selectAll(".line")
-      .data(["above", "below"])
-      .enter().append("path")
-      .attr("class", function(d) { return "line " + d; })
-      .attr("clip-path", function(d) { return "url(#clip-" + d + ")"; })
-      .datum(data)
-      .attr("d", line);
+        .selectAll(".dot")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("class", "dot")
+        .attr("r", 5)
+        .attr("cx", xMap)
+        .attr("cy", yMap)
+        .attr("clip-path", "url(#" + clip_id + ")")
+        .attr("fill", "black")
+        .attr("opacity", 0)
+        .on("mouseover", function(d) {
+          tooltip
+            .transition()
+            .duration(100)
+            .style("opacity", 1);
+          tooltip
+            .html(
+              "Date: " + formatDate(d.date) +
+                "<br>" +
+                localThis.yAxisLabel +
+                ": " +
+                (yValue(d))
+            )
+            .style("left", d3.event.pageX + 5 + "px")
+            .style("top", d3.event.pageY - 28 + "px");
+          d3
+            .select(this)
+            .transition()
+            .duration(50)
+            .style("fill", "black")
+            .attr("opacity", 1);
 
-    svg
-      .selectAll(".dot")
-      .data(data)
-      .enter()
-      .append("circle")
-      .attr("class", "dot")
-      .attr("r", 5)
-      .attr("cx", xMap)
-      .attr("cy", yMap)
-      .attr("clip-path", "url(#" + clip_id + ")")
-      .attr("fill", "black")
-      .attr("opacity", 0)
-      .on("mouseover", function(d) {
-        tooltip
-          .transition()
-          .duration(100)
-          .style("opacity", 1);
-        tooltip
-          .html(
-            "Date: " + formatDate(d.date) +
-              "<br>" +
-              localThis.yAxisLabel +
-              ": " +
-              format_attribute(yValue(d))
-          )
-          .style("left", d3.event.pageX + 5 + "px")
-          .style("top", d3.event.pageY - 28 + "px");
-        d3
-          .select(this)
-          .transition()
-          .duration(50)
-          .style("fill", "black")
-          .attr("opacity", 1);
-
-      })
-      .on("mouseout", function(d) {
-        tooltip
-          .transition()
-          .duration(300)
-          .style("opacity", 0);
-        d3
-          .select(this)
-          .transition()
-          .duration(50)
-          .attr("opacity", 0);
-      });
-
-    // svg
-    //   .selectAll(".tick")
-    //   .filter(function(d) {
-    //     return d === 0;
-    //   })
-    //   .remove();
-
+        })
+        .on("mouseout", function(d) {
+          tooltip
+            .transition()
+            .duration(300)
+            .style("opacity", 0);
+          d3
+            .select(this)
+            .transition()
+            .duration(50)
+            .attr("opacity", 0);
+        });
   }
 
 }
