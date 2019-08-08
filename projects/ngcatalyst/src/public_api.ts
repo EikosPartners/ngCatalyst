@@ -12,4 +12,3 @@ export * from './lib/heat-map.component';
 export * from './lib/pie-chart.component';
 export * from './lib/punch-card.component';
 export * from './lib/sunburst.component';
-export * from './lib/alt-line-plot.component';

@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-// import {NgcatalystModule} from 'ngcatalyst';
+import {NgcatalystModule} from 'ngcatalyst';
 
 import {LinePlotComponent} from '../../../../projects/ngcatalyst/src/lib/line-plot.component';
 // import {BarChartComponent} from '../../../../projects/ngcatalyst/src/lib/bar-chart.component';

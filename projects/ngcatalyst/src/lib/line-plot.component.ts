@@ -202,9 +202,10 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
         .datum(data)
         .attr("id", pathID)
         .attr("class", "line linechartline")
+        .style("stroke", `url("#${gradID}")`)
         .attr("d", line);
 
-    document.querySelectorAll("#" + pathID)[0]["style"].stroke = `url("#${gradID}")`;
+    // document.querySelectorAll("#" + pathID)[0]["style"].stroke = `url("#${gradID}")`;
 // this.propID + "-gradient"
     const xMap = function(d) {return  x(xValue(d)); };
     const yMap = function(d) {return  y(yValue(d)); };
