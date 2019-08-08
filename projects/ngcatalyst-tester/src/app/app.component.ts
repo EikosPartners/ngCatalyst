@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
 
   lineData = lineDataJson;
   lineDataA = this.lineData.map(item => item.date).map(item2 => {
-    return {date: item2, value: this.randomNumber(-1000, 1000, true)};
+    return {date: item2, value: this.randomNumber(-10000, 20000, true)};
   });
   linePropID = 'angularlines';
   lineTitle = 'Line Plot';

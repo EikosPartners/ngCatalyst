@@ -154,8 +154,11 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    const gradID = this.propID + "-gradient",
+        pathID = this.propID + "-path";
+
     svg.append("linearGradient")
-        .attr("id", "gradient-gradient")
+        .attr("id", gradID)
         .attr("gradientUnits", "userSpaceOnUse")
         .attr("x1", 0).attr("y1", y(0))
         .attr("x2", 0).attr("y2", y(1))
@@ -197,9 +200,12 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
         .text(this.yAxisLabel);
     svg.append("path")
         .datum(data)
-        .attr("class", "line")
+        .attr("id", pathID)
+        .attr("class", "line linechartline")
         .attr("d", line);
 
+    document.querySelectorAll("#" + pathID)[0]["style"].stroke = `url("#${gradID}")`;
+// this.propID + "-gradient"
     const xMap = function(d) {return  x(xValue(d)); };
     const yMap = function(d) {return  y(yValue(d)); };
     const clip_id = "clip-" + this.propID;

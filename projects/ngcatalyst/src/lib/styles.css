@@ -1,29 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+
+
 body {
   margin: auto;
-  width: 960px;
+  /* width: 960px; */
 }
+
 text {
   font: 10px sans-serif;
 }
+
+h2 {
+  text-align: center;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
 .axis path,
 .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
-}
-
-.line {
-  fill: none;
-  stroke: url(#gradient-gradient);
-  stroke-width: 1.5px;
-}
-/* .tick > line {
-  opacity: 0.2 !important;
-} */
-
-/* You can add global styles to this file, and also import other style files */
- h2 {
-  text-align: center;
 }
 
 .d3_visuals_tooltip {
@@ -40,23 +39,20 @@ text {
   pointer-events: none;
 }
 
-.axis{
-  font: 10px sans-serif;
+.dot, .rect {
+  stroke: #000;
+  cursor: pointer;
+  fill: blue;
 }
 
-.axis path, .axis line{
+.line {
   fill: none;
-  shape-rendering: crispEdges;
+  stroke: auto;
+  stroke-width: 1.5px;
 }
 
 .small-axis{
   font-size: 9px;
-}
-
-.dot, .rect{
-stroke: #000;
-cursor: pointer;
-fill: blue;
 }
 
 .tick line{
@@ -64,10 +60,3 @@ fill: blue;
   stroke-width: 1.8px;
   shape-rendering: geometricPrecision;
 }
-
-.line {
-  fill: none;
-  stroke: url(#gradient-gradient);
-  stroke-width: 1.5px;
-}
-
