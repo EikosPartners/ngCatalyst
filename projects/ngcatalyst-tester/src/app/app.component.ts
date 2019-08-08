@@ -7,7 +7,7 @@ const heatDataJson = require('../assets/heatDataCal.json');
 const heatData2Json = require('../assets/heatData.json');
 const bubbleDataJson = require('../assets/bubbleData.json');
 const barDataJson = require('../assets/barData.json');
-
+import { RandomNumberService} from './random-number.service';
 import { shuffle } from 'lodash';
 
 @Component({
@@ -16,6 +16,10 @@ import { shuffle } from 'lodash';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
+  constructor(private randomNumberService: RandomNumberService) {
+
+  }
   title = 'ngcatalyst-tester';
 
   yAxisLabel = 'Thing Measured';
@@ -28,7 +32,7 @@ export class AppComponent implements OnInit {
   fiftyPct = "50%";
   margin = {};
   anObject: Array<{}> = [{foo: "bar", baz: 12, thing: "one", thang: 2}, {bar: "basz", one: 123, ought: "b", why: "not"}];
-
+  randomNumber = this.randomNumberService.randomNumber;
   barData = barDataJson;
   barDataA = this.barData.map(item => item.name).map(item2 => {
     return {x: item2, y: this.randomNumber(5000, 10000, true)};
@@ -160,13 +164,4 @@ export class AppComponent implements OnInit {
     // this.punchColors = this.pieColors;
     this.sunburstData = this.metaCollect(this.sunburstData);
   }
-
-  randomNumber(min, max, int) {
-    if (int) {
-      return Math.floor(Math.random() * max) + min;
-    } else {
-      return (Math.random() * max) + min;
-    }
-  }
-
 }

@@ -71,13 +71,13 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
   }
 
   ngDoCheck() {
-    console.log(this.propID, this.data);
+    // console.log(this.propID, this.data);
   }
 
   drawLinePlot() {
     const localThis = this;
     const selection_string = "#" + this.propID, color = this.color;
-
+    console.log(this.data);
     d3.selectAll(`.${this.propID}_tooltip`).remove();
     if (document.querySelectorAll(selection_string + " svg")[0] != null) {
       document.querySelectorAll(selection_string + " svg")[0].remove();
@@ -166,7 +166,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
         ])
       .enter().append("stop")
         .attr("offset", function(d) {
-          debugger
+          // debugger
           return d.offset; })
         .attr("stop-color", function(d) { return d.color; });
 
