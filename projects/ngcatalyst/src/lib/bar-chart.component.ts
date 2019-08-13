@@ -114,8 +114,12 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
           .paddingInner(.2)
           .paddingOuter(.2);
 
-        let extent = d3.extent(dataValues);
-        extent[0] -= d3.max(dataValues);
+        const extent = d3.extent(dataValues);
+        if (d3.min(dataValues) <= 5 && d3.min(dataValues) >= 1) {
+          extent[0] -= (d3.min(dataValues) * 5);
+        } else if (d3.min(dataValues) <= 0) {
+          extent[0] -= d3.max(dataValues);
+        }
         console.log(extent);
         console.log(dataValues);
         const y = d3.scaleLinear()
@@ -209,8 +213,6 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
                   .attr("y", -margin.left / 2 - 5);
             }
         }
-        let dataColors = this.dataColors;
-        // console.log(dataColors);
         chart
           .append("g")
           .attr("class", "y axis")
