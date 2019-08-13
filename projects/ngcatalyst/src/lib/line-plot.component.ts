@@ -17,7 +17,8 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
   @Input() propID = 'line';
   @Input() data: [{date: string, value: number}];
   @Input() title: "Line Plot";
-  @Input() color = "#000";
+  @Input() colors = ["red", "green"];
+  @Input() threshold = 0;
   @Input() yAxisLabel = 'Value';
   @Input() xAxisLabel = 'Date';
   @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
@@ -156,16 +157,16 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
 
     const gradID = this.propID + "-gradient",
         pathID = this.propID + "-path";
-
+    console.log(localThis.threshold);
     svg.append("linearGradient")
         .attr("id", gradID)
         .attr("gradientUnits", "userSpaceOnUse")
-        .attr("x1", 0).attr("y1", y(0))
-        .attr("x2", 0).attr("y2", y(1))
+        .attr("x1", 0).attr("y1", y(localThis.threshold))
+        .attr("x2", 0).attr("y2", y(localThis.threshold + 1))
       .selectAll("stop")
         .data([
-          {offset: "0%", color: "red"},
-          {offset: "50%", color: "green"}
+          {offset: "0%", color: localThis.colors[0]},
+          {offset: "50%", color: localThis.colors[1]}
         ])
       .enter().append("stop")
         .attr("offset", function(d) {

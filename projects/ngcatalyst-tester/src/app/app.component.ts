@@ -68,7 +68,8 @@ export class AppComponent implements OnInit {
   });
   linePropID = 'angularlines';
   lineTitle = 'Line Plot';
-  lineColor = "#5c2197";
+  lineColors = ["purple", "orange"];
+  threshold = 2000;
 
   pieData = pieDataJson;
   pieData2 = this.pieData.map(item => item.label).map(item2 => {

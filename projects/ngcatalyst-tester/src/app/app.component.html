@@ -94,7 +94,6 @@
     [data]="lineData"
     [propID]="linePropID"
     [title]="lineTitle"
-    [color]="lineColor"
     [xAxisLabel]="xAxisLabelDate"
     [yAxisLabel]="yAxisLabel"
     [divHeight]="hundoPct"
@@ -106,7 +105,8 @@
     <eikos-line-plot
       [data]="lineDataA"
       [title]="lineTitle"
-      [color]="lineColor"
+      [colors]="lineColors"
+      [threshold]="threshold"
       [xAxisLabel]="xAxisLabelDate"
       [yAxisLabel]="yAxisLabel"
       [divHeight]="fiftyPct"
