@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   randomNumber = this.randomNumberService.randomNumber;
   barData = barDataJson;
   barDataA = this.barData.map(item => item.name).map(item2 => {
-    return {x: item2, y: this.randomNumber(5000, 10000, true)};
+    return {x: item2, y: this.randomNumber(-10000, 15000, true)};
   });
   // barDataA = barDataJson2;
 

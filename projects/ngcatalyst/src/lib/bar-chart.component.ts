@@ -106,13 +106,21 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
         if (this.title) {
           height = height - 48;
         }
+        const dataValues = this.dataModel.map(item => item["y"]);
+        const dataNames = this.dataModel.map(item => item["x"]);
         const x = d3.scaleBand()
           .range([0, width])
+          .domain(dataNames)
           .paddingInner(.2)
           .paddingOuter(.2);
 
+        let extent = d3.extent(dataValues);
+        extent[0] -= d3.max(dataValues);
+        console.log(extent);
+        console.log(dataValues);
         const y = d3.scaleLinear()
-          .range([height - margin.bottom, 0]);
+          .domain(extent.reverse())
+          .range([0, height - margin.bottom]);
 
         const xAxis = d3.axisBottom()
           .scale(x)
@@ -137,19 +145,19 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
           .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        if (data.length > 0) {
-          y.domain([
-            0,
-            d3.max(data, function(d) {
-              return d.y;
-            })
-          ]);
-          x.domain(
-            data.map(function(d) {
-              return d.x;
-            })
-          );
-        }
+        // if (data.length > 0) {
+        //   y.domain([
+        //     0,
+        //     d3.max(data, function(d) {
+        //       return d.y;
+        //     })
+        //   ]);
+        //   x.domain(
+        //     data.map(function(d) {
+        //       return d.x;
+        //     })
+        //   );
+        // }
 
         chart
           .append("g")
