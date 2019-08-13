@@ -2,14 +2,13 @@
 
 <div class="flexbox-container">
 
-<!--
  <div style="height: 500px; width: 500px">
       <eikos-bar-chart
       [data]="barData"
       [xAxisLabel]="xAxisLabel"
       [yAxisLabel]="yAxisLabel"
       [propID]="barPropID"
-      [color]="barColor"
+      [colors]="barColors"
       [title]="barTitle"
       [xAxisAngle]="axisAngle"
       [yAxisAngle]="axisAngle"
@@ -23,7 +22,7 @@
       [data]="barDataA"
       [xAxisLabel]="xAxisLabel"
       [yAxisLabel]="yAxisLabel"
-      [color]="barColor"
+      [colors]="bubbleColors"
       [title]="barTitle"
       [xAxisAngle]="axisAngle"
       [yAxisAngle]="axisAngle"
@@ -33,6 +32,7 @@
     </eikos-bar-chart>
   </div>
 
+<!--
 
   <div style="height: 500px; width: 500px">
     <eikos-bubble-chart
@@ -83,8 +83,6 @@
     ></eikos-heat-map>
   </div>
 
--->
-
 
 
 
@@ -113,7 +111,7 @@
       [divWidth]="hundoPct"
       ></eikos-line-plot>
     </div>
-<!--
+
 
   <div style="height: 500px; width: 500px">
     <eikos-pie-chart

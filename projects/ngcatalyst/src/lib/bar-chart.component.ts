@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, AfterViewInit} from '@angular/core';
 import * as d3 from 'd3';
-import { isEqual } from 'lodash';
+import { isEqual, zip, zipObject } from 'lodash';
 
 @Component({
   selector: 'eikos-bar-chart',
@@ -17,6 +17,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
   @Input() data: Array<{}>;
   @Input() propID = 'barchart';
   @Input() color = '#2DA8C9';
+  @Input() colors = ["#9400D3", "#4B0082", "#0000FF", "#00FF00", "#FFFF00", "#FF7F00", "#FF0000"];
   @Input() yAxisLabel = 'y';
   @Input() xAxisLabel = 'x';
   @Input() xAxisAngle = 45;
@@ -35,6 +36,21 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
     } else if (this.data[0]["x"]) {
       return this.data;
     }
+  }
+  get dataColors() {
+    if (typeof this.colors[0] !== "string") {
+      return this.colors;
+    } else {
+      let dataColors, localColor;
+      if (this.colors.length < this.data.length) {
+        localColor = this.colors.concat(this.colors).slice(0, this.data.length);
+      } else {
+        localColor = this.colors;
+      }
+      dataColors = zipObject(this.dataModel.map(item => item["x"]), localColor);
+      return dataColors;
+    }
+
   }
 
   get area () {
@@ -185,7 +201,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
                   .attr("y", -margin.left / 2 - 5);
             }
         }
-
+        let dataColors = this.dataColors;
+        // console.log(dataColors);
         chart
           .append("g")
           .attr("class", "y axis")
@@ -220,7 +237,9 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
               return height - y(d.y) - margin.bottom;
             })
             .attr("width", x.bandwidth() - x.paddingInner())
-            .style("fill", localThis.color)
+            .style("fill", function(d, i, c){
+              return dataColors[d["x"]];
+            })
             .on("mouseover", function(d) {
               const yval = mouseover_callback(d.y);
               tooltip
@@ -242,10 +261,10 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
                 .select(this)
                 .transition()
                 .duration(50)
-                .style("fill", function(dt) {
+                .style("fill", function(dt, i) {
 
                   let currentFill: any;
-                  currentFill = hex2rgb(localThis.color);
+                  currentFill = hex2rgb(dataColors[dt["x"]]);
                   // if (currentFill.includes('#')){
                   // } else {
                   //   currentFill = currentFill.slice(0, currentFill.length -2).slice(4).split(', ')
@@ -262,7 +281,9 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
                 .select(this)
                 .transition()
                 .duration(100)
-                .style("fill", localThis.color);
+                .style("fill", function(d, i) {
+                   return dataColors[d["x"]];
+                });
               tooltip
                 .transition()
                 .duration(300)

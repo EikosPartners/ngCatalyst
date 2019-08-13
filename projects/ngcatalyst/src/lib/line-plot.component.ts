@@ -77,7 +77,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
 
   drawLinePlot() {
     const localThis = this;
-    const selection_string = "#" + this.propID, color = this.color;
+    const selection_string = "#" + this.propID;
     console.log(this.data);
     d3.selectAll(`.${this.propID}_tooltip`).remove();
     if (document.querySelectorAll(selection_string + " svg")[0] != null) {

@@ -8,7 +8,7 @@ const heatData2Json = require('../assets/heatData.json');
 const bubbleDataJson = require('../assets/bubbleData.json');
 const barDataJson = require('../assets/barData.json');
 import { RandomNumberService} from './random-number.service';
-import { shuffle } from 'lodash';
+import { shuffle, zipObject } from 'lodash';
 
 @Component({
   selector: 'app-root',
@@ -41,7 +41,6 @@ export class AppComponent implements OnInit {
 
   barPropID = 'angularbar';
   barTitle = 'Bar Chart';
-  barColor = '#57a71c';
   height = 500;
   width = 600;
 
@@ -90,6 +89,8 @@ export class AppComponent implements OnInit {
   punchTitle = 'Punch Card';
   punchColors =  ["#641E16", "#7B241C", "#922B21", "#A93226", "#C0392B", "#CD6155", "#D98880", "#E6B0AA", "#E57373", "#B71C1C"];
   axisColor = ["#FF6F00", "#FFD600"];
+  barColors = zipObject(this.barData.map(item => item.name), this.punchColors);
+
 
   sunburstData = sunburstDataJson;
   sunburstData2 = this.metaCollect(this.sunburstData);
