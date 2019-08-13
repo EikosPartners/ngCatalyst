@@ -213,6 +213,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
                   .attr("y", -margin.left / 2 - 5);
             }
         }
+        const dataColors = this.dataColors;
         chart
           .append("g")
           .attr("class", "y axis")
