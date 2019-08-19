@@ -132,8 +132,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
 
         const yAxis = d3.axisLeft()
           .scale(y)
-          .tickSizeInner(-width)
-          .tickSizeOuter(0);
+          .tickSizeInner(-width);
 
         const tooltip = d3
           .select("body")
@@ -214,6 +213,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
             }
         }
         const dataColors = this.dataColors;
+        // .log(dataColors);
         chart
           .append("g")
           .attr("class", "y axis")

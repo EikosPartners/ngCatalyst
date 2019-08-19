@@ -2,7 +2,7 @@
 
 <div class="flexbox-container">
 
- <div style="height: 500px; width: 500px">
+ <!-- <div style="height: 500px; width: 500px">
       <eikos-bar-chart
       [data]="barData"
       [xAxisLabel]="xAxisLabel"
@@ -30,7 +30,7 @@
       [divWidth]="hundoPct"
       >
     </eikos-bar-chart>
-  </div>
+  </div> -->
 
 <!--
 
@@ -84,18 +84,19 @@
   </div>
 
 
-
+-->
 
 
  <div style="height: 500px; width: 500px">
     <eikos-line-plot
-    [data]="lineData"
-    [propID]="linePropID"
-    [title]="lineTitle"
-    [xAxisLabel]="xAxisLabelDate"
-    [yAxisLabel]="yAxisLabel"
-    [divHeight]="hundoPct"
-    [divWidth]="hundoPct"
+      [data]="lineDataB"
+      [propID]="linePropID"
+      [title]="lineTitle"
+      [type]="lineType"
+      [xAxisLabel]="xAxisLabelDate"
+      [yAxisLabel]="yAxisLabel"
+      [divHeight]="hundoPct"
+      [divWidth]="hundoPct"
     ></eikos-line-plot>
   </div>
 
@@ -111,7 +112,7 @@
       [divWidth]="hundoPct"
       ></eikos-line-plot>
     </div>
-
+<!--
 
   <div style="height: 500px; width: 500px">
     <eikos-pie-chart

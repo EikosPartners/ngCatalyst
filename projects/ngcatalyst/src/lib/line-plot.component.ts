@@ -6,7 +6,7 @@ import { isEqual } from 'lodash';
   selector: 'eikos-line-plot',
   template: `
   <h2>{{title}}</h2>
-  <div [ngStyle]="area" >
+  <div [ngStyle]="area">
       <div  [id]="propID" style="width:100%;height:100%"> </div>
   </div>
 `
@@ -15,7 +15,7 @@ import { isEqual } from 'lodash';
 export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewInit {
 
   @Input() propID = 'line';
-  @Input() data: [{date: string, value: number}];
+  @Input() data: Array<{}>; // [{date: string, value: number}];
   @Input() title: "Line Plot";
   @Input() colors = ["red", "green"];
   @Input() threshold = 0;
@@ -25,6 +25,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
   @Input() divWidth: any = "100%";
   @Input() axisFontSize: any = "14px";
   @Input() margins = { top: 20, right: 30, bottom: 45, left: 50 };
+  @Input() type = "Date"; // (alternate option is time)
   // gradientId = 'gradient-' + this.propID;
 
   // @Input() xAxisAngle = 45;
@@ -88,20 +89,34 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
     // console.log(this.data)
     this.data.forEach(el => data.push(Object.assign({}, el)));
 
+    const parseTime = d3.timeParse('%I:%M %p');
     const parseDate = d3.timeParse('%Y-%m-%d');
-    const formatDate = d3.timeFormat('%B %-d %Y');
+    let formatDate;
+    if (localThis.type === "Date") {
+      formatDate = d3.timeFormat('%B %-d %Y');
+    } else if (localThis.type === "Time") {
+      formatDate = d3.timeFormat('%I:%M %p');
+    }
+
     // https://github.com/d3/d3-time-format to change how this is formatted - leave the parseDate because that's for sorting the data
 
-    if (typeof data[0].date === 'string') {
+    if (this.type === "Date" && typeof data[0].date === 'string') {
       data.forEach(function(d) {
         d.date = parseDate(d.date);
       });
+      data.sort(function(a, b) {
+        return a.date - b.date;
+      });
+    } else if (this.type == "Time" && typeof data[0].time === 'string') {
+      data.forEach(function(d) {
+        d.time = parseTime(d.time);
+      });
+      data.sort(function(a, b) {
+        return a.time - b.time;
+      });
     }
-    data.sort(function(a, b) {
-      return a.date - b.date;
-    });
     let element: any;
-
+    debugger
     const selected = document.querySelectorAll(selection_string);
 
     if (selected[0] == null) {
@@ -119,7 +134,11 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
       height -= 40;
     }
     const xValue = function(d) {
-      return d.date;
+      if (localThis.type === "Date") {
+        return d.date;
+      } else if (localThis.type === "Time") {
+        return d.time;
+      }
     };
     const yValue = function(d) {
       return d.value;
@@ -136,16 +155,29 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
         .attr("class", `d3_visuals_tooltip ${this.propID}_tooltip`)
         .style("opacity", 0);
 
+    let timeFormatLabel;
+    if (localThis.type === "Date") {
+      timeFormatLabel = d3.timeFormat('%b');
+    } else if (localThis.type === "Time") {
+      timeFormatLabel = d3.timeFormat('%I:%M');
+    }
+
     const yAxis = d3.axisLeft()
         .tickSizeInner(-width)
         .scale(y),
       xAxis = d3.axisBottom()
         .tickSizeInner(-height)
-        .tickFormat(d3.timeFormat('%b'))
+        .tickFormat(timeFormatLabel)
         .scale(x),
       line = d3.line()
         .curve(d3.curveLinear)
-        .x(function(d) { return x(d.date); })
+        .x(function(d) {
+          if (localThis.type === "Date") {
+            return x(d.date);
+          } else if (localThis.type === "Time") {
+            return x(d.time);
+          }
+       })
         .y(function(d) { return y(d.value); }),
       svg = d3
         .select(selection_string)
@@ -244,8 +276,8 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
             .duration(100)
             .style("opacity", 1);
           tooltip
-            .html(
-              "Date: " + formatDate(d.date) +
+            .html( localThis.xAxisLabel + ": " +
+              formatDate(d.date || d.time) +
                 "<br>" +
                 localThis.yAxisLabel +
                 ": " +

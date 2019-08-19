@@ -3,6 +3,8 @@ const sunburstDataJson = require('../assets/sunburstData.json');
 const punchDataJson = require('../assets/punchData.json');
 const pieDataJson = require('../assets/pieData.json');
 const lineDataJson = require('../assets/lineData.json');
+const lineDataJsonB = require('../assets/lineDataTimes.json');
+
 const heatDataJson = require('../assets/heatDataCal.json');
 const heatData2Json = require('../assets/heatData.json');
 const bubbleDataJson = require('../assets/bubbleData.json');
@@ -62,13 +64,15 @@ export class AppComponent implements OnInit {
   dataType = "other";
 
   lineData = lineDataJson;
+  lineDataB = lineDataJsonB;
+  lineType = "Time";
   lineDataA = this.lineData.map(item => item.date).map(item2 => {
     return {date: item2, value: this.randomNumber(-10000, 20000, true)};
   });
   linePropID = 'angularlines';
   lineTitle = 'Line Plot';
   lineColors = ["purple", "orange"];
-  threshold = 2000;
+  threshold = 0;
 
   pieData = pieDataJson;
   pieData2 = this.pieData.map(item => item.label).map(item2 => {
