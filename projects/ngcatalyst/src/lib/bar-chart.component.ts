@@ -114,17 +114,18 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
           .paddingInner(.2)
           .paddingOuter(.2);
 
-        const extent = d3.extent(dataValues);
-        if (d3.min(dataValues) <= 5 && d3.min(dataValues) >= 1) {
-          extent[0] -= (d3.min(dataValues) * 5);
-        } else if (d3.min(dataValues) <= 0) {
-          extent[0] -= d3.max(dataValues);
-        }
+        let extent = d3.extent(dataValues);
+        // if (d3.min(dataValues) <= 5 && d3.min(dataValues) >= 1) {
+        //   extent[0] -= (d3.min(dataValues) * 5);
+        // } else if (d3.min(dataValues) <= 0) {
+        //   extent[0] -= d3.max(dataValues);
+        // }
+        extent = extent.reverse();
         console.log(extent);
         console.log(dataValues);
         const y = d3.scaleLinear()
-          .domain(extent.reverse())
-          .range([0, height - margin.bottom]);
+        .range([0, height - margin.bottom])
+        .domain(extent);
 
         const xAxis = d3.axisBottom()
           .scale(x)
@@ -242,10 +243,14 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
               return x(d.x);
             })
             .attr("y", function(d) {
-              return y(d.y);
+              if (d.y <= 0) {
+                return y(0);
+              } else {
+                return y(d.y);
+              }
             })
             .attr("height", function(d) {
-              return height - y(d.y) - margin.bottom;
+              return Math.abs(y(d.y) - y(0));
             })
             .attr("width", x.bandwidth() - x.paddingInner())
             .style("fill", function(d, i, c){
