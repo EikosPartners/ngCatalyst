@@ -28,7 +28,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
   @Input() type = "Date"; // (alternate option is time)
   // gradientId = 'gradient-' + this.propID;
 
-  // @Input() xAxisAngle = 45;
+  @Input() xAxisAngle = 45;
   // @Input() yAxisAngle = 45;
 
   constructor() { }
@@ -107,7 +107,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
       data.sort(function(a, b) {
         return a.date - b.date;
       });
-    } else if (this.type == "Time" && typeof data[0].time === 'string') {
+    } else if (this.type === "Time" && typeof data[0].time === 'string') {
       data.forEach(function(d) {
         d.time = parseTime(d.time);
       });
@@ -116,7 +116,7 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
       });
     }
     let element: any;
-    debugger
+    // debugger
     const selected = document.querySelectorAll(selection_string);
 
     if (selected[0] == null) {
@@ -125,7 +125,11 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
       element = selected[0];
     }
 
-    const margin = this.margins,
+    let margin = this.margins;
+    if (this.xAxisAngle > 0) {
+      this.margins.bottom += 10;
+    }
+    const
       width = element.clientWidth - margin.left - margin.right;
     let height = element.clientHeight - margin.top - margin.bottom;
 
@@ -206,8 +210,8 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
           return d.offset; })
         .attr("stop-color", function(d) { return d.color; });
 
-    svg.append("g")
-        .attr("class", "x axis x-axis")
+    let xLabel = svg.append("g")
+        .attr("class", "x axis x-axis xaxis")
         .style('fill', 'grey')
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis)
@@ -217,8 +221,60 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
         .attr("dy", ".71em")
         .style("fill", "black")
         .style("text-anchor", "middle")
+        .attr("class", "xaxis-tick")
         .attr("font-size", this.axisFontSize)
-        .text(this.xAxisLabel);
+        .text(this.xAxisLabel)
+        .attr("y", 40)
+        .attr("class", "axislabel x-axis-label");
+
+        const text = svg.selectAll("g.tick > text");
+
+        if (this.xAxisAngle > 0) {
+            text
+                .attr("transform", `rotate(${this.xAxisAngle}) translate(${margin.top}, 0)`)
+                .style("text-anchor", "middle");
+
+            const dimensions = text.node().getBBox();
+            const array = Array.from(text._groups[0]).map((item: any, index: number) => item.getBBox().width);
+            // const dimwid = d3.max(array);
+
+            if (this.xAxisAngle < 45) {
+              text.attr("x", function(a, b, c, d) {
+                    if (array[b] < margin.bottom) {
+                      return dimensions.width / 2;
+                    } else {
+                      return dimensions.width / 1.5;
+                    }
+                  })
+                  .attr("y", dimensions.height - margin.top);
+            }
+
+            if (this.xAxisAngle >= 45) {
+              text.attr("x", function(a, b, c, d) {
+                    if (array[b] < margin.bottom) {
+                      return dimensions.width - 15;
+                    } else {
+                      return dimensions.width - 10;
+                    }
+                  })
+                  .attr("y", dimensions.height - 10);
+            }
+
+            if (this.xAxisAngle === 90) {
+              text.attr("x", dimensions.width)
+                  .attr("y", -margin.left / 2 - 5);
+            }
+        }
+
+        // xLabel.append("g")
+        //   .append("text")
+        //   .text(this.xAxisLabel)
+        //   .attr("x", (width / 2))
+        //   .attr("y", 25)
+        //   .attr("dy", ".71em")
+        //   .style("fill", "black")
+        //   .style("text-anchor", "middle");
+
 
     svg.append("g")
         .attr("class", "y axis y-axis")
