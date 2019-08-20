@@ -114,18 +114,13 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
           .paddingInner(.2)
           .paddingOuter(.2);
 
-        let extent = d3.extent(dataValues);
-        // if (d3.min(dataValues) <= 5 && d3.min(dataValues) >= 1) {
-        //   extent[0] -= (d3.min(dataValues) * 5);
-        // } else if (d3.min(dataValues) <= 0) {
-        //   extent[0] -= d3.max(dataValues);
-        // }
-        extent = extent.reverse();
-        console.log(extent);
-        console.log(dataValues);
+        let extent = d3.extent(dataValues).reverse();
+        // extent = extent.reverse();
+        // console.log(extent);
+        // console.log(dataValues);
         const y = d3.scaleLinear()
-        .range([0, height - margin.bottom])
-        .domain(extent);
+          .range([0, height - margin.bottom])
+          .domain(extent);
 
         const xAxis = d3.axisBottom()
           .scale(x)
@@ -149,27 +144,13 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
           .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        // if (data.length > 0) {
-        //   y.domain([
-        //     0,
-        //     d3.max(data, function(d) {
-        //       return d.y;
-        //     })
-        //   ]);
-        //   x.domain(
-        //     data.map(function(d) {
-        //       return d.x;
-        //     })
-        //   );
-        // }
-
         chart
           .append("g")
           .attr("class", "x axis xaxis")
-          .attr("transform", "translate(0," +  (height - margin. bottom) + ")")
+          .attr("transform", "translate(0," + (height - margin.bottom) + ")")
           .call(xAxis)
           .append("text")
-          .attr("class", "label")
+          .attr("class", "label x-label")
           .attr("x", (width / 3) + margin.right)
           .attr("y", 0)
           .style("text-anchor", "middle")
@@ -214,7 +195,6 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
             }
         }
         const dataColors = this.dataColors;
-        // .log(dataColors);
         chart
           .append("g")
           .attr("class", "y axis")
@@ -222,7 +202,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
           .append("text")
           .attr("class", "label")
           .attr("transform", "rotate(-90)")
-          .attr("y", 6)
+          .attr("y", 0)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
           .text(yaxisvalue);
@@ -243,14 +223,18 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
               return x(d.x);
             })
             .attr("y", function(d) {
-              if (d.y <= 0) {
+              if (d.y < 0) {
                 return y(0);
               } else {
                 return y(d.y);
               }
             })
             .attr("height", function(d) {
-              return Math.abs(y(d.y) - y(0));
+              if (dataValues.every(it => it > 0)) {
+                return height - y(d.y) - margin.bottom;
+              } else {
+                return Math.abs(y(d.y) - y(0));
+              }
             })
             .attr("width", x.bandwidth() - x.paddingInner())
             .style("fill", function(d, i, c){

@@ -111,7 +111,7 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
     // calendar, get the range of years to display
     if ( data !== undefined && data.length > 0 && localThis.dataType === 'calendar') {
       data.forEach(function(datum) {
-        if (parseDate(datum['x']) == null) {console.log('why'); }
+        // if (parseDate(datum['x']) == null) {console.log('why'); }
         const date_year = parseDate(datum['x']).getFullYear();
         min_value = date_year < min_value ? date_year : min_value;
         max_value = date_year > max_value ? date_year : max_value;
