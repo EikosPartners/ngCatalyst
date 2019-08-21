@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -11,8 +11,8 @@ import { isEqual } from 'lodash';
   </div>
 `
 })
-export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
-
+export class PieChartComponent implements OnChanges, AfterViewInit {
+  @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'pie';
   @Input() data: Array<{}>;
   @Input() title: 'Pie Chart';
@@ -48,10 +48,6 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
   //   });
   // }
 
-  ngOnInit() {
-    // this.drawPieChart();
-  }
-
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange && changes.colors && !isEqual(changes.colors.previousValue, changes.colors.currentValue)) {
       this.savedColors = {};
@@ -79,7 +75,6 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
     const selected = document.querySelectorAll(selection_string);
     let colors: Array<String>;
     colors = this.colors;
-    console.log(colors);
 
 
     if (selected[0] == null) {
@@ -194,6 +189,9 @@ export class PieChartComponent implements OnInit, OnChanges, AfterViewInit {
           return localThis.savedColors[label];
 
         });
+      })
+      .on("click", function(d) {
+        localThis.clickEvent.emit(d.data);
       });
 
     // add colors to each slice

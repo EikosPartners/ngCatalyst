@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 import luxon from 'luxon';
 
@@ -16,7 +16,7 @@ import luxon from 'luxon';
 // also found a use case where the graph didn't render because #s ended up too small because margins were bigger than dimensions themselves - is this a real bug?
 
 export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
-
+  @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'bubble';
   @Input() data: [{label: string, value: number, x: number, y: number}];
   @Input() title = 'Bubble Chart';
@@ -308,7 +308,6 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
       })
       .style("opacity", 0.75)
       .on("mouseover", function(d) {
-        console.log(tooltip);
         tooltip.transition()
           .duration(100)
           .style("opacity", 1);
@@ -329,6 +328,9 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
             .transition()
             .duration(200)
             .style("opacity", 0);
+      })
+      .on("click", function(d) {
+        localThis.clickEvent.emit(d);
       });
   }
 

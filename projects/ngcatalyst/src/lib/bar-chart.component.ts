@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, AfterViewInit} from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit} from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual, zip, zipObject } from 'lodash';
 
@@ -14,6 +14,7 @@ import { isEqual, zip, zipObject } from 'lodash';
 })
 
 export class BarChartComponent implements OnChanges, AfterViewInit {
+  @Output() clickEvent = new EventEmitter<any>();
   @Input() data: Array<{}>;
   @Input() propID = 'barchart';
   @Input() color = '#2DA8C9';
@@ -114,10 +115,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
           .paddingInner(.2)
           .paddingOuter(.2);
 
-        let extent = d3.extent(dataValues).reverse();
-        // extent = extent.reverse();
-        // console.log(extent);
-        // console.log(dataValues);
+        const extent = d3.extent(dataValues).reverse();
         const y = d3.scaleLinear()
           .range([0, height - margin.bottom])
           .domain(extent);
@@ -288,6 +286,9 @@ export class BarChartComponent implements OnChanges, AfterViewInit {
                 .transition()
                 .duration(300)
                 .style("opacity", 0);
+            })
+            .on("click", function(d) {
+              localThis.clickEvent.emit(d);
             });
         }
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -10,7 +10,8 @@ import * as d3 from 'd3';
 </div>
   `
 })
-export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
+export class HeatMapComponent implements OnChanges, AfterViewInit {
+  @Output() clickEvent = new EventEmitter<any>();
   @Input() dataType = "calendar"; // alternately, "other"
   @Input() title = "Heat Map";
   @Input() propID = 'heat-map';
@@ -41,8 +42,6 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
     return {height: height, width: width};
   }
 
-  ngOnInit() {
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.data && changes.data.previousValue) {
@@ -58,7 +57,16 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
 
   get dataModel() {
     const returner = this.data.map(item => {
-      const newItem = {x: item['date'] ? item['date'] : item['x'], magnitude: item['volume'] ? item['volume'] : item['magnitude']};
+      let xVal, mag;
+      if (this.dataType === 'calendar') {
+        xVal = item['date'];
+        mag = item['volume'];
+      } else {
+        xVal = item['x'];
+        mag = item['magnitude'];
+      }
+
+      const newItem = {x: xVal, magnitude: mag};
       if (item['y']) {
         newItem['y'] = item['y'];
       }
@@ -309,9 +317,9 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
       .attr('stroke', 'black')
       .filter(function(d) {
         if (localThis.dataType === 'calendar') {
-          return ('$' + d in ndata) && (ndata['$' + d] !== 0);
+          return ('$' + d in ndata); // && (ndata['$' + d] !== 0)
         } else {
-          return ('$' + d.x in ndata) && (ndata['$' + d] !== 0);
+          return ('$' + d.x in ndata); // && (ndata['$' + d] !== 0);
         }
       })
       .attr("class", "hasData")
@@ -378,6 +386,13 @@ export class HeatMapComponent implements OnInit, OnChanges, AfterViewInit {
           .transition()
           .duration(300)
           .style("opacity", 0);
+      })
+      .on("click", function(d) {
+        if (localThis.dataType !== 'calendar') {
+          localThis.clickEvent.emit(d);
+        } else {
+          localThis.clickEvent.emit(localThis.dataModel.filter(item => item.x === d)[0])
+        }
       });
 
   }

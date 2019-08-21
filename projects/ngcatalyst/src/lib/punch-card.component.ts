@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 import luxon from 'luxon';
 
@@ -17,7 +17,7 @@ import luxon from 'luxon';
 `
 })
 export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
-
+  @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'punch';
   @Input() data: [{day_of_week: string, hour_volumes: []}];
   @Input() title: string;
@@ -146,9 +146,9 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
     element.clientHeight / 24 * 7 +
       2 * xLabelHeight - margin.top - margin.bottom;
 
-    console.log(selected);
-    console.log(element.clientWidth);
-    console.log(element.clientHeight);
+    // console.log(selected);
+    // console.log(element.clientWidth);
+    // console.log(element.clientHeight);
 
 
     //   if (this..changeHeight !== undefined ) {
@@ -353,14 +353,10 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
           .select("text")
           .transition()
           .style("opacity", 0);
+      })
+      .on("click", function(d, i) {
+        localThis.clickEvent.emit(d);
       });
-      // .on("click", function(d, i) {
-      //   if (localThis.onClick !== undefined) {
-      //     if (d[0] > 0) {
-      //       localThis.onClick("point", localThis.getDay(d[1]), i);
-      //     }
-      //   }
-      // });
 
 
     dotLabels
@@ -503,20 +499,11 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
           .select("text")
           .transition()
           .style("opacity", 0);
+      })
+      .on("click", function(d, i) {
+        const day = localThis.getDay(yLabels._groups[0][i].textContent);
+        localThis.clickEvent.emit({day: day, total: d});
       });
-      // .on("click", function(d, i) {
-      //   if (d > 0) {
-      //     if (localThis !== undefined) {
-      //       localThis.onClick(
-      //         "day",
-      //         localThis.getDay(yLabels[0][i].textContent),
-      //         -1
-      //       );
-      //     }
-
-      //     // window.location.href = redirect_url + yLabels[0][i].textContent + '/-1';
-      //   }
-      // });
 
     // creates the needed svg and text elements to make the labels actually readable
     sumsYValues
@@ -643,12 +630,10 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
           .select("text")
           .transition()
           .style("opacity", 0);
+      })
+      .on("click", function(d, i) {
+        localThis.clickEvent.emit({hour: i, total: d});
       });
-      // .on("click", function(d, i) {
-      //   if (d > 0) {
-      //     localThis.onClick("hour", 0, i);
-      //   }
-      // });
 
     // creates the needed svg and text elements to make the labels actually readable
     sumsXValues

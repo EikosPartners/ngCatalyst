@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, DoCheck, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -12,8 +12,8 @@ import { isEqual } from 'lodash';
 `
 })
 
-export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewInit {
-
+export class LinePlotComponent implements OnChanges, AfterViewInit {
+  @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'line';
   @Input() data: Array<{}>; // [{date: string, value: number}];
   @Input() title: "Line Plot";
@@ -54,39 +54,28 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
   //   });
   // }
 
-  ngOnInit() {
-    // this.drawLinePlot(this.data, "#" + this.propID, this.color);
-  }
-
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.propID);
     if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawLinePlot();
     }
-    // else if (isEqual(changes.data.previousValue, changes.data.currentValue)) {
-    //   debugger;
-    // }
+
   }
 
   ngAfterViewInit() {
     this.drawLinePlot();
   }
-
-  ngDoCheck() {
-    // console.log(this.propID, this.data);
-  }
-
+  // onClick() {
+  //   this.clickEvent.emit(event);
+  // }
   drawLinePlot() {
     const localThis = this;
     const selection_string = "#" + this.propID;
-    console.log(this.data);
     d3.selectAll(`.${this.propID}_tooltip`).remove();
     if (document.querySelectorAll(selection_string + " svg")[0] != null) {
       document.querySelectorAll(selection_string + " svg")[0].remove();
     }
     // make copy of the original data so we do not mutate it
     const data = [];
-    // console.log(this.data)
     this.data.forEach(el => data.push(Object.assign({}, el)));
 
     const parseTime = d3.timeParse('%I:%M %p');
@@ -193,7 +182,6 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
 
     const gradID = this.propID + "-gradient",
         pathID = this.propID + "-path";
-    console.log(localThis.threshold);
     svg.append("linearGradient")
         .attr("id", gradID)
         .attr("gradientUnits", "userSpaceOnUse")
@@ -359,7 +347,8 @@ export class LinePlotComponent implements DoCheck, OnInit, OnChanges, AfterViewI
             .transition()
             .duration(50)
             .attr("opacity", 0);
-        });
+        })
+        .on("click", localThis.clickEvent.emit);
   }
 
 }

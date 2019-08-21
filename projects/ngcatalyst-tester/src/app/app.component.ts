@@ -142,9 +142,12 @@ export class AppComponent implements OnInit {
     return shuffle(arr.map(item => item[arg]));
   }
 
+  clickEventEmit (data) {
+    console.log(data);
+  }
+
 
   onclickfn () {
-    console.log('clicked');
     this.barData = this.barData.map(item => item.name).map(item2 => {
       return {name: item2, value: this.randomNumber(0, 30000, true)};
     });
