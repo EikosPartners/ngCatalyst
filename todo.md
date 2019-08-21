@@ -1,8 +1,8 @@
 ### David's requests 
 
 * make a Treemap component 
-* "Should have a zero line and then the bar is draw [above zero or below zero](https://www.google.com/url?sa=i&source=imgres&cd=&cad=rja&uact=8&ved=2ahUKEwiYpuOdnY_kAhVQSN8KHWfyBRoQjRx6BAgBEAQ&url=https%3A%2F%2Fwww.thedataschool.co.uk%2Ftimothy-manning%2Fmake-clean-diverging-bar-chart-tableau-tips-tableautimothy%2F&psig=AOvVaw2qWD1KCZuJJOyZWxLuAAu4&ust=1566314200280722) depending on value"
-* line plot: I need it to take into account time, so my data range is time base not date passed
+* fix HeatMap for 
+* fix the Sizing!!!!! percentage
 
 ### L's bugbears
 
