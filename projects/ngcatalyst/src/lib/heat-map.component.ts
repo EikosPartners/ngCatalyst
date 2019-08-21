@@ -88,7 +88,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit {
     const component = document.querySelectorAll(selection_string)[0];
     const width = (typeof this.divWidth === "string") ? component.clientWidth : this.divWidth,
       height = (typeof this.divHeight === "string") ? component.clientHeight : this.divHeight,
-      cellSize = ((13 / 900) * (width)); // cell size
+      cellSize = width > 300 ? ((13 / 900) * (width)) : ((13 / 350) * width); // cell size
     const week_days = [ , "Mon", , "Wed", , "Fri"];
     // const week_days = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
     const month = [
@@ -153,9 +153,9 @@ export class HeatMapComponent implements OnChanges, AfterViewInit {
       .enter()
       .append("svg")
       .attr("width", "100%")
-      .attr("data-height", "0.5678")
+      .attr("data-height", "1")
       .attr("viewBox", `0 0 ${width} ${height}`)
-      .attr("preserveAspectRatio", "xMidYmid slice")
+      .attr("preserveAspectRatio", "xMidYMid slice")
       // http://tutorials.jenkov.com/svg/svg-viewport-view-box.html
       // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
       // http://jonibologna.com/svg-viewbox-and-viewport/
@@ -165,10 +165,14 @@ export class HeatMapComponent implements OnChanges, AfterViewInit {
       .attr("class", "g-class")
       .attr(
         "transform", function(d) {
-          if (localThis.dataType === "calendar") {
-            return "translate(30,50)";
+          if (width > 300 && height > 300) {
+            if (localThis.dataType === "calendar") {
+              return "translate(30,50)";
+            } else {
+              return "translate(100, 50)";
+            }
           } else {
-            return "translate(100, 50)";
+            return "translate(0, 50)";
           }
         }
       );
@@ -191,6 +195,8 @@ export class HeatMapComponent implements OnChanges, AfterViewInit {
     const fontsize = area > 525 ? "12px" : "9px";
 
     // "y" axis values
+    if (height > 300) {
+
     for (let i = 0; i < y_elems.length; i++) {
       svg
         .append("text")
@@ -203,6 +209,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit {
           return y_elems[i];
         });
     }
+  }
 
     // "magnitudes"
     const rect = svg
@@ -242,6 +249,8 @@ export class HeatMapComponent implements OnChanges, AfterViewInit {
       rect.datum(format);
     }
     // "x" axis values
+    if (width > 300) {
+
     const legend = svg
       .selectAll(".legend")
       .data(x_elems)
@@ -261,18 +270,21 @@ export class HeatMapComponent implements OnChanges, AfterViewInit {
         }
 
       })
-      .append("text")
-      .attr("class", "x-axis-label axis-label")
-      .attr("class", function(d, i) {
-        return x_elems[i];
-      })
-      .style("text-anchor", `${(localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) ? 'start' : 'end'}`)
-      .attr("transform", `rotate(${localThis.xAxisAngle})`)
-      .attr("dy", "-.25em")
-      .style("font-size", fontsize)
-      .text(function(d, i) {
-        return x_elems[i];
-      });
+        .append("text")
+        .attr("class", "x-axis-label axis-label")
+        .attr("class", function(d, i) {
+          return x_elems[i];
+        })
+        .style("text-anchor", `${(localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) ? 'start' : 'end'}`)
+        .attr("transform", `rotate(${localThis.xAxisAngle})`)
+        .attr("dy", "-.25em")
+        .style("font-size", fontsize)
+        .text(function(d, i) {
+          return x_elems[i];
+        });
+
+      }
+
 
     svg
       .selectAll(".month")

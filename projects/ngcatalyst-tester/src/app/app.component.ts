@@ -39,7 +39,6 @@ export class AppComponent implements OnInit {
   barDataA = this.barData.map(item => item.name).map(item2 => {
     return {x: item2, y: this.randomNumber(-10000, 20000, true)};
   });
-  // barDataA = barDataJson2;
 
   barPropID = 'angularbar';
   barTitle = 'Bar Chart';
@@ -54,7 +53,7 @@ export class AppComponent implements OnInit {
   bubbleTitle = 'Bubble Chart';
   bubbleColors = ["#4F1E71", "#7C388E", "#A93B8D", "#BA5288", "#F38595", "#EDB7A7", "#F06292", "#C2185B"];
   bbcDivHeight = 300;
-  bbcDivWidth = 400;
+  bbcDivWidth = 200;
 
   heatData = heatDataJson;
   heatData2 = heatData2Json;
@@ -145,7 +144,6 @@ export class AppComponent implements OnInit {
   clickEventEmit (data) {
     console.log(data);
   }
-
 
   onclickfn () {
     this.barData = this.barData.map(item => item.name).map(item2 => {
