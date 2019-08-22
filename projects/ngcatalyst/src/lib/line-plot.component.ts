@@ -114,7 +114,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit {
       element = selected[0];
     }
 
-    let margin = this.margins;
+    const margin = this.margins;
     if (this.xAxisAngle > 0) {
       this.margins.bottom += 10;
     }
@@ -198,7 +198,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit {
           return d.offset; })
         .attr("stop-color", function(d) { return d.color; });
 
-    let xLabel = svg.append("g")
+    const xLabel = svg.append("g")
         .attr("class", "x axis x-axis xaxis")
         .style('fill', 'grey')
         .attr("transform", "translate(0," + height + ")")
