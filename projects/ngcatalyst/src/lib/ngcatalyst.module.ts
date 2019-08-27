@@ -12,12 +12,12 @@ import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
-    NgcatalystComponent, BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent, TreeMapComponent],
+    NgcatalystComponent, BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent],
   imports: [
     CommonModule
   ],
   exports: [
     NgcatalystComponent,
-    BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent, TreeMapComponent]
+    BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent]
 })
 export class NgcatalystModule { }
