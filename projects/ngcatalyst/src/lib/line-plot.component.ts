@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges, AfterViewChecked, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -12,7 +12,7 @@ import { isEqual } from 'lodash';
 `
 })
 
-export class LinePlotComponent implements OnChanges, AfterViewInit {
+export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'line';
   @Input() data: Array<{}>; // [{date: string, value: number}];
@@ -59,6 +59,10 @@ export class LinePlotComponent implements OnChanges, AfterViewInit {
       this.drawLinePlot();
     }
 
+  }
+
+  ngAfterViewChecked() {
+    this.drawLinePlot();
   }
 
   ngAfterViewInit() {
@@ -124,7 +128,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit {
 
     // Account for panel heading height if the title exists.
     if (this.title) {
-      height -= 40;
+      height -= 50;
     }
     const xValue = function(d) {
       if (localThis.type === "Date") {
