@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import luxon from 'luxon';
 
@@ -15,7 +15,7 @@ import luxon from 'luxon';
 // HTK - the bubbles sometimes go outside the margins because of their radius, should we pin radius to margin size as well?
 // also found a use case where the graph didn't render because #s ended up too small because margins were bigger than dimensions themselves - is this a real bug?
 
-export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
+export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'bubble';
   @Input() data: [{label: string, value: number, x: number, y: number}];
@@ -71,6 +71,10 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.drawBubbleChart(this.processedData);
+  }
+
+  ngAfterViewChecked() {
     this.drawBubbleChart(this.processedData);
   }
 

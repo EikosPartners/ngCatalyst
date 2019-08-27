@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -11,7 +11,7 @@ import { isEqual } from 'lodash';
   </div>
 `
 })
-export class PieChartComponent implements OnChanges, AfterViewInit {
+export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'pie';
   @Input() data: Array<{}>;
@@ -58,6 +58,10 @@ export class PieChartComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.drawPieChart();
+  }
+
+  ngAfterViewChecked() {
     this.drawPieChart();
   }
 

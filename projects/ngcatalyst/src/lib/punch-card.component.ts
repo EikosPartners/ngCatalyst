@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import luxon from 'luxon';
 
@@ -16,7 +16,7 @@ import luxon from 'luxon';
   </div>
 `
 })
-export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
+export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'punch';
   @Input() data: [{day_of_week: string, hour_volumes: []}];
@@ -63,6 +63,10 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.drawPunchCard();
+  }
+
+  ngAfterViewChecked() {
     this.drawPunchCard();
   }
 

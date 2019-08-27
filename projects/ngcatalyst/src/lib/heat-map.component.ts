@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -10,7 +10,7 @@ import * as d3 from 'd3';
 </div>
   `
 })
-export class HeatMapComponent implements OnChanges, AfterViewInit {
+export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() dataType = "calendar"; // alternately, "other"
   @Input() title = "Heat Map";
@@ -53,6 +53,9 @@ export class HeatMapComponent implements OnChanges, AfterViewInit {
 
   ngAfterViewInit() {
     this.draw();
+  }
+  ngAfterViewChecked() {
+    this.draw()
   }
 
   get dataModel() {

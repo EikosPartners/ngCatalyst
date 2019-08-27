@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -11,7 +11,7 @@ import { isEqual } from 'lodash';
   </div>
 `
 })
-export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
+export class SunburstComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
 
   @Input() propID = 'burst';
   @Input() data: [{name: string, children: [{name: string, size: number}, {name: string, children: []}]}];
@@ -54,6 +54,10 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.drawSunburst();
+  }
+
+  ngAfterViewChecked() {
     this.drawSunburst();
   }
 
