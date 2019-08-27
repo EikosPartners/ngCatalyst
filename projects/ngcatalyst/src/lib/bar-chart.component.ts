@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked} from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit} from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual, zip, zipObject } from 'lodash';
 
@@ -13,7 +13,7 @@ import { isEqual, zip, zipObject } from 'lodash';
   `
 })
 
-export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChecked {
+export class BarChartComponent implements OnChanges, AfterViewInit {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() data: Array<{}>;
   @Input() propID = 'barchart';
@@ -68,10 +68,6 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
 
   ngAfterViewInit() {
-    this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel, this.mouseover_callback);
-  }
-
-  ngAfterViewChecked() {
     this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel, this.mouseover_callback);
   }
 
