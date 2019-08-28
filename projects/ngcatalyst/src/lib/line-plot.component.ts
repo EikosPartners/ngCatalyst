@@ -30,10 +30,11 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
   @Input() xAxisAngle = 45;
+  // resized = false;
   // @Input() yAxisAngle = 45;
 
   constructor() {
-    window.onresize = this.drawLinePlot.bind(this);
+    // window.onresize = this.resizeEvent.bind(this);
    }
 
   get area () {
@@ -57,14 +58,32 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   //   });
   // }
 
-  // onResize(ev) {
-  //   debugger
+  // resizeEvent() {
+  //   this.resized = true;
   //   this.drawLinePlot();
   // }
 
-  checkForRedraw() {
 
-  }
+  // areaEvent() {
+  //   let height, width;
+  //   if (typeof this.divHeight === "number") {
+  //     height = this.divHeight + "px";
+  //   } else {
+  //     height = this.divHeight;
+  //   }
+  //   if (typeof this.divWidth === "number" ) {
+  //     width = this.divWidth + "px";
+  //   } else {
+  //     width = this.divWidth;
+  //   }
+  //   this.area = {height: height, width: width};
+  // }
+
+  // resizeEvent() {
+  //   this.resized = true;
+  //   this.drawLinePlot();
+  //   this.areaEvent();
+  // }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
@@ -74,18 +93,18 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   }
 
   ngAfterViewChecked() {
-    this.checkForRedraw();
-  }
-
-  ngAfterViewInit() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
     const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
-
-    if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
+    if ((offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) && this.resized === false) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
       this.drawLinePlot();
     }
+
+  }
+
+  ngAfterViewInit() {
+    this.drawLinePlot();
   }
   // onClick() {
   //   this.clickEvent.emit(event);

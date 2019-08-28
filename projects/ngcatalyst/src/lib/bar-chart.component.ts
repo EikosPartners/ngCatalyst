@@ -29,7 +29,9 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
 
-  constructor() { }
+  constructor() {
+    // window.onresize = this.drawBarPlot.bind(this);
+  }
 
   get dataModel() {
     if (this.data[0]["name"]) {
@@ -70,27 +72,32 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
 
   ngAfterViewInit() {
-    this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel);
+    this.drawBarPlot();
   }
 
   ngAfterViewChecked() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
     const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
-
+    console.log('viewcheck?');
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
-      this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel);
+      this.drawBarPlot();
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.data && !changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
-      this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel);
+      this.drawBarPlot();
     }
   }
 
-  drawBarPlot (data, id, yaxisvalue, xaxisvalue) {
+  drawBarPlot () {
+        console.log('drawing');
+        const data = this.dataModel,
+          id = this.propID,
+          yaxisvalue = this.yAxisLabel,
+          xaxisvalue =this.xAxisLabel;
         const localThis = this;
         d3.selectAll(`.${this.propID}_tooltip`).remove();
 
