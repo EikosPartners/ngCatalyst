@@ -7,7 +7,7 @@ import { isEqual } from 'lodash';
   template: `
   <h2>{{title}}</h2>
   <div [ngStyle]="area">
-      <div  [id]="propID" style="width:100%;height:100%"> </div>
+      <div [id]="propID" style="width:100%;height:100%"> </div>
   </div>
 `
 })
@@ -32,7 +32,9 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() xAxisAngle = 45;
   // @Input() yAxisAngle = 45;
 
-  constructor() { }
+  constructor() {
+    window.onresize = this.drawLinePlot.bind(this);
+   }
 
   get area () {
     let height, width;
@@ -55,6 +57,15 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   //   });
   // }
 
+  // onResize(ev) {
+  //   debugger
+  //   this.drawLinePlot();
+  // }
+
+  checkForRedraw() {
+
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawLinePlot();
@@ -63,6 +74,10 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   }
 
   ngAfterViewChecked() {
+    this.checkForRedraw();
+  }
+
+  ngAfterViewInit() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
     const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
 
@@ -71,10 +86,6 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       this.givenWidth = offsetWidth;
       this.drawLinePlot();
     }
-  }
-
-  ngAfterViewInit() {
-    this.drawLinePlot();
   }
   // onClick() {
   //   this.clickEvent.emit(event);

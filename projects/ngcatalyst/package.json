@@ -2,8 +2,13 @@
   "name": "ngcatalyst",
   "version": "0.1.11",
   "description": "Eikos Partners presents D3 data visualizations in Angular",
-  "license" : "SEE LICENSE IN LICENSE",
-  "keywords" :["Angular","Library","D3","Visualizations"],
+  "license": "SEE LICENSE IN LICENSE",
+  "keywords": [
+    "Angular",
+    "Library",
+    "D3",
+    "Visualizations"
+  ],
   "peerDependencies": {
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.0",
@@ -11,12 +16,13 @@
     "luxon": "^1.16.0"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/EikosPartners/agVisuals"
+    "type": "git",
+    "url": "https://github.com/EikosPartners/agVisuals"
   },
   "dependencies": {
     "d3": "^5.9.2",
-    "luxon": "^1.16.0"
+    "luxon": "^1.16.0",
+    "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
     "ng-packagr": "^5.3.0",
