@@ -95,7 +95,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   ngAfterViewChecked() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
     const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
-    if ((offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) && this.resized === false) {
+    if ((offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth)) { //&& this.resized === false
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
       this.drawLinePlot();
