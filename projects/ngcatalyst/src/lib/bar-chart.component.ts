@@ -26,6 +26,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() title = "Bar Chart";
   @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
   @Input() divWidth: any = "100%";
+  givenHeight = this.divHeight;
+  givenWidth = this.divWidth;
 
   constructor() { }
 
@@ -68,24 +70,27 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
 
   ngAfterViewInit() {
-    this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel, this.mouseover_callback);
+    this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel);
   }
 
   ngAfterViewChecked() {
-    this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel, this.mouseover_callback);
+    const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
+    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+
+    if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
+      this.givenHeight = offsetHeight;
+      this.givenWidth = offsetWidth;
+      this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.data && !changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
-      this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel, this.mouseover_callback);
+      this.drawBarPlot(this.dataModel, this.propID, this.yAxisLabel, this.xAxisLabel);
     }
   }
 
-  mouseover_callback(x) {
-      return x;
-  }
-
-  drawBarPlot (data, id, yaxisvalue, xaxisvalue, mouseover_callback) {
+  drawBarPlot (data, id, yaxisvalue, xaxisvalue) {
         const localThis = this;
         d3.selectAll(`.${this.propID}_tooltip`).remove();
 
@@ -239,11 +244,12 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
               }
             })
             .attr("width", x.bandwidth() - x.paddingInner())
-            .style("fill", function(d, i, c){
+            .style("fill", function(d, i, c) {
               return dataColors[d["x"]];
             })
             .on("mouseover", function(d) {
-              const yval = mouseover_callback(d.y);
+              // debugger
+              const yval = d.y;
               tooltip
                 .transition()
                 .duration(100)
@@ -283,8 +289,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
                 .select(this)
                 .transition()
                 .duration(100)
-                .style("fill", function(d, i) {
-                   return dataColors[d["x"]];
+                .style("fill", function(d2, i) {
+                   return dataColors[d2["x"]];
                 });
               tooltip
                 .transition()

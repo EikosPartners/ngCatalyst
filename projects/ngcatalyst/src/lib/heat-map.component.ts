@@ -21,6 +21,8 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
   @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"]; // need 10 hex colors;
   @Input() divHeight: any = "100%";
   @Input() divWidth: any = "100%";
+  givenHeight = this.divHeight;
+  givenWidth = this.divWidth;
   // should maybe have a min-width or min-height to prevent it from going SUPER TINY?
   // also since it's preserveAspectRatio maybe only @Input one of the dimensions? HTK
 
@@ -54,8 +56,15 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
   ngAfterViewInit() {
     this.draw();
   }
+
   ngAfterViewChecked() {
-    this.draw()
+    const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
+    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+    if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
+      this.givenHeight = offsetHeight;
+      this.givenWidth = offsetWidth;
+      this.draw();
+    }
   }
 
   get dataModel() {
@@ -406,7 +415,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
         if (localThis.dataType !== 'calendar') {
           localThis.clickEvent.emit(d);
         } else {
-          localThis.clickEvent.emit(localThis.dataModel.filter(item => item.x === d)[0])
+          localThis.clickEvent.emit(localThis.dataModel.filter(item => item.x === d)[0]);
         }
       });
 

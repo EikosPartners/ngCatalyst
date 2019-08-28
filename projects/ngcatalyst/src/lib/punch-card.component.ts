@@ -28,7 +28,9 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
   @Input() divWidth: any = "100%";
   // tslint:disable-next-line:max-line-length
   labelsX = ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"];
-
+  givenHeight = this.divHeight;
+  givenWidth = this.divWidth;
+  
 // HTK reference https://gist.github.com/kaezarrex/10122633
 
   get area () {
@@ -67,7 +69,14 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
   }
 
   ngAfterViewChecked() {
-    this.drawPunchCard();
+    const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
+    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+
+    if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
+      this.givenHeight = offsetHeight;
+      this.givenWidth = offsetWidth;
+      this.drawPunchCard();
+    }
   }
 
   getDay (day) {

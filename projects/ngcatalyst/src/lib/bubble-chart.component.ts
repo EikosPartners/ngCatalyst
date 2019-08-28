@@ -30,7 +30,8 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   @Input() divWidth: any = "100%";
   @Input() margin = { top: 40, right: 20, bottom: 40, left: 20 }; // maybe make this a calc based on radius so if x or y is 0 it will show whole bubble?;
   dateFormat = '%Y-%m-%d';
-
+  givenHeight = this.divHeight;
+  givenWidth = this.divWidth;
   constructor() { }
 
   get area () {
@@ -75,7 +76,14 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   }
 
   ngAfterViewChecked() {
-    this.drawBubbleChart(this.processedData);
+    const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
+    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+
+    if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
+      this.givenHeight = offsetHeight;
+      this.givenWidth = offsetWidth;
+      this.drawBubbleChart(this.processedData);
+    }
   }
 
   xValue(d) {

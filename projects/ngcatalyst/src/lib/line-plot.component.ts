@@ -27,7 +27,8 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() margins = { top: 20, right: 30, bottom: 45, left: 50 };
   @Input() type = "Date"; // (alternate option is time)
   // gradientId = 'gradient-' + this.propID;
-
+  givenHeight = this.divHeight;
+  givenWidth = this.divWidth;
   @Input() xAxisAngle = 45;
   // @Input() yAxisAngle = 45;
 
@@ -62,7 +63,14 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   }
 
   ngAfterViewChecked() {
-    this.drawLinePlot();
+    const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
+    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+
+    if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
+      this.givenHeight = offsetHeight;
+      this.givenWidth = offsetWidth;
+      this.drawLinePlot();
+    }
   }
 
   ngAfterViewInit() {

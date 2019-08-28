@@ -24,6 +24,8 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   // note that if the donutWidth is too big, the pie chart will stretch outside the div area - HTK check for that
   savedColors = {};
   total = 0;
+  givenHeight = this.divHeight;
+  givenWidth = this.divWidth;
 
   constructor() { }
 
@@ -62,7 +64,14 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   }
 
   ngAfterViewChecked() {
-    this.drawPieChart();
+    const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
+    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+
+    if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
+      this.givenHeight = offsetHeight;
+      this.givenWidth = offsetWidth;
+      this.drawPieChart();
+    }
   }
 
   drawPieChart() {
