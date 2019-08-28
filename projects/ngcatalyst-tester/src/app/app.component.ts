@@ -22,6 +22,8 @@ export class AppComponent implements OnInit {
   constructor(private randomNumberService: RandomNumberService) {
 
   }
+
+
   title = 'ngcatalyst-tester';
 
   yAxisLabel = 'Thing Measured';
@@ -99,6 +101,12 @@ export class AppComponent implements OnInit {
   sunburstData2 = this.metaCollect(this.sunburstData);
   sunburstPropID = "angularsunburst";
   sunburstTitle = 'Sunburst';
+
+  onResize(ev) {
+    console.log(ev);
+    console.log('from the top');
+    // debugger;
+  }
 
   ngOnInit() {
   }

@@ -1,9 +1,8 @@
 <button (click)="onclickfn()">Button</button>
 
-<div class="flexbox-container">
-
- <div style="height: 500px; width: 500px">
-      <eikos-bar-chart
+<div class="flexbox-container" >
+ <!-- <div style="height: 500px; width: 700px">
+    <eikos-bar-chart
       [data]="barData"
       [xAxisLabel]="xAxisLabel"
       [yAxisLabel]="yAxisLabel"
@@ -19,7 +18,7 @@
       >
     </eikos-bar-chart>
   </div>
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px">
       <eikos-bar-chart
       [data]="barDataA"
       [xAxisLabel]="xAxisLabel"
@@ -37,7 +36,7 @@
 
 
 
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px">
     <eikos-bubble-chart
       [data]="bubbleData"
       [propID]="bubblePropID"
@@ -54,7 +53,7 @@
     ></eikos-bubble-chart>
   </div>
 
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px">
       <eikos-bubble-chart
         [data]="bubbleData2"
         [title]="bubbleTitle"
@@ -71,7 +70,7 @@
     </div>
 
 
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px">
     <eikos-heat-map
       [data]="heatData"
       [colors]="pieColors"
@@ -82,7 +81,7 @@
     ></eikos-heat-map>
   </div>
 
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px">
     <eikos-heat-map
       [data]="heatData2"
       [dataType]="dataType"
@@ -94,13 +93,12 @@
       (clickEvent)="clickEventEmit($event)"
 
     ></eikos-heat-map>
-  </div>
+  </div> -->
 
 
 
 
-
- <div style="height: 500px; width: 500px">
+ <div style="height: 500px; width: 700px">
     <eikos-line-plot
       [data]="lineDataB"
       [propID]="linePropID"
@@ -108,13 +106,13 @@
       [type]="lineType"
       [xAxisLabel]="'foobar'"
       [yAxisLabel]="yAxisLabel"
-      [divHeight]="hundoPct"
-      [divWidth]="hundoPct"
+      [divHeight]="bbcDivWidth"
+      [divWidth]="bbcDivWidth"
       (clickEvent)="clickEventEmit($event)"
     ></eikos-line-plot>
   </div>
 
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px" >
     <eikos-line-plot
       [data]="lineDataA"
       [title]="lineTitle"
@@ -127,8 +125,7 @@
       ></eikos-line-plot>
     </div>
 
-
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px">
     <eikos-pie-chart
       [data]="pieData"
       [donutWidth]="donutWidth"
@@ -142,7 +139,7 @@
   </div>
 
 
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px">
     <eikos-pie-chart
       [data]="pieData2"
       [colors]="bubbleColors"
@@ -153,8 +150,8 @@
     ></eikos-pie-chart>
   </div>
 
-<!--
-  <div style="height: 700px; width: 500px">
+
+  <div style="height: 700px; width: 700px">
     <eikos-punch-card
       [data]="punchData"
       [propID]="punchPropID"
@@ -166,7 +163,7 @@
       [divWidth]="hundoPct"
     ></eikos-punch-card>
   </div>
-  <div style="height: 560px; width: 500px">
+  <div style="height: 560px; width: 700px">
       <eikos-punch-card
         [data]="punchData2"
         [colors]="punchColors"
@@ -176,10 +173,9 @@
         [divHeight]="hundoPct"
         [divWidth]="hundoPct"
       ></eikos-punch-card>
-    </div> -->
+    </div>
 
-<!--
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px">
     <eikos-sunburst
     [data]="sunburstData"
     [propID]="sunburstPropID"
@@ -190,13 +186,13 @@
   </div>
 
 
-  <div style="height: 500px; width: 500px">
+  <div style="height: 500px; width: 700px">
     <eikos-sunburst
     [data]="sunburstData2"
     [title]="sunburstTitle"
     [divHeight]="hundoPct"
     [divWidth]="hundoPct"
     ></eikos-sunburst>
-  </div> -->
+  </div>
 
 </div>
