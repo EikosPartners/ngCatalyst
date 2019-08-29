@@ -7,12 +7,10 @@ import { isEqual } from 'lodash';
   selector: 'eikos-line-plot',
   template: `
   <h2>{{title}}</h2>
-  <ng-container #vc></ng-container>
-  <!---->
+  <!--   <ng-container #vc></ng-container> -->
   <div [ngStyle]="area">
-    <ng-template>
-    <div #c [id]="propID" style="width:100%;height:100%"> </div>
-    </ng-template>
+    <!-- <ng-template> -->
+    <div [id]="propID" style="width:100%;height:100%"> </div>
   </div>
   <!-- </ng-template>-->
 `
@@ -41,7 +39,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   @ViewChildren('c', {read: ElementRef}) childComps: QueryList<ElementRef>;
   @ViewChild('vc', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
   @ViewChild(TemplateRef) template: TemplateRef<null>;
-  area = {height: "100%", width: "100%"};
+  // area = {height: "100%", width: "100%"};
   @HostListener('window:resize', ['$event'])
 
   onResize(event) {
@@ -62,8 +60,16 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   }
 
   constructor() {
-    // window.onresize = this.resizeEvent.bind(this);
-    console.log('con');
+
+   }
+
+   ngOnInit() {
+    console.log('init');
+    // this.viewContainer.createEmbeddedView(this.template);
+
+   }
+
+  get area () {
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
@@ -75,30 +81,8 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     } else {
       width = this.divWidth;
     }
-    this.area = {height: height, width: width};
-
-   }
-
-   ngOnInit() {
-     console.log('init');
-    this.viewContainer.createEmbeddedView(this.template);
-
-   }
-
-  // get area () {
-  //   let height, width;
-  //   if (typeof this.divHeight === "number") {
-  //     height = this.divHeight + "px";
-  //   } else {
-  //     height = this.divHeight;
-  //   }
-  //   if (typeof this.divWidth === "number" ) {
-  //     width = this.divWidth + "px";
-  //   } else {
-  //     width = this.divWidth;
-  //   }
-  //   return {height: height, width: width};
-  // }
+    return {height: height, width: width};
+  }
   // you might need a method like this to reformat given data with the appropriate field names,
   // get dataModel() {
   //   return this.data.map(item => {
