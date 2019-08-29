@@ -2,11 +2,8 @@
 
 <div class="flexbox-container outlet" >
 
-    <ng-container #vc></ng-container>
-    <ng-template>
 
-
-    <div #c style="height: 500px; width: 700px" >
+    <div style="height: 500px; width: 700px" >
         <eikos-line-plot
           [data]="lineDataA"
           [title]="lineTitle"
@@ -18,10 +15,10 @@
           [divWidth]="hundoPct"
           ></eikos-line-plot>
         </div>
-</ng-template>
 
- <!-- <div style="height: 500px; width: 700px">
+ <div style="height: 500px; width: 700px">
     <eikos-bar-chart
+      [showMe]="showMe"
       [data]="barData"
       [xAxisLabel]="xAxisLabel"
       [yAxisLabel]="yAxisLabel"
@@ -30,13 +27,15 @@
       [title]="barTitle"
       [xAxisAngle]="axisAngle"
       [yAxisAngle]="axisAngle"
-      [divHeight]="hundoPct"
-      [divWidth]="fiftyPct"
+      [divHeight]="fiftyPct"
+      [divWidth]="hundoPct"
       (clickEvent)="clickEventEmit($event)"
 
       >
     </eikos-bar-chart>
   </div>
+
+<!--
   <div style="height: 500px; width: 700px">
       <eikos-bar-chart
       [data]="barDataA"
@@ -115,7 +114,7 @@
   </div> -->
 
 
-
+<!--
 
  <div style="height: 500px; width: 700px">
     <eikos-line-plot
@@ -129,7 +128,7 @@
       [divWidth]="bbcDivWidth"
       (clickEvent)="clickEventEmit($event)"
     ></eikos-line-plot>
-  </div>
+  </div> -->
 <!--
   <div style="height: 500px; width: 700px" >
     <eikos-line-plot

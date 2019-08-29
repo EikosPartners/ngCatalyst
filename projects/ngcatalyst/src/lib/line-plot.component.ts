@@ -1,5 +1,5 @@
 import{ AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input,
-  OnChanges, Output, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+  OnChanges, OnInit, Output, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -7,17 +7,18 @@ import { isEqual } from 'lodash';
   selector: 'eikos-line-plot',
   template: `
   <h2>{{title}}</h2>
-<!--  <ng-container #vc></ng-container>
-  <ng-template>
-  -->
-    <div [ngStyle]="area">
-        <div [id]="propID" style="width:100%;height:100%"> </div>
-    </div>
+  <ng-container #vc></ng-container>
+  <!---->
+  <div [ngStyle]="area">
+    <ng-template>
+    <div #c [id]="propID" style="width:100%;height:100%"> </div>
+    </ng-template>
+  </div>
   <!-- </ng-template>-->
 `
 })
 
-export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChecked {
+export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'line';
   @Input() data: Array<{}>; // [{date: string, value: number}];
@@ -37,27 +38,32 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() xAxisAngle = 45;
   resized = false;
   // @Input() yAxisAngle = 45;
-  @HostListener('window:resize', ['$event'])
   @ViewChildren('c', {read: ElementRef}) childComps: QueryList<ElementRef>;
   @ViewChild('vc', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
   @ViewChild(TemplateRef) template: TemplateRef<null>;
+  area = {height: "100%", width: "100%"};
+  @HostListener('window:resize', ['$event'])
 
   onResize(event) {
-    console.log('onResize');
-    let res;
-    if (res) {
-      clearTimeout(res);
-    }
-    const thing = this.drawLinePlot.bind(this);
-    res = setTimeout(thing, 1000);
+    console.log('onResize?');
+    // this.viewContainer.clear();
+    // this.viewContainer.createEmbeddedView(this.template);
+    // this.resized = true;
+    // setTimeout(this.drawLinePlot.bind(this), 0);
+    this.drawLinePlot();
+    // console.log('onResize');
+    // let res;
+    // if (res) {
+    //   clearTimeout(res);
+    // }
+    // const thing = this.drawLinePlot.bind(this);
+    // res = setTimeout(thing, 1000);
 
   }
 
   constructor() {
     // window.onresize = this.resizeEvent.bind(this);
-   }
-
-  get area () {
+    console.log('con');
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
@@ -69,8 +75,30 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     } else {
       width = this.divWidth;
     }
-    return {height: height, width: width};
-  }
+    this.area = {height: height, width: width};
+
+   }
+
+   ngOnInit() {
+     console.log('init');
+    this.viewContainer.createEmbeddedView(this.template);
+
+   }
+
+  // get area () {
+  //   let height, width;
+  //   if (typeof this.divHeight === "number") {
+  //     height = this.divHeight + "px";
+  //   } else {
+  //     height = this.divHeight;
+  //   }
+  //   if (typeof this.divWidth === "number" ) {
+  //     width = this.divWidth + "px";
+  //   } else {
+  //     width = this.divWidth;
+  //   }
+  //   return {height: height, width: width};
+  // }
   // you might need a method like this to reformat given data with the appropriate field names,
   // get dataModel() {
   //   return this.data.map(item => {
@@ -107,13 +135,13 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
-      console.log('changes?');
+      // console.log('changes?');
       this.drawLinePlot();
     }
   }
 
   ngAfterViewChecked() {
-    console.log('viewcheck');
+    // console.log('viewcheck');
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
     const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
     if ((offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) && this.resized === false) {
@@ -121,8 +149,12 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       this.givenWidth = offsetWidth;
       this.drawLinePlot();
       this.resized = false;
-      console.log('resized?');
+      // console.log('resized?');
     }
+    // else if (this.resized) {
+    //   this.drawLinePlot();
+    //   this.resized = false;
+    // }
 
   }
 
@@ -133,7 +165,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   //   this.clickEvent.emit(event);
   // }
   drawLinePlot() {
-    console.log('redrawn?');
+    // console.log('redrawn?');
     // debugger;
     const localThis = this;
     const selection_string = "#" + this.propID;
@@ -181,17 +213,17 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     }
 
     const margin = this.margins;
-    if (this.xAxisAngle > 0) {
-      this.margins.bottom += 10;
-    }
+    // if (this.xAxisAngle > 0) {
+    //   this.margins.bottom += 10;
+    // }
+    console.log(element.clientHeight);
+    console.log(margin);
     const
-      width = element.clientWidth - margin.left - margin.right;
-    let height = element.clientHeight - margin.top - margin.bottom;
-
+      width = element.clientWidth - margin.left - margin.right,
+      height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0) - (this.title ? 50 : 0);
+    console.log(height);
     // Account for panel heading height if the title exists.
-    if (this.title) {
-      height -= 50;
-    }
+
     const xValue = function(d) {
       if (localThis.type === "Date") {
         return d.date;

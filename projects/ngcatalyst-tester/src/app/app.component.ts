@@ -21,11 +21,11 @@ import { shuffle, zipObject } from 'lodash';
 export class AppComponent implements OnInit {
 
   constructor(private randomNumberService: RandomNumberService) {
-    window.onresize = this.rerender.bind(this);
+    // window.onresize = this.rerender.bind(this);
   }
-  @ViewChildren('c', {read: ElementRef}) childComps: QueryList<ElementRef>;
-  @ViewChild('vc', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
-  @ViewChild(TemplateRef) template: TemplateRef<null>;
+  // @ViewChildren('c', {read: ElementRef}) childComps: QueryList<ElementRef>;
+  // @ViewChild('vc', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
+  // @ViewChild(TemplateRef) template: TemplateRef<null>;
 
 
   title = 'ngcatalyst-tester';
@@ -100,7 +100,7 @@ export class AppComponent implements OnInit {
   axisColor = ["#FF6F00", "#FFD600"];
   barColors = zipObject(this.barData.map(item => item.name), this.punchColors);
 
-
+  showMe = true;
   sunburstData = sunburstDataJson;
   sunburstData2 = this.metaCollect(this.sunburstData);
   sunburstPropID = "angularsunburst";
@@ -108,16 +108,24 @@ export class AppComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
 
   onResize(event) {
-     console.log("Width: " + event.target.innerWidth);
+    this.showMe = false;
+    console.log("Width: " + event.target.innerWidth);
+    const localThis = this;
+    const equation = () => localThis.showMe = true;
+    setTimeout(equation, 1);
+    console.log(this.showMe);
   }
 
 
   ngOnInit() {
-    this.viewContainer.createEmbeddedView(this.template);
-
+    // this.viewContainer.createEmbeddedView(this.template);
   }
   rerender() {
-    this.viewContainer.createEmbeddedView(this.template);
+    // this.viewContainer.createEmbeddedView(this.template);
+    // this.showMe = false;
+    // const localThis = this;
+    // const equation = () => localThis.showMe = true;
+    // setTimeout(equation, 500);
   }
 
   metaCollect(obj) {
