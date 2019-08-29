@@ -1,6 +1,25 @@
 <button (click)="onclickfn()">Button</button>
 
-<div class="flexbox-container" >
+<div class="flexbox-container outlet" >
+
+    <ng-container #vc></ng-container>
+    <ng-template>
+
+
+    <div #c style="height: 500px; width: 700px" >
+        <eikos-line-plot
+          [data]="lineDataA"
+          [title]="lineTitle"
+          [colors]="lineColors"
+          [threshold]="threshold"
+          [xAxisLabel]="xAxisLabelDate"
+          [yAxisLabel]="yAxisLabel"
+          [divHeight]="fiftyPct"
+          [divWidth]="hundoPct"
+          ></eikos-line-plot>
+        </div>
+</ng-template>
+
  <!-- <div style="height: 500px; width: 700px">
     <eikos-bar-chart
       [data]="barData"
@@ -111,7 +130,7 @@
       (clickEvent)="clickEventEmit($event)"
     ></eikos-line-plot>
   </div>
-
+<!--
   <div style="height: 500px; width: 700px" >
     <eikos-line-plot
       [data]="lineDataA"
@@ -123,7 +142,7 @@
       [divHeight]="fiftyPct"
       [divWidth]="hundoPct"
       ></eikos-line-plot>
-    </div>
+    </div> -->
 
   <div style="height: 500px; width: 700px">
     <eikos-pie-chart

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ViewContainerRef,
+  ElementRef,  QueryList,  ViewChildren, TemplateRef } from '@angular/core';
 const sunburstDataJson = require('../assets/sunburstData.json');
 const punchDataJson = require('../assets/punchData.json');
 const pieDataJson = require('../assets/pieData.json');
@@ -20,8 +21,11 @@ import { shuffle, zipObject } from 'lodash';
 export class AppComponent implements OnInit {
 
   constructor(private randomNumberService: RandomNumberService) {
-
+    window.onresize = this.rerender.bind(this);
   }
+  @ViewChildren('c', {read: ElementRef}) childComps: QueryList<ElementRef>;
+  @ViewChild('vc', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
+  @ViewChild(TemplateRef) template: TemplateRef<null>;
 
 
   title = 'ngcatalyst-tester';
@@ -101,14 +105,19 @@ export class AppComponent implements OnInit {
   sunburstData2 = this.metaCollect(this.sunburstData);
   sunburstPropID = "angularsunburst";
   sunburstTitle = 'Sunburst';
+  @HostListener('window:resize', ['$event'])
 
-  onResize(ev) {
-    console.log(ev);
-    console.log('from the top');
-    // debugger;
+  onResize(event) {
+     console.log("Width: " + event.target.innerWidth);
   }
 
+
   ngOnInit() {
+    this.viewContainer.createEmbeddedView(this.template);
+
+  }
+  rerender() {
+    this.viewContainer.createEmbeddedView(this.template);
   }
 
   metaCollect(obj) {
