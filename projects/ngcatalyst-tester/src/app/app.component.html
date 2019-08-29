@@ -1,9 +1,12 @@
 <button (click)="onclickfn()">Button</button>
 
-<div class="flexbox-container outlet" >
+<div class="flexbox-container" vc >
+  <ng-container #vc></ng-container>
+  <ng-template>
 
 
-    <div style="height: 500px; width: 700px" >
+
+    <div style="height: 500px; width: 700px" #c>
         <eikos-line-plot
           [data]="lineDataA"
           [title]="lineTitle"
@@ -15,6 +18,8 @@
           [divWidth]="hundoPct"
           ></eikos-line-plot>
         </div>
+
+        </ng-template>
 
  <div style="height: 500px; width: 700px">
     <eikos-bar-chart
