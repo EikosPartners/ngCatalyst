@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnChanges, AfterViewChecked, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, Input, OnChanges, AfterViewChecked, SimpleChanges, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -32,9 +32,14 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() xAxisAngle = 45;
   // resized = false;
   // @Input() yAxisAngle = 45;
+  @HostListener('window:resize', ['$event'])
+
+  resizeEvent() {
+    this.drawLinePlot();
+  }
 
   constructor() {
-    // window.onresize = this.resizeEvent.bind(this);
+    // window.onresize = this.resizeEvent; // alt method for resizing withou HostListener
    }
 
   get area () {
@@ -58,44 +63,17 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   //   });
   // }
 
-  // resizeEvent() {
-  //   this.resized = true;
-  //   this.drawLinePlot();
-  // }
-
-
-  // areaEvent() {
-  //   let height, width;
-  //   if (typeof this.divHeight === "number") {
-  //     height = this.divHeight + "px";
-  //   } else {
-  //     height = this.divHeight;
-  //   }
-  //   if (typeof this.divWidth === "number" ) {
-  //     width = this.divWidth + "px";
-  //   } else {
-  //     width = this.divWidth;
-  //   }
-  //   this.area = {height: height, width: width};
-  // }
-
-  // resizeEvent() {
-  //   this.resized = true;
-  //   this.drawLinePlot();
-  //   this.areaEvent();
-  // }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawLinePlot();
     }
-
   }
 
   ngAfterViewChecked() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
     const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
-    if ((offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth)) { //&& this.resized === false
+    if ((offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth)) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
       this.drawLinePlot();
@@ -157,17 +135,14 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     }
 
     const margin = this.margins;
-    if (this.xAxisAngle > 0) {
-      this.margins.bottom += 10;
-    }
     const
-      width = element.clientWidth - margin.left - margin.right;
-    let height = element.clientHeight - margin.top - margin.bottom;
+      width = element.clientWidth - margin.left - margin.right,
+      height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0) - (this.title ? 50 : 0);
 
     // Account for panel heading height if the title exists.
-    if (this.title) {
-      height -= 50;
-    }
+    // if (this.title) {
+    //   height -= 50;
+    // }
     const xValue = function(d) {
       if (localThis.type === "Date") {
         return d.date;

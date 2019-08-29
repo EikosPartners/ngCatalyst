@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked, HostListener } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -25,6 +25,11 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
   givenWidth = this.divWidth;
   // should maybe have a min-width or min-height to prevent it from going SUPER TINY?
   // also since it's preserveAspectRatio maybe only @Input one of the dimensions? HTK
+  @HostListener('window:resize', ['$event'])
+
+  resizeEvent() {
+    this.draw();
+  }
 
   constructor() {
   }
@@ -280,7 +285,6 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
 
           return "translate(" + size + ",0)";
         }
-
       })
         .append("text")
         .attr("class", "x-axis-label axis-label")

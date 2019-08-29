@@ -1,7 +1,7 @@
 <button (click)="onclickfn()">Button</button>
 
 <div class="flexbox-container" >
- <!-- <div style="height: 500px; width: 700px">
+  <div style="height: 500px; width: 700px">
     <eikos-bar-chart
       [data]="barData"
       [xAxisLabel]="xAxisLabel"
@@ -12,12 +12,13 @@
       [xAxisAngle]="axisAngle"
       [yAxisAngle]="axisAngle"
       [divHeight]="hundoPct"
-      [divWidth]="fiftyPct"
+      [divWidth]="hundoPct"
       (clickEvent)="clickEventEmit($event)"
 
       >
     </eikos-bar-chart>
   </div>
+
   <div style="height: 500px; width: 700px">
       <eikos-bar-chart
       [data]="barDataA"
@@ -93,10 +94,7 @@
       (clickEvent)="clickEventEmit($event)"
 
     ></eikos-heat-map>
-  </div> -->
-
-
-
+  </div>
 
  <div style="height: 500px; width: 700px">
     <eikos-line-plot
@@ -150,7 +148,6 @@
     ></eikos-pie-chart>
   </div>
 
-
   <div style="height: 700px; width: 700px">
     <eikos-punch-card
       [data]="punchData"
@@ -163,28 +160,28 @@
       [divWidth]="hundoPct"
     ></eikos-punch-card>
   </div>
-  <div style="height: 560px; width: 700px">
-      <eikos-punch-card
-        [data]="punchData2"
-        [colors]="punchColors"
-        [title]="punchTitle"
-        [axisColors]="axisColor"
-        (clickEvent)="clickEventEmit($event)"
-        [divHeight]="hundoPct"
-        [divWidth]="hundoPct"
-      ></eikos-punch-card>
-    </div>
 
-  <div style="height: 500px; width: 700px">
-    <eikos-sunburst
-    [data]="sunburstData"
-    [propID]="sunburstPropID"
-    [title]="sunburstTitle"
-    [divHeight]="hundoPct"
-    [divWidth]="hundoPct"
-    ></eikos-sunburst>
+  <div style="height: 560px; width: 700px">
+    <eikos-punch-card
+      [data]="punchData2"
+      [colors]="punchColors"
+      [title]="punchTitle"
+      [axisColors]="axisColor"
+      (clickEvent)="clickEventEmit($event)"
+      [divHeight]="hundoPct"
+      [divWidth]="hundoPct"
+    ></eikos-punch-card>
   </div>
 
+  <div style="height: 1000px; width: 700px">
+    <eikos-sunburst
+      [data]="sunburstData"
+      [propID]="sunburstPropID"
+      [title]="sunburstTitle"
+      [divHeight]="hundoPct"
+      [divWidth]="hundoPct"
+    ></eikos-sunburst>
+  </div>
 
   <div style="height: 500px; width: 700px">
     <eikos-sunburst

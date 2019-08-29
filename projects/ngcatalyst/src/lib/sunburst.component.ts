@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, HostListener, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -19,6 +19,11 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit, Afte
   @Input() divHeight: any = "100%";
   @Input() divWidth: any = "100%";
   // htk it seems that when one is bigger than the other that affects posiitioning in the div instead of actual size
+  @HostListener('window:resize', ['$event'])
+
+  resizeEvent() {
+    this.drawSunburst();
+  }
 
   constructor() { }
 
@@ -76,7 +81,7 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit, Afte
         } else {
           element = selected[0];
         }
-        // debugger
+
         const	width = element.clientWidth;
         let	height = element.clientHeight;
 
