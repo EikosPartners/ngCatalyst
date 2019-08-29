@@ -32,7 +32,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
   givenWidth = this.divWidth;
   @HostListener('window:resize', ['$event'])
 
-  resizeEvent() {
+  resizeEvent(ev) {
     this.drawPunchCard();
   }
 

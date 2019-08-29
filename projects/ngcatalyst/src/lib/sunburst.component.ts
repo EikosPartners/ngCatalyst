@@ -21,7 +21,7 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit, Afte
   // htk it seems that when one is bigger than the other that affects posiitioning in the div instead of actual size
   @HostListener('window:resize', ['$event'])
 
-  resizeEvent() {
+  resizeEvent(ev) {
     this.drawSunburst();
   }
 

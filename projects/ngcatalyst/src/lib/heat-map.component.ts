@@ -27,7 +27,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
   // also since it's preserveAspectRatio maybe only @Input one of the dimensions? HTK
   @HostListener('window:resize', ['$event'])
 
-  resizeEvent() {
+  resizeEvent(ev) {
     this.draw();
   }
 

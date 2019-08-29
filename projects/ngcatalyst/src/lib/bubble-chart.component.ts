@@ -34,8 +34,8 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   givenWidth = this.divWidth;
   @HostListener('window:resize', ['$event'])
 
-  resizeEvent() {
-    this.drawBubbleChart();
+  resizeEvent(ev) {
+    this.drawBubbleChart(this.processedData);
   }
 
   constructor() { }

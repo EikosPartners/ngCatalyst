@@ -34,7 +34,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   // @Input() yAxisAngle = 45;
   @HostListener('window:resize', ['$event'])
 
-  resizeEvent() {
+  resizeEvent(ev) {
     this.drawLinePlot();
   }
 

@@ -28,7 +28,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   givenWidth = this.divWidth;
   @HostListener('window:resize', ['$event'])
 
-  resizeEvent() {
+  resizeEvent(ev) {
     this.drawPieChart();
   }
 
