@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 // import {NgcatalystModule} from 'ngcatalyst';
+import { ContainerComponent} from './container/container.component';
 
 import {LinePlotComponent} from '../../../../projects/ngcatalyst/src/lib/line-plot.component';
 import {BarChartComponent} from '../../../../projects/ngcatalyst/src/lib/bar-chart.component';
@@ -20,7 +21,8 @@ import {PunchCardComponent} from '../../../../projects/ngcatalyst/src/lib/punch-
     PieChartComponent,
     HeatMapComponent,
     BubbleChartComponent,
-    PunchCardComponent
+    PunchCardComponent,
+    ContainerComponent
   ],
   imports: [
     BrowserModule,

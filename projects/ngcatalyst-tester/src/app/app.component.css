@@ -1,4 +1,4 @@
-.flexbox-container {
+.flexbox-container, app-container {
   margin-top: 3%;
   display: flex;
   align-items: flex-start;
