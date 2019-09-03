@@ -10,17 +10,17 @@ import { PunchCardComponent } from './punch-card.component';
 import { SunburstComponent } from './sunburst.component';
 import { HeatMapComponent } from './heat-map.component';
 
+import { CardListComponent } from './card-list/card-list.component';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
-    NgcatalystComponent, BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent
-  ],
+    NgcatalystComponent, BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent, CardListComponent],
   imports: [
     CommonModule, BrowserModule
   ],
   exports: [
     NgcatalystComponent,
-    BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent]
+    BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent, CardListComponent]
 })
 export class NgcatalystModule { }
