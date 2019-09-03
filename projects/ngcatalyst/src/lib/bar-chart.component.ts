@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked} from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked} from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual, zip, zipObject } from 'lodash';
 
@@ -31,6 +31,11 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() divWidth: any = "100%";
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
+  @HostListener('window:resize', ['$event'])
+
+  onResize(ev) {
+    this.drawBarPlot();
+  }
 
   constructor() {
     // window.onresize = this.drawBarPlot.bind(this);
@@ -122,7 +127,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
           margin.bottom += (this.xAxisAngle / 2);
         }
         const width = element.clientWidth - margin.left - margin.right;
-        let height = element.clientHeight - margin.top - margin.bottom;
+        let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? (this.xAxisAngle / 2) : 0);
         if (this.title) {
           height = height - 48;
         }

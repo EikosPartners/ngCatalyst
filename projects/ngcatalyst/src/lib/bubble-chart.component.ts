@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked, HostListener } from '@angular/core';
 import * as d3 from 'd3';
 import luxon from 'luxon';
 
@@ -32,6 +32,12 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   dateFormat = '%Y-%m-%d';
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
+  @HostListener('window:resize', ['$event'])
+
+  resizeEvent(ev) {
+    this.drawBubbleChart(this.processedData);
+  }
+
   constructor() { }
 
   get area () {

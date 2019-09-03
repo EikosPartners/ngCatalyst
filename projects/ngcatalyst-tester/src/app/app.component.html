@@ -111,7 +111,7 @@
       (clickEvent)="clickEventEmit($event)"
 
     ></eikos-heat-map>
-  </div> -->
+  </div>
 
 
 <!--
@@ -168,7 +168,6 @@
     ></eikos-pie-chart>
   </div>
 
-
   <div style="height: 700px; width: 700px">
     <eikos-punch-card
       [data]="punchData"
@@ -181,28 +180,28 @@
       [divWidth]="hundoPct"
     ></eikos-punch-card>
   </div>
-  <div style="height: 560px; width: 700px">
-      <eikos-punch-card
-        [data]="punchData2"
-        [colors]="punchColors"
-        [title]="punchTitle"
-        [axisColors]="axisColor"
-        (clickEvent)="clickEventEmit($event)"
-        [divHeight]="hundoPct"
-        [divWidth]="hundoPct"
-      ></eikos-punch-card>
-    </div>
 
-  <div style="height: 500px; width: 700px">
-    <eikos-sunburst
-    [data]="sunburstData"
-    [propID]="sunburstPropID"
-    [title]="sunburstTitle"
-    [divHeight]="hundoPct"
-    [divWidth]="hundoPct"
-    ></eikos-sunburst>
+  <div style="height: 560px; width: 700px">
+    <eikos-punch-card
+      [data]="punchData2"
+      [colors]="punchColors"
+      [title]="punchTitle"
+      [axisColors]="axisColor"
+      (clickEvent)="clickEventEmit($event)"
+      [divHeight]="hundoPct"
+      [divWidth]="hundoPct"
+    ></eikos-punch-card>
   </div>
 
+  <div style="height: 1000px; width: 700px">
+    <eikos-sunburst
+      [data]="sunburstData"
+      [propID]="sunburstPropID"
+      [title]="sunburstTitle"
+      [divHeight]="hundoPct"
+      [divWidth]="hundoPct"
+    ></eikos-sunburst>
+  </div>
 
   <div style="height: 500px; width: 700px">
     <eikos-sunburst
@@ -212,5 +211,8 @@
     [divWidth]="hundoPct"
     ></eikos-sunburst>
   </div>
+
+  <app-eikos-card-list-demo>
+  </app-eikos-card-list-demo>
 
 </div>

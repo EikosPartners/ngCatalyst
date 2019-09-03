@@ -10,6 +10,8 @@ import {PieChartComponent} from '../../../../projects/ngcatalyst/src/lib/pie-cha
 import {BubbleChartComponent} from '../../../../projects/ngcatalyst/src/lib/bubble-chart.component';
 import {HeatMapComponent} from '../../../../projects/ngcatalyst/src/lib/heat-map.component';
 import {PunchCardComponent} from '../../../../projects/ngcatalyst/src/lib/punch-card.component';
+// import {NgcatalystModule} from 'ngcatalyst';
+import {CardListComponent} from '../../../../projects/ngcatalyst/src/lib/card-list/card-list.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import {PunchCardComponent} from '../../../../projects/ngcatalyst/src/lib/punch-
     PieChartComponent,
     HeatMapComponent,
     BubbleChartComponent,
-    PunchCardComponent
+    PunchCardComponent,
+    CardListComponent
   ],
   imports: [
     BrowserModule,

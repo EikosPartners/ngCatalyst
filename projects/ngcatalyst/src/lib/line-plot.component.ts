@@ -90,32 +90,6 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   //   });
   // }
 
-  // resizeEvent() {
-  //   this.resized = true;
-  //   this.drawLinePlot();
-  // }
-
-
-  // areaEvent() {
-  //   let height, width;
-  //   if (typeof this.divHeight === "number") {
-  //     height = this.divHeight + "px";
-  //   } else {
-  //     height = this.divHeight;
-  //   }
-  //   if (typeof this.divWidth === "number" ) {
-  //     width = this.divWidth + "px";
-  //   } else {
-  //     width = this.divWidth;
-  //   }
-  //   this.area = {height: height, width: width};
-  // }
-
-  // resizeEvent() {
-  //   this.resized = true;
-  //   this.drawLinePlot();
-  //   this.areaEvent();
-  // }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
