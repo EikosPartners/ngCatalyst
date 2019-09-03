@@ -174,12 +174,15 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     // if (this.xAxisAngle > 0) {
     //   this.margins.bottom += 10;
     // }
-    console.log(element.clientHeight);
-    console.log(margin);
+    // console.log(element.clientHeight);
+    // console.log(margin);
     const
-      width = element.clientWidth - margin.left - margin.right,
-      height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0) - (this.title ? 50 : 0);
-    console.log(height);
+      width = element.clientWidth - margin.left - margin.right;
+    let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0) - (this.title ? 50 : 0);
+    // console.log(height);
+    if (height < 0) {
+      height = 300;
+    }
     // Account for panel heading height if the title exists.
 
     const xValue = function(d) {

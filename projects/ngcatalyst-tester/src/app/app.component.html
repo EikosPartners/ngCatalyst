@@ -1,7 +1,19 @@
 <button (click)="onclickfn()">Button</button>
 
 <div class="flexbox-container outlet" >
+  <!-- <i class="fab fa-500px"></i> -->
 
+
+      <eikos-card-list [items]="lineDataA"
+
+      >
+      <ng-template let-item="item">
+        <div> {{item}}</div>
+
+
+      </ng-template>
+
+  </eikos-card-list>
 
     <div style="height: 500px; width: 700px" >
         <eikos-line-plot
@@ -17,6 +29,8 @@
         </div>
 
  <div style="height: 500px; width: 700px">
+    <i class="fab fa-accessible-icon"></i>
+
     <eikos-bar-chart
       [showMe]="showMe"
       [data]="barData"
@@ -211,8 +225,8 @@
     [divWidth]="hundoPct"
     ></eikos-sunburst>
   </div>
-
+<!--
   <app-eikos-card-list-demo>
-  </app-eikos-card-list-demo>
+  </app-eikos-card-list-demo> -->
 
 </div>

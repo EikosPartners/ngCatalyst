@@ -128,6 +128,9 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         }
         const width = element.clientWidth - margin.left - margin.right;
         let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? (this.xAxisAngle / 2) : 0);
+        if (height < 0) {
+          height = 300;
+        }
         if (this.title) {
           height = height - 48;
         }

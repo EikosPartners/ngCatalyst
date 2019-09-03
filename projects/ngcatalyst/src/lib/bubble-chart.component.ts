@@ -163,7 +163,9 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     let height = ternaryHeight - margin.top - margin.bottom;
     // retrieving globals
     const colors = this.themeColors;
-
+    if (height < 0) {
+      height = 300;
+    }
     // Account for panel heading height if title exists.
     if (this.title && height > 50) {
       height -= 40;

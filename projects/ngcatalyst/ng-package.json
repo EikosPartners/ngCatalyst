@@ -4,5 +4,5 @@
   "lib": {
     "entryFile": "src/public_api.ts"
   },
-  "whitelistedNonPeerDependencies": ["d3", "luxon"]
+  "whitelistedNonPeerDependencies": ["d3", "luxon", "font-awesome"]
 }
