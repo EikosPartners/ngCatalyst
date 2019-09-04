@@ -28,7 +28,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   givenWidth = this.divWidth;
 
   constructor() {
-    window.onresize = this.drawPieChart.bind(this);
+    window.addEventListener('resize', this.drawPieChart.bind(this));
   }
 
   get area () {

@@ -24,7 +24,7 @@ export class SunburstComponent implements OnInit, OnChanges, AfterViewInit, Afte
   }
 
   constructor() {
-    window.onresize = this.drawSunburst.bind(this);
+    window.addEventListener('resize', this.drawSunburst.bind(this));
   }
 
   get area () {

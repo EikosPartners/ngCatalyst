@@ -44,7 +44,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
 
 
   constructor() {
-    window.onresize = this.drawLinePlot.bind(this);
+    window.addEventListener('resize', this.drawLinePlot.bind(this));
    }
 
    ngOnInit() {

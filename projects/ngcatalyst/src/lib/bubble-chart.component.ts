@@ -35,7 +35,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
 
   constructor() {
     const localThis = this;
-    window.onresize = this.resizeEvent.bind(this);
+    window.addEventListener('resize', this.resizeEvent.bind(this));
   }
 
   resizeEvent() {

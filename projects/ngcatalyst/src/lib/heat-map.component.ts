@@ -28,7 +28,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
 
 
   constructor() {
-    window.onresize = this.draw.bind(this);
+    window.addEventListener('resize', this.draw.bind(this));
   }
 
   get area () {

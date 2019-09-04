@@ -49,7 +49,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
   }
 
   constructor() {
-    window.onresize = this.drawPunchCard.bind(this);
+    window.addEventListener('resize', this.drawPunchCard.bind(this));
   }
 
   ngOnInit() {
