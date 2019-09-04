@@ -18,7 +18,7 @@ import luxon from 'luxon';
 export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'bubble';
-  @Input() data: [{label: string, value: number, x: number, y: number}];
+  @Input() data: {label: string, value: number, x: number, y: number}[];
   @Input() title = 'Bubble Chart';
   @Input() isTime = false;
   @Input() isDate = false;
@@ -34,7 +34,12 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   givenWidth = this.divWidth;
 
   constructor() {
-    window.onresize = this.drawBubbleChart.bind(this);
+    const localThis = this;
+    window.onresize = this.resizeEvent.bind(this);
+  }
+
+  resizeEvent() {
+    this.drawBubbleChart(this.processedData);
   }
 
   get area () {
@@ -55,9 +60,11 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   get processedData() {
     const data = this.data;
     try {
-    data.sort(function(x, y) {
-      return d3.descending(x.value, y.value);
-    });
+      if (data) {
+        data.sort(function(x, y) {
+          return d3.descending(x.value, y.value);
+        });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -65,17 +72,20 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   }
 
   ngOnInit() {
-    this.drawBubbleChart();
+    // this.drawBubbleChart();
+    this.drawBubbleChart(this.processedData);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange) {
-      this.drawBubbleChart();
+      // this.drawBubbleChart();
+      this.drawBubbleChart(this.processedData);
     }
   }
 
   ngAfterViewInit() {
-    this.drawBubbleChart();
+    // this.drawBubbleChart();
+    this.drawBubbleChart(this.processedData);
   }
 
   ngAfterViewChecked() {
@@ -85,7 +95,8 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
-      this.drawBubbleChart();
+      // this.drawBubbleChart();
+      this.drawBubbleChart(this.processedData);
     }
   }
 
@@ -131,11 +142,16 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     return this.get_duration_zoom_range(d3.max(asrs, xval), min_zoom_mins);
   }
 
-  drawBubbleChart() {
-    let data = this.processedData;
+  drawBubbleChart(data) {
+    // let data = this.processedData;
     if (!data) {
-      return ;
+      return;
     }
+    // if (!data && !this.processedData) {
+    //   return ;
+    // } else if (!data) {
+    //   data = this.processedData;
+    // }
     const localThis = this;
     const selection_string = "#" + this.propID;
     const pretty_duration = this.pretty_duration;
@@ -155,7 +171,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     const margin = this.margin;
     const elementWidth = element.clientWidth;
     const elementHeight = element.clientHeight;
-    const ternaryWidth = elementWidth > 0 ? elementWidth : 400;
+    const ternaryWidth = (elementWidth > 0 && elementWidth < window.innerWidth) ? elementWidth : window.innerWidth;
     const width = ternaryWidth - margin.left - margin.right;
     const ternaryHeight = elementHeight > 0 ? elementHeight : 400;
     let height = ternaryHeight - margin.top - margin.bottom;
@@ -186,9 +202,9 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     if (this.isDate) {
       xScale = d3.scaleTime().range([0, width]);
       data = data.map(function (d) {
-        if (d.mapped) { return d; }
+        if (d["mapped"]) { return d; }
         d.x = formatDate(d.x);
-        d.mapped = true;
+        d["mapped"] = true;
         return d;
       });
     } else {
