@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked, HostListener } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import luxon from 'luxon';
 
@@ -32,13 +32,10 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   dateFormat = '%Y-%m-%d';
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
-  @HostListener('window:resize', ['$event'])
 
-  resizeEvent(ev) {
-    this.drawBubbleChart(this.processedData);
+  constructor() {
+    window.onresize = this.drawBubbleChart.bind(this);
   }
-
-  constructor() { }
 
   get area () {
     let height, width;
@@ -68,17 +65,17 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   }
 
   ngOnInit() {
-    this.drawBubbleChart(this.processedData);
+    this.drawBubbleChart();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange) {
-      this.drawBubbleChart(this.processedData);
+      this.drawBubbleChart();
     }
   }
 
   ngAfterViewInit() {
-    this.drawBubbleChart(this.processedData);
+    this.drawBubbleChart();
   }
 
   ngAfterViewChecked() {
@@ -88,7 +85,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
-      this.drawBubbleChart(this.processedData);
+      this.drawBubbleChart();
     }
   }
 
@@ -134,7 +131,8 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     return this.get_duration_zoom_range(d3.max(asrs, xval), min_zoom_mins);
   }
 
-  drawBubbleChart(data) {
+  drawBubbleChart() {
+    let data = this.processedData;
     if (!data) {
       return ;
     }

@@ -1,4 +1,4 @@
-import{ AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input,
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input,
   OnChanges, OnInit, Output, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
@@ -42,25 +42,9 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   // area = {height: "100%", width: "100%"};
   // @HostListener('window:resize', ['$event'])
 
-  onResize() {
-    console.log('onResize?');
-    // this.viewContainer.clear();
-    // this.viewContainer.createEmbeddedView(this.template);
-    // this.resized = true;
-    // setTimeout(this.drawLinePlot.bind(this), 0);
-    this.drawLinePlot();
-    // console.log('onResize');
-    // let res;
-    // if (res) {
-    //   clearTimeout(res);
-    // }
-    // const thing = this.drawLinePlot.bind(this);
-    // res = setTimeout(thing, 1000);
-
-  }
 
   constructor() {
-    window.onresize = this.onResize.bind(this);
+    window.onresize = this.drawLinePlot.bind(this);
    }
 
    ngOnInit() {

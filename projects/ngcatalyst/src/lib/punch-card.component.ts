@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked, HostListener } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import luxon from 'luxon';
 
@@ -30,11 +30,6 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
   labelsX = ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"];
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
-  @HostListener('window:resize', ['$event'])
-
-  resizeEvent(ev) {
-    this.drawPunchCard();
-  }
 
 // HTK reference https://gist.github.com/kaezarrex/10122633
 
@@ -53,7 +48,9 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     return {height: height, width: width};
   }
 
-  constructor() { }
+  constructor() {
+    window.onresize = this.drawPunchCard.bind(this);
+  }
 
   ngOnInit() {
     this.drawPunchCard();

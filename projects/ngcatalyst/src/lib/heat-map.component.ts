@@ -25,13 +25,10 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
   givenWidth = this.divWidth;
   // should maybe have a min-width or min-height to prevent it from going SUPER TINY?
   // also since it's preserveAspectRatio maybe only @Input one of the dimensions? HTK
-  @HostListener('window:resize', ['$event'])
 
-  resizeEvent(ev) {
-    this.draw();
-  }
 
   constructor() {
+    window.onresize = this.draw.bind(this);
   }
 
   get area () {

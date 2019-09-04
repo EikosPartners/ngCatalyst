@@ -1,4 +1,4 @@
-import { HostListener, Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -26,13 +26,10 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   total = 0;
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
-  @HostListener('window:resize', ['$event'])
 
-  resizeEvent(ev) {
-    this.drawPieChart();
+  constructor() {
+    window.onresize = this.drawPieChart.bind(this);
   }
-
-  constructor() { }
 
   get area () {
     let height, width;
