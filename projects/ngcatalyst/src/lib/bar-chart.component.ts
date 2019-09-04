@@ -31,14 +31,9 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() divWidth: any = "100%";
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
-  @HostListener('window:resize', ['$event'])
-
-  onResize(ev) {
-    this.drawBarPlot();
-  }
 
   constructor() {
-    // window.onresize = this.drawBarPlot.bind(this);
+    window.onresize = this.drawBarPlot.bind(this);
   }
 
   get dataModel() {
