@@ -7,10 +7,10 @@ import { AppComponent } from './app.component';
 // import {BarChartComponent} from '../../../../projects/ngcatalyst/src/lib/bar-chart.component';
 // import {SunburstComponent} from '../../../../projects/ngcatalyst/src/lib/sunburst.component';
 // import {PieChartComponent} from '../../../../projects/ngcatalyst/src/lib/pie-chart.component';
-import {BubbleChartComponent} from '../../../../projects/ngcatalyst/src/lib/bubble-chart.component';
+// import {BubbleChartComponent} from '../../../../projects/ngcatalyst/src/lib/bubble-chart.component';
 // import {HeatMapComponent} from '../../../../projects/ngcatalyst/src/lib/heat-map.component';
 // import {PunchCardComponent} from '../../../../projects/ngcatalyst/src/lib/punch-card.component';
-// import {NgcatalystModule} from '../../../../dist/ngcatalyst/';
+import {NgcatalystModule} from '../../../../dist/ngcatalyst/';
 // import {CardListComponent} from '../../../../projects/ngcatalyst/src/lib/card-list/card-list.component';
 
 
@@ -22,13 +22,13 @@ import {BubbleChartComponent} from '../../../../projects/ngcatalyst/src/lib/bubb
     // LinePlotComponent,
     // PieChartComponent,
     // HeatMapComponent,
-    BubbleChartComponent,
+    // BubbleChartComponent,
     // PunchCardComponent,
     // CardListComponent
   ],
   imports: [
     BrowserModule,
-    // NgcatalystModule
+    NgcatalystModule
   ],
   providers: [],
   bootstrap: [AppComponent]

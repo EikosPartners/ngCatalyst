@@ -23,4 +23,5 @@ import { CommonModule } from '@angular/common';
     NgcatalystComponent,
     BarChartComponent, BubbleChartComponent, LinePlotComponent, PieChartComponent, PunchCardComponent, SunburstComponent, HeatMapComponent, CardListComponent]
 })
-export class NgcatalystModule { }
+export class NgcatalystModule {
+ }

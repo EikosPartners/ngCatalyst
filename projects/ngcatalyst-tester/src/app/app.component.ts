@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ViewChild, ViewContainerRef,
-  ElementRef,  QueryList,  ViewChildren, TemplateRef } from '@angular/core';
+  ElementRef,  ViewChildren, TemplateRef } from '@angular/core';
 const sunburstDataJson = require('../assets/sunburstData.json');
 const punchDataJson = require('../assets/punchData.json');
 const pieDataJson = require('../assets/pieData.json');
