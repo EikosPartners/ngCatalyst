@@ -40,9 +40,9 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   @ViewChild('vc', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
   @ViewChild(TemplateRef) template: TemplateRef<null>;
   // area = {height: "100%", width: "100%"};
-  @HostListener('window:resize', ['$event'])
+  // @HostListener('window:resize', ['$event'])
 
-  onResize(event) {
+  onResize() {
     console.log('onResize?');
     // this.viewContainer.clear();
     // this.viewContainer.createEmbeddedView(this.template);
@@ -60,7 +60,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   }
 
   constructor() {
-
+    window.onresize = this.onResize.bind(this);
    }
 
    ngOnInit() {

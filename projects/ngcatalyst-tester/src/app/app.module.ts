@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import {NgcatalystModule} from 'ngcatalyst';
 
-// import {LinePlotComponent} from '../../../../projects/ngcatalyst/src/lib/line-plot.component';
+import {LinePlotComponent} from '../../../../projects/ngcatalyst/src/lib/line-plot.component';
 // import {BarChartComponent} from '../../../../projects/ngcatalyst/src/lib/bar-chart.component';
 // import {SunburstComponent} from '../../../../projects/ngcatalyst/src/lib/sunburst.component';
 // import {PieChartComponent} from '../../../../projects/ngcatalyst/src/lib/pie-chart.component';
@@ -18,7 +18,7 @@ import {NgcatalystModule} from 'ngcatalyst';
     AppComponent,
     // BarChartComponent,
     // SunburstComponent,
-    // LinePlotComponent,
+    LinePlotComponent,
     // PieChartComponent,
     // HeatMapComponent,
     // BubbleChartComponent,
@@ -27,7 +27,7 @@ import {NgcatalystModule} from 'ngcatalyst';
   ],
   imports: [
     BrowserModule,
-    NgcatalystModule
+    // NgcatalystModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -59,8 +59,9 @@
             ],
             "styles": [
               "projects/ngcatalyst-tester/src/styles.css",
-              "projects/ngcatalyst/src/lib/styles.css",
-              "node_modules/font-awesome/css/font-awesome.css"
+              "projects/ngcatalyst/src/lib/styles.css"
+              // ,
+              // "node_modules/font-awesome/css/font-awesome.css"
             ],
             "scripts": []
           },
