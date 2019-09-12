@@ -29,6 +29,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() title = "Bar Chart";
   @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
   @Input() divWidth: any = "100%";
+  @Input() showTicks: Boolean = false;
+  @Input() marker: Number = 0;
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
 
@@ -147,8 +149,11 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
           .tickSizeOuter(0);
 
         const yAxis = d3.axisLeft()
-          .scale(y)
-          .tickSizeInner(-width);
+          .scale(y);
+
+        if (this.showTicks) {
+          yAxis.tickSizeInner(-width);
+        }
 
         const tooltip = d3
           .select("body")
@@ -312,6 +317,16 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
             .on("click", function(d) {
               localThis.clickEvent.emit(d);
             });
+
+            if (this.marker) {
+              chart.append("g").append("line")
+                  .attr("x1", 0).attr("y1", y(this.marker))
+                  .attr("x2", width).attr("y2", y(this.marker))
+                  .attr("stroke-width", "1")
+                  .attr("class", "marker-line")
+                  .attr("stroke", "black");
+            }
+            
         }
   }
 
