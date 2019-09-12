@@ -5,8 +5,9 @@
     "entryFile": "src/public_api.ts",
     "styleIncludePaths": [
       "./src/lib/styles.css",
-      "/node_modules/font-awesome/css/font-awesome.css"
+      "./src/lib/cardlist/card-list.component.scss"
+
     ]
   },
-  "whitelistedNonPeerDependencies": ["d3", "luxon", "font-awesome"]
+  "whitelistedNonPeerDependencies": ["d3", "luxon", "@fortawesome/angular-fontawesome", "@fortawesome/free-solid-svg-icons"]
 }
