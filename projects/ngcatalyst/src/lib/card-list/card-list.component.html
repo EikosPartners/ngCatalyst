@@ -1,27 +1,19 @@
 <div class="card-list-header">
-  <div class="header" *ngIf="title || showActionButtons">
+  <div class="header" *ngIf="title">
     <strong class="title">{{ title }}</strong>
-    <div class="header-buttons">
-      <div class="primary-action" *ngIf="showActionButtons && selectedItems.length">
-        <button class="header-action" (click)="onPrimaryActionClick()">Select {{ selectedItems.length }} Items</button>
-      </div>
-      <div class="clear-action" *ngIf="showActionButtons && selectedItems.length">
-        <button class="header-action" (click)="onClearActionClick()">Clear</button>
-      </div>
-    </div>
   </div>
 </div>
 
 <div class="card-list-content">
   <div class="scroll-button-group">
     <div class="fixed-button fixed-top" *ngIf="showScrollUp()">
-      <button class="scroll-button" (click)="updateScrollPosition(-200)">
-        <i class="fa fa-angle-up fa-3x"></i>
+      <button class="scroll-button" (click)="scrollUp()">
+        <fa-icon [icon]="faAngleUp" size="2x"></fa-icon>
       </button>
     </div>
     <div class="fixed-button fixed-bottom"  *ngIf="showScrollDown()">
-      <button class="scroll-button" (click)="updateScrollPosition(200)">
-        <i class="fa fa-angle-down fa-3x"></i>
+      <button class="scroll-button" (click)="scrollDown()">
+        <fa-icon [icon]="faAngleDown" size="2x"></fa-icon>
       </button>
     </div>
   </div>

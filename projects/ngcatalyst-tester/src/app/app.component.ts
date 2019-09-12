@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { RandomNumberService} from './random-number.service';
+import { shuffle, zipObject } from 'lodash';
+
 const sunburstDataJson = require('../assets/sunburstData.json');
 const punchDataJson = require('../assets/punchData.json');
 const pieDataJson = require('../assets/pieData.json');
 const lineDataJson = require('../assets/lineData.json');
 const lineDataJsonB = require('../assets/lineDataTimes.json');
-
 const heatDataJson = require('../assets/heatDataCal.json');
 const heatData2Json = require('../assets/heatData.json');
 const bubbleDataJson = require('../assets/bubbleData.json');
 const barDataJson = require('../assets/barData.json');
-import { RandomNumberService} from './random-number.service';
-import { shuffle, zipObject } from 'lodash';
+const cardListDataJson = require('../assets/cardListData.json');
 
 @Component({
   selector: 'app-root',
@@ -101,6 +102,8 @@ export class AppComponent implements OnInit {
   sunburstData2 = this.metaCollect(this.sunburstData);
   sunburstPropID = "angularsunburst";
   sunburstTitle = 'Sunburst';
+
+  cardListDataJson = cardListDataJson.items;
 
   onResize(ev) {
     console.log(ev);

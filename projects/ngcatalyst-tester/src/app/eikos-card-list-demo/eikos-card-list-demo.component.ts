@@ -6,19 +6,17 @@ const cardListData = require('../../assets/cardListData.json');
   selector: 'app-eikos-card-list-demo',
   styleUrls: ['./eikos-card-list-demo.component.scss'],
   template: `
-    <div class="card-list-demo-container">
+    <div class="card-list-demo-container" style="width: 50%;">
       <h2>Eikos Card List Demo</h2>
-      <div style="display: flex;">
+      <div style="display: flex; flex-direction: column;">
 
-        <div class="card-list-demo-content" style="width: 500px;">
+        <div class="card-list-demo-content">
           <eikos-card-list
             [items]="items"
             [title]="'Limit Orders - Base View'"
             [listHeight]="500"
             [multiSelect]="true"
-            [showActionButtons]="true"
-            (itemSelected)="handleItemSelected($event)"
-            (primaryActionClicked)="handlePrimaryAction($event)">
+            (itemSelected)="logItemSelected($event)">
             <ng-template let-item="item">
               <div class="card-list-row">
                 <div class="card-list-cell symbol-cell">
@@ -57,16 +55,14 @@ const cardListData = require('../../assets/cardListData.json');
           </eikos-card-list>
         </div>
 
-        <div class="card-list-demo-content" style="width: 500px;">
+        <div class="card-list-demo-content">
           <eikos-card-list
             [items]="items"
             [title]="'Limit Orders - Grid View'"
-            [listHeight]="500"
+            [listHeight]="250"
             [cardView]="true"
-            [multiSelect]="true"
-            [showActionButtons]="true"
-            (itemSelected)="handleItemSelected($event)"
-            (primaryActionClicked)="handlePrimaryAction($event)">
+            [multiSelect]="false"
+            (itemSelected)="logItemSelected($event)">
             <ng-template let-item="item">
               <div class="card-list-card">
                 <div
@@ -103,18 +99,12 @@ export class EikosCardListDemoComponent implements OnInit {
 
   ngOnInit() { }
 
-  handleItemSelected (item) {
-    // console.log("selected", item);
+  alertItemSelected (item) {
+    alert("clicked " + item.symbol);
   }
 
-  handlePrimaryAction (items) {
-    let message = "Selected items:";
-
-    for (let i = 0; i < items.length; i++) {
-      message += "\n" + items[i].symbol;
-    }
-
-    alert(message);
+  logItemSelected (item) {
+    console.log("clicked", item);
   }
 
   setHslColor (percent, start, end) {
