@@ -23,7 +23,7 @@ $primary20: darken($primary, 20%);
 }
 
 .scroll-button {
-  height: 2.5rem;
+  min-height: 2.5rem;
   width: 100%;
   background-color: $dark;
   color: $primary;
@@ -35,34 +35,6 @@ $primary20: darken($primary, 20%);
   }
 }
 
-button.header-action {
-  display: inline-block;
-  border: none;
-  padding: .5rem 1rem;
-  margin: 0;
-  text-decoration: none;
-  text-transform: uppercase;
-  background: #0069ed;
-  color: #ffffff;
-  font-size: .5rem;
-  cursor: pointer;
-  text-align: center;
-  transition: background 250ms ease-in-out,
-    transform 150ms ease;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  &:hover, &:focus {
-    background: #0053ba;
-  }
-  &:focus {
-    outline: 1px solid #fff;
-    outline-offset: -4px;
-  }
-  &:active {
-    transform: scale(0.99);
-  }
-}
-
 .card-list-header {
   .header {
     display: flex;
@@ -70,12 +42,6 @@ button.header-action {
     min-height: 2rem;
     .title {
       text-transform: uppercase;
-    }
-    .header-buttons {
-      display: flex;
-      button {
-        margin-left: .5rem
-      }
     }
   }
 }

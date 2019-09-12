@@ -11,6 +11,8 @@ import {
   EventEmitter
 } from '@angular/core';
 
+import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'eikos-card-list',
   templateUrl: './card-list.component.html',
@@ -22,16 +24,16 @@ export class CardListComponent implements AfterViewInit {
 
   @Input() items: any[];
   @Input() title: string;
-  @Input() multiSelect = false;
-  @Input() showActionButtons = false;
   @Input() listHeight = 500;
   @Input() cardView = false;
-  @Input() numCols = 6;
+  @Input() multiSelect = false;
 
   @Output() itemSelected = new EventEmitter();
   @Output() primaryActionClicked = new EventEmitter();
 
   selectedItems = [];
+  faAngleUp = faAngleUp;
+  faAngleDown = faAngleDown;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
@@ -54,8 +56,17 @@ export class CardListComponent implements AfterViewInit {
     return clientHeight >= this.listHeight && scrollBottom > 0;
   }
 
-  updateScrollPosition (offset) {
+  scrollUp () {
+    const offset = this.listHeight * -0.5;
     const scrollToPosition = this.cardListGroup.nativeElement.scrollTop + offset;
+
+    this.cardListGroup.nativeElement.scroll({ top: (scrollToPosition), behavior: 'smooth' });
+  }
+
+  scrollDown () {
+    const offset = this.listHeight * 0.5;
+    const scrollToPosition = this.cardListGroup.nativeElement.scrollTop + offset;
+
     this.cardListGroup.nativeElement.scroll({ top: (scrollToPosition), behavior: 'smooth' });
   }
 

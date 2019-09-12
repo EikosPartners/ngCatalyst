@@ -1,17 +1,16 @@
-import { Component, OnInit, HostListener, ViewChild, ViewContainerRef,
-  ElementRef,  ViewChildren, TemplateRef } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { RandomNumberService} from './random-number.service';
+import { shuffle, zipObject } from 'lodash';
+
 const sunburstDataJson = require('../assets/sunburstData.json');
 const punchDataJson = require('../assets/punchData.json');
 const pieDataJson = require('../assets/pieData.json');
 const lineDataJson = require('../assets/lineData.json');
 const lineDataJsonB = require('../assets/lineDataTimes.json');
-
 const heatDataJson = require('../assets/heatDataCal.json');
 const heatData2Json = require('../assets/heatData.json');
 const bubbleDataJson = require('../assets/bubbleData.json');
 const barDataJson = require('../assets/barData.json');
-import { RandomNumberService} from './random-number.service';
-import { shuffle, zipObject } from 'lodash';
 
 @Component({
   selector: 'app-root',
