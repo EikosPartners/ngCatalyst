@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked, HostListener } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import luxon from 'luxon';
 
@@ -18,7 +18,7 @@ import luxon from 'luxon';
 export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'bubble';
-  @Input() data: [{label: string, value: number, x: number, y: number}];
+  @Input() data: {label: string, value: number, x: number, y: number}[];
   @Input() title = 'Bubble Chart';
   @Input() isTime = false;
   @Input() isDate = false;
@@ -32,13 +32,15 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   dateFormat = '%Y-%m-%d';
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
-  @HostListener('window:resize', ['$event'])
 
-  resizeEvent(ev) {
-    this.drawBubbleChart(this.processedData);
+  constructor() {
+    const localThis = this;
+    window.addEventListener('resize', this.resizeEvent.bind(this));
   }
 
-  constructor() { }
+  resizeEvent() {
+    this.drawBubbleChart(this.processedData);
+  }
 
   get area () {
     let height, width;
@@ -58,9 +60,11 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   get processedData() {
     const data = this.data;
     try {
-    data.sort(function(x, y) {
-      return d3.descending(x.value, y.value);
-    });
+      if (data) {
+        data.sort(function(x, y) {
+          return d3.descending(x.value, y.value);
+        });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -68,16 +72,19 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   }
 
   ngOnInit() {
+    // this.drawBubbleChart();
     this.drawBubbleChart(this.processedData);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange) {
+      // this.drawBubbleChart();
       this.drawBubbleChart(this.processedData);
     }
   }
 
   ngAfterViewInit() {
+    // this.drawBubbleChart();
     this.drawBubbleChart(this.processedData);
   }
 
@@ -88,6 +95,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
+      // this.drawBubbleChart();
       this.drawBubbleChart(this.processedData);
     }
   }
@@ -135,9 +143,15 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   }
 
   drawBubbleChart(data) {
+    // let data = this.processedData;
     if (!data) {
-      return ;
+      return;
     }
+    // if (!data && !this.processedData) {
+    //   return ;
+    // } else if (!data) {
+    //   data = this.processedData;
+    // }
     const localThis = this;
     const selection_string = "#" + this.propID;
     const pretty_duration = this.pretty_duration;
@@ -157,13 +171,15 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     const margin = this.margin;
     const elementWidth = element.clientWidth;
     const elementHeight = element.clientHeight;
-    const ternaryWidth = elementWidth > 0 ? elementWidth : 400;
+    const ternaryWidth = (elementWidth > 0 && elementWidth < window.innerWidth) ? elementWidth : window.innerWidth;
     const width = ternaryWidth - margin.left - margin.right;
     const ternaryHeight = elementHeight > 0 ? elementHeight : 400;
     let height = ternaryHeight - margin.top - margin.bottom;
     // retrieving globals
     const colors = this.themeColors;
-
+    if (height < 0) {
+      height = 300;
+    }
     // Account for panel heading height if title exists.
     if (this.title && height > 50) {
       height -= 40;
@@ -186,9 +202,9 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     if (this.isDate) {
       xScale = d3.scaleTime().range([0, width]);
       data = data.map(function (d) {
-        if (d.mapped) { return d; }
+        if (d["mapped"]) { return d; }
         d.x = formatDate(d.x);
-        d.mapped = true;
+        d["mapped"] = true;
         return d;
       });
     } else {

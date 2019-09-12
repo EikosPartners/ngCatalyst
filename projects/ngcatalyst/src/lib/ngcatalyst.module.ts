@@ -42,4 +42,5 @@ import { CardListComponent } from './card-list/card-list.component';
     CardListComponent
   ]
 })
-export class NgcatalystModule { }
+export class NgcatalystModule {
+ }

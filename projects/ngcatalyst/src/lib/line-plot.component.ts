@@ -1,4 +1,5 @@
-import { Component, Output, EventEmitter, HostListener, Input, OnChanges, AfterViewChecked, SimpleChanges, AfterViewInit } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input,
+  OnChanges, OnInit, Output, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -6,13 +7,16 @@ import { isEqual } from 'lodash';
   selector: 'eikos-line-plot',
   template: `
   <h2>{{title}}</h2>
+  <!--   <ng-container #vc></ng-container> -->
   <div [ngStyle]="area">
-      <div [id]="propID" style="width:100%;height:100%"> </div>
+    <!-- <ng-template> -->
+    <div [id]="propID" style="width:100%;height:100%"> </div>
   </div>
+  <!-- </ng-template>-->
 `
 })
 
-export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChecked {
+export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'line';
   @Input() data: Array<{}>; // [{date: string, value: number}];
@@ -30,16 +34,23 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
   @Input() xAxisAngle = 45;
-  // resized = false;
+  resized = false;
   // @Input() yAxisAngle = 45;
-  @HostListener('window:resize', ['$event'])
+  @ViewChildren('c', {read: ElementRef}) childComps: QueryList<ElementRef>;
+  @ViewChild('vc', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
+  @ViewChild(TemplateRef) template: TemplateRef<null>;
+  // area = {height: "100%", width: "100%"};
+  // @HostListener('window:resize', ['$event'])
 
-  resizeEvent(ev) {
-    this.drawLinePlot();
-  }
 
   constructor() {
-    // window.onresize = this.resizeEvent; // alt method for resizing withou HostListener
+    window.addEventListener('resize', this.drawLinePlot.bind(this));
+   }
+
+   ngOnInit() {
+    console.log('init');
+    // this.viewContainer.createEmbeddedView(this.template);
+
    }
 
   get area () {
@@ -66,18 +77,26 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
+      // console.log('changes?');
       this.drawLinePlot();
     }
   }
 
   ngAfterViewChecked() {
+    // console.log('viewcheck');
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
     const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
-    if ((offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth)) {
+    if ((offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) && this.resized === false) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
       this.drawLinePlot();
+      this.resized = false;
+      // console.log('resized?');
     }
+    // else if (this.resized) {
+    //   this.drawLinePlot();
+    //   this.resized = false;
+    // }
 
   }
 
@@ -88,6 +107,8 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   //   this.clickEvent.emit(event);
   // }
   drawLinePlot() {
+    // console.log('redrawn?');
+    // debugger;
     const localThis = this;
     const selection_string = "#" + this.propID;
     d3.selectAll(`.${this.propID}_tooltip`).remove();
@@ -125,7 +146,6 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       });
     }
     let element: any;
-    // debugger
     const selected = document.querySelectorAll(selection_string);
 
     if (selected[0] == null) {
@@ -135,14 +155,20 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     }
 
     const margin = this.margins;
-    const
-      width = element.clientWidth - margin.left - margin.right,
-      height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0) - (this.title ? 50 : 0);
-
-    // Account for panel heading height if the title exists.
-    // if (this.title) {
-    //   height -= 50;
+    // if (this.xAxisAngle > 0) {
+    //   this.margins.bottom += 10;
     // }
+    // console.log(element.clientHeight);
+    // console.log(margin);
+    const
+      width = element.clientWidth - margin.left - margin.right;
+    let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0) - (this.title ? 50 : 0);
+    // console.log(height);
+    if (height < 0) {
+      height = 300;
+    }
+    // Account for panel heading height if the title exists.
+
     const xValue = function(d) {
       if (localThis.type === "Date") {
         return d.date;
@@ -211,8 +237,8 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
         ])
       .enter().append("stop")
         .attr("offset", function(d) {
-          // debugger
-          return d.offset; })
+          return d.offset;
+        })
         .attr("stop-color", function(d) { return d.color; });
 
     const xLabel = svg.append("g")

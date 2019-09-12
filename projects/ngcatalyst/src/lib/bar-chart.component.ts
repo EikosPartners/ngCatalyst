@@ -5,11 +5,13 @@ import { isEqual, zip, zipObject } from 'lodash';
 @Component({
   selector: 'eikos-bar-chart',
   template: `
+  <ng-container>
   <h2>{{title}}</h2>
     <div [ngStyle]="area" >
       <div [id]="propID" style="width:100%;height:100%">
       </div>
     </div>
+  </ng-container>
   `
 })
 
@@ -17,6 +19,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Output() clickEvent = new EventEmitter<any>();
   @Input() data: Array<{}>;
   @Input() propID = 'barchart';
+  @Input() showMe = true;
   @Input() color = '#2DA8C9';
   @Input() colors = ["#9400D3", "#4B0082", "#0000FF", "#00FF00", "#FFFF00", "#FF7F00", "#FF0000"];
   @Input() yAxisLabel = 'y';
@@ -28,14 +31,9 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() divWidth: any = "100%";
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
-  @HostListener('window:resize', ['$event'])
-
-  onResize(ev) {
-    this.drawBarPlot();
-  }
 
   constructor() {
-    // window.onresize = this.drawBarPlot.bind(this);
+    window.addEventListener('resize', this.drawBarPlot.bind(this));
   }
 
   get dataModel() {
@@ -83,7 +81,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   ngAfterViewChecked() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
     const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
-    console.log('viewcheck?');
+    // console.log('viewcheck?');
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
@@ -98,7 +96,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   }
 
   drawBarPlot () {
-        console.log('drawing');
+        // console.log('drawing');
         const data = this.dataModel,
           id = this.propID,
           yaxisvalue = this.yAxisLabel,
@@ -125,6 +123,9 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         }
         const width = element.clientWidth - margin.left - margin.right;
         let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? (this.xAxisAngle / 2) : 0);
+        if (height < 0) {
+          height = 300;
+        }
         if (this.title) {
           height = height - 48;
         }
@@ -260,7 +261,6 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
               return dataColors[d["x"]];
             })
             .on("mouseover", function(d) {
-              // debugger
               const yval = d.y;
               tooltip
                 .transition()

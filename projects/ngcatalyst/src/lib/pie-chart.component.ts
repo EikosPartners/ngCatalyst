@@ -1,4 +1,4 @@
-import { HostListener, Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -26,13 +26,10 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   total = 0;
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
-  @HostListener('window:resize', ['$event'])
 
-  resizeEvent(ev) {
-    this.drawPieChart();
+  constructor() {
+    window.addEventListener('resize', this.drawPieChart.bind(this));
   }
-
-  constructor() { }
 
   get area () {
     let height, width;
@@ -108,9 +105,12 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     const localThis = this;
 
     const margin = {top: 10, right: 0, bottom: 20, left: 0},
-      width = element.clientWidth - margin.left - margin.right,
-      height = element.clientHeight - margin.top - margin.bottom,
-      radius = height > width ?  width / 2 : height / 2;
+      width = element.clientWidth - margin.left - margin.right;
+    let height = element.clientHeight - margin.top - margin.bottom;
+    if (height < 0) {
+      height = 300;
+    }
+    let radius = height > width ?  width / 2 : height / 2;
     let donutWidth = this.donutWidth;
     if (typeof donutWidth === "string") {
       donutWidth = (parseInt(donutWidth.split('%')[0]) / 100) * radius;
