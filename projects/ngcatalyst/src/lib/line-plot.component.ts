@@ -111,6 +111,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     // debugger;
     const localThis = this;
     const selection_string = "#" + this.propID;
+    // remove previous chart and tooltips if already drawn on the page
     d3.selectAll(`.${this.propID}_tooltip`).remove();
     if (document.querySelectorAll(selection_string + " svg")[0] != null) {
       document.querySelectorAll(selection_string + " svg")[0].remove();
@@ -119,8 +120,10 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     const data = [];
     this.data.forEach(el => data.push(Object.assign({}, el)));
 
+    // create parsers to format the data for display in graph
     const parseTime = d3.timeParse('%I:%M %p');
     const parseDate = d3.timeParse('%Y-%m-%d');
+    //create date/time formatter to format text on tooltip
     let formatDate;
     if (localThis.type === "Date") {
       formatDate = d3.timeFormat('%B %-d %Y');
@@ -129,7 +132,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     }
 
     // https://github.com/d3/d3-time-format to change how this is formatted - leave the parseDate because that's for sorting the data
-
+    // format and sort data 
     if (this.type === "Date" && typeof data[0].date === 'string') {
       data.forEach(function(d) {
         d.date = parseDate(d.date);
@@ -160,8 +163,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     // }
     // console.log(element.clientHeight);
     // console.log(margin);
-    const
-      width = element.clientWidth - margin.left - margin.right;
+    const width = element.clientWidth - margin.left - margin.right;
     let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0) - (this.title ? 50 : 0);
     // console.log(height);
     if (height < 0) {
@@ -169,6 +171,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     }
     // Account for panel heading height if the title exists.
 
+    // create functions that will be used to process x and y values from the data
     const xValue = function(d) {
       if (localThis.type === "Date") {
         return d.date;
@@ -179,18 +182,19 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     const yValue = function(d) {
       return d.value;
     };
+    // create the scales for the data and axes. range is the how big the axes will be and domain is what the 
+    // range of values will be for the axes.(this is calc by by finding min and max values of data points)
     const x = d3.scaleTime().range([0, width]).domain(d3.extent(data, xValue)).nice();
     const y = d3.scaleLinear().range([height, 0]).domain(d3.extent(data, yValue)).nice();
-    // x;
-    // y.;
 
-
+    // add tooltip to the DOM for the chart
     const tooltip = d3
         .select("body")
         .append("div")
         .attr("class", `d3_visuals_tooltip ${this.propID}_tooltip`)
         .style("opacity", 0);
 
+    // format for x axis labels based on date or time, will be used to process raw data to readable dates/times
     let timeFormatLabel;
     if (localThis.type === "Date") {
       timeFormatLabel = d3.timeFormat('%b');
@@ -198,6 +202,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
       timeFormatLabel = d3.timeFormat('%I:%M');
     }
 
+    // create axes and line for data to be appended later to the DOM
     const yAxis = d3.axisLeft()
         .tickSizeInner(-width)
         .scale(y),
@@ -223,6 +228,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    // Is this for the line changing color at a specific threshold?? LP
     const gradID = this.propID + "-gradient",
         pathID = this.propID + "-path";
     svg.append("linearGradient")
@@ -241,6 +247,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
         })
         .attr("stop-color", function(d) { return d.color; });
 
+    // Do we need to assing this to a variable since we are just adding the axis to the svg?? LP
     const xLabel = svg.append("g")
         .attr("class", "x axis x-axis xaxis")
         .style('fill', 'grey')
@@ -259,7 +266,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
         .attr("class", "axislabel x-axis-label");
 
         const text = svg.selectAll("g.tick > text");
-
+        // angle the labels on x-axis if specified
         if (this.xAxisAngle > 0) {
             text
                 .attr("transform", `rotate(${this.xAxisAngle}) translate(${margin.top}, 0)`)
@@ -296,7 +303,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
                   .attr("y", -margin.left / 2 - 5);
             }
         }
-
+        // Is this needed still????? LP
         // xLabel.append("g")
         //   .append("text")
         //   .text(this.xAxisLabel)
@@ -345,6 +352,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     //     format_attribute = d3.format("");
     //   }
 
+    // add the dots at each data point and add events for mouseover/out to show/hide tooltips
     svg
         .selectAll(".dot")
         .data(data)
@@ -352,7 +360,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
         .append("circle")
         .attr("class", "dot")
         .attr("r", 5)
-        .attr("cx", xMap)
+        .attr("cx", xMap) // set the center of the dot using calculated x and y values
         .attr("cy", yMap)
         .attr("clip-path", "url(#" + clip_id + ")")
         .attr("fill", "black")

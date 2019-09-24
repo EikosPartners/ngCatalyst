@@ -30,7 +30,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
   constructor() {
     window.addEventListener('resize', this.draw.bind(this));
   }
-
+  // helper function to get height and width
   get area () {
     let height, width;
     if (typeof this.divHeight === "number") {
@@ -43,7 +43,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
     } else {
       width = this.divWidth;
     }
-    return {height: height, width: width};
+    return {height, width};
   }
 
 
@@ -210,7 +210,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
 
     // "y" axis values
     if (height > 300) {
-
+    // add labels to the y axis
     for (let i = 0; i < y_elems.length; i++) {
       svg
         .append("text")
