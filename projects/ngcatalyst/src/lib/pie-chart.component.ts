@@ -81,6 +81,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       this.data.forEach(el => {this.total += el['value']; });
     }
 
+    // remove previous tooltips and chart before redrawing
     d3.selectAll(`.${this.propID}_tooltip`).remove();
     const selection_string = "#" + this.propID;
     if (document.querySelectorAll(selection_string + " svg")[0] != null) {

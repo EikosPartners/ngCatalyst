@@ -31,6 +31,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() divWidth: any = "100%";
   @Input() showTicks: Boolean = false;
   @Input() marker: Number = 0;
+  @Input() markerColor: String = "#000"; //default is black
+  @Input() markerWidth: String = "1"; //default thickness of marker line
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
 
@@ -322,9 +324,9 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
               chart.append("g").append("line")
                   .attr("x1", 0).attr("y1", y(this.marker))
                   .attr("x2", width).attr("y2", y(this.marker))
-                  .attr("stroke-width", "1")
+                  .attr("stroke-width", this.markerWidth)
                   .attr("class", "marker-line")
-                  .attr("stroke", "black");
+                  .attr("stroke", this.markerColor);
             }
             
         }

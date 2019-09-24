@@ -190,6 +190,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
       containerIdSvg = containerId + " svg",
       containerIdG = containerIdSvg + " g";
 
+    // clear previous tooltips and chart from DOM
     d3.selectAll(`.${this.propID}_tooltip`).remove();
     if (document.querySelectorAll(selection_string + " svg")[0] != null) {
       document.querySelectorAll(selection_string + " svg")[0].remove();
@@ -198,7 +199,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     const formatDate = d3.timeParse(this.dateFormat);
 
     let xScale;
-
+    // create scale for x-axis for date values
     if (this.isDate) {
       xScale = d3.scaleTime().range([0, width]);
       data = data.map(function (d) {
@@ -214,11 +215,13 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     const xMap = function(d) {
         return xScale(xValue(d));
       },
+      // create the x-axis with the already created scale and set number of ticks. will be added to DOM later
       xAxis = d3.axisBottom()
         .scale(xScale)
         .tickSizeInner(-height)
         .ticks(6);
 
+      // set tick format for x-axis to date or time depending on if isDate is true
       if (this.isDate) {
         xAxis.tickFormat(d3.timeFormat(this.dateFormat));
       } else {
@@ -227,23 +230,27 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
         });
       }
 
+    // create scale for y-axis 
     const yScale = d3.scaleLinear()
         .range([height, 0]),
+      // will be used to calculate the postion of bubble later
       yMap = function(d) {
         return yScale(yValue(d));
       },
+      // create y-axis using the scale. will be added to DOM later
       yAxis = d3.axisLeft()
         .scale(yScale)
         .tickSizeInner(-width)
         .ticks(4);
 
+    //create the bubble sizes based on data values
     const max_value_size = Math.sqrt(d3.max(data, function(d) {
       return +d.value;
     }));
     const bubble_sizes = this.get_bubble_sizes(max_value_size, height, width);
     const min_bubble_size = bubble_sizes['min'];
     const max_bubble_size = bubble_sizes['max'];
-
+    // create the scale used to size the bubbles based on the calculated min and max sizes of bubbles
     const zScale = d3.scaleLinear().domain([1, max_value_size]).range([
       min_bubble_size,
       max_bubble_size
@@ -300,6 +307,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
       .attr("width", width)
       .attr("height", height);
 
+    //add x axis to DOM
     svg.append("g")
       .attr("class", "x axis")
       .attr("id", "top-x")
@@ -312,6 +320,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
       .style("text-anchor", "end")
       .text(this.xAxisLabel);
 
+    // add y-axis to the DOM
     svg.append("g")
       .attr("class", "y axis")
       .attr("id", "top-y")
@@ -325,7 +334,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
       .text(this.yAxisLabel);
 
   // const mouseOver = this.mouseOverBubble;
-
+    // add all of the bubbles of the data points and set colors
     svg.selectAll(".dot")
       .data(data)
       .enter()
@@ -341,11 +350,11 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
         return saveThisColor;
       })
       .style("opacity", 0.75)
+      // add event listener to show the tooltips when moused over
       .on("mouseover", function(d) {
         tooltip.transition()
           .duration(100)
           .style("opacity", 1);
-        // tslint:disable-next-line:max-line-length
       tooltip.html('<b class="tooltip-header">' + d.label + '</b>' + "<br/><b>" + localThis.xAxisLabel + "</b> " + (localThis.isTime ? localThis.pretty_duration(60 * localThis.xValue(d)) :  localThis.xValue(d)) + "<br/><b>" + localThis.yAxisLabel + ": </b>" + localThis.yValue(d)
           .toFixed(2) + "<br> <b>value:</b> " + localThis.zValue(d))
           .style("left", (d3.event.pageX + 5) + "px")
@@ -355,6 +364,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
           .duration(50)
           .style("opacity", 1);
       })
+      // add even listener to hide tooltip when user mouses out of bubble
       .on("mouseout", function(d) {
         // const tooltip = d3.select(`.${localThis.propID}_tooltip`);
           tooltip.transition().duration(300).style("opacity", 0);
@@ -363,6 +373,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
             .duration(200)
             .style("opacity", 0);
       })
+      // add click event to each bubble
       .on("click", function(d) {
         localThis.clickEvent.emit(d);
       });
