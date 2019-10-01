@@ -5,10 +5,15 @@
 </div>
 
 <div class="card-list-content">
-  <div class="scroll-button-group">
+  <div class="scroll-button-group" [ngClass]="{ 'reverse-layout': reverseLayout }">
     <div class="fixed-button fixed-top" *ngIf="showScrollUp()">
       <button class="scroll-button" (click)="scrollUp()">
         <fa-icon [icon]="faAngleUp" size="2x"></fa-icon>
+      </button>
+    </div>
+    <div class="fixed-button fixed-right" *ngIf="showScrollRight()">
+      <button class="scroll-button" (click)="scrollRight()">
+        <fa-icon [icon]="faAngleRight" size="2x"></fa-icon>
       </button>
     </div>
     <div class="fixed-button fixed-bottom"  *ngIf="showScrollDown()">
@@ -16,10 +21,15 @@
         <fa-icon [icon]="faAngleDown" size="2x"></fa-icon>
       </button>
     </div>
+    <div class="fixed-button fixed-left" *ngIf="showScrollLeft()">
+      <button class="scroll-button" (click)="scrollLeft()">
+        <fa-icon [icon]="faAngleLeft" size="2x"></fa-icon>
+      </button>
+    </div>
   </div>
   <div
     class="card-list-group"
-    [ngClass]="{ 'card-view': cardView }"
+    [ngClass]="{ 'inverse-layout': inverseLayout, 'card-view': cardView }"
     [style.height.px]="listHeight"
     (scroll)="onCardListScroll($event)"
     #cardListGroup>

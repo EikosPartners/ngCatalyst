@@ -11,7 +11,7 @@ import {
   EventEmitter
 } from '@angular/core';
 
-import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleUp, faAngleRight, faAngleDown, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'eikos-card-list',
@@ -26,6 +26,7 @@ export class CardListComponent implements AfterViewInit {
   @Input() title: string;
   @Input() listHeight = 500;
   @Input() cardView = false;
+  @Input() inverseLayout = false;
   @Input() multiSelect = false;
 
   @Output() itemSelected = new EventEmitter();
@@ -33,7 +34,9 @@ export class CardListComponent implements AfterViewInit {
 
   selectedItems = [];
   faAngleUp = faAngleUp;
+  faAngleRight = faAngleRight;
   faAngleDown = faAngleDown;
+  faAngleLeft = faAngleLeft;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
@@ -42,37 +45,65 @@ export class CardListComponent implements AfterViewInit {
   }
 
   showScrollUp () {
-    const clientHeight = this.cardListGroup.nativeElement.clientHeight;
     const scrollTop = this.cardListGroup.nativeElement.scrollTop;
 
-    return clientHeight >= this.listHeight && scrollTop > 0;
+    return scrollTop > 0;
+  }
+
+  showScrollRight () {
+    const clientWidth = this.cardListGroup.nativeElement.clientWidth;
+    const scrollWidth = this.cardListGroup.nativeElement.scrollWidth;
+    const scrollLeft = this.cardListGroup.nativeElement.scrollLeft;
+
+    return clientWidth + scrollLeft < scrollWidth;
   }
 
   showScrollDown () {
     const clientHeight = this.cardListGroup.nativeElement.clientHeight;
-    const scrollBottom = this.cardListGroup.nativeElement.scrollHeight -
-      (this.cardListGroup.nativeElement.clientHeight + this.cardListGroup.nativeElement.scrollTop);
+    const scrollHeight = this.cardListGroup.nativeElement.scrollHeight;
+    const scrollTop = this.cardListGroup.nativeElement.scrollTop;
 
-    return clientHeight >= this.listHeight && scrollBottom > 0;
+    return clientHeight + scrollTop < scrollHeight;
+  }
+
+  showScrollLeft () {
+    const scrollLeft = this.cardListGroup.nativeElement.scrollLeft;
+
+    return scrollLeft > 0;
   }
 
   scrollUp () {
-    const offset = this.listHeight * -0.5;
-    const scrollToPosition = this.cardListGroup.nativeElement.scrollTop + offset;
+    const scrollAmount = this.cardListGroup.nativeElement.clientHeight * -0.5;
+    const scrollToPosition = this.cardListGroup.nativeElement.scrollTop + scrollAmount;
 
     this.cardListGroup.nativeElement.scroll({ top: (scrollToPosition), behavior: 'smooth' });
+  }
+
+  scrollRight () {
+    const scrollAmount = this.cardListGroup.nativeElement.clientWidth * 0.5;
+    const scrollToPosition = this.cardListGroup.nativeElement.scrollLeft + scrollAmount;
+
+    this.cardListGroup.nativeElement.scroll({ left: (scrollToPosition), behavior: 'smooth' });
   }
 
   scrollDown () {
-    const offset = this.listHeight * 0.5;
-    const scrollToPosition = this.cardListGroup.nativeElement.scrollTop + offset;
+    const scrollAmount = this.cardListGroup.nativeElement.clientHeight * 0.5;
+    const scrollToPosition = this.cardListGroup.nativeElement.scrollTop + scrollAmount;
 
     this.cardListGroup.nativeElement.scroll({ top: (scrollToPosition), behavior: 'smooth' });
   }
 
+  scrollLeft () {
+    const scrollAmount = this.cardListGroup.nativeElement.clientWidth * -0.5;
+    const scrollToPosition = this.cardListGroup.nativeElement.scrollLeft + scrollAmount;
+
+    this.cardListGroup.nativeElement.scroll({ left: (scrollToPosition), behavior: 'smooth' });
+  }
+
   onCardListScroll (event) {
-    /* this variable is not used, but is required for scroll buttons to show/hide properly */
+    /* these variables are not used, but are required for scroll buttons to show/hide properly */
     const scrollTop = event.path[0].scrollTop;
+    const scrollLeft = event.path[0].scrollLeft;
   }
 
   toggleSelectedItems (item) {
