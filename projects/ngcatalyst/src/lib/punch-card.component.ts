@@ -19,11 +19,11 @@ import luxon from 'luxon';
 export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'punch';
-  @Input() data: [{day_of_week: string, hour_volumes: []}];
+  @Input() data: [{ day_of_week: string, hour_volumes: [] }];
   @Input() title: string;
   @Input() axisColors = ["#e5b1a5", "#ff2b2b"];
   @Input() axisLabel = 'Date';
-  @Input() colors =  ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
+  @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
   @Input() divHeight: any = "100%";
   @Input() divWidth: any = "100%";
   // tslint:disable-next-line:max-line-length
@@ -31,21 +31,21 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
 
-// HTK reference https://gist.github.com/kaezarrex/10122633
+  // HTK reference https://gist.github.com/kaezarrex/10122633
 
-  get area () {
+  get area() {
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
     } else {
       height = this.divHeight;
     }
-    if (typeof this.divWidth === "number" ) {
+    if (typeof this.divWidth === "number") {
       width = this.divWidth + "px";
     } else {
       width = this.divWidth;
     }
-    return {height: height, width: width};
+    return { height, width };
   }
 
   constructor() {
@@ -70,7 +70,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
 
   ngAfterViewChecked() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
-    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+    const offsetWidth = document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
 
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
@@ -79,15 +79,15 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     }
   }
 
-  getDay (day) {
+  getDay(day) {
     const days = [
-        { name: 'Mon', value: 2, description: 'Monday' },
-        { name: 'Tue', value: 3, description: 'Tuesday' },
-        { name: 'Wed', value: 4, description: 'Wednesday' },
-        { name: 'Thu', value: 5, description: 'Thursday' },
-        { name: 'Fri', value: 6, description: 'Friday' },
-        { name: 'Sat', value: 7, description: 'Saturday' },
-        { name: 'Sun', value: 1, description: 'Sunday' }
+      { name: 'Mon', value: 2, description: 'Monday' },
+      { name: 'Tue', value: 3, description: 'Tuesday' },
+      { name: 'Wed', value: 4, description: 'Wednesday' },
+      { name: 'Thu', value: 5, description: 'Thursday' },
+      { name: 'Fri', value: 6, description: 'Friday' },
+      { name: 'Sat', value: 7, description: 'Saturday' },
+      { name: 'Sun', value: 1, description: 'Sunday' }
     ];
     const result = days.filter(d => {
       return d.name === day;
@@ -95,15 +95,15 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     return result[0].value;
   }
 
-  getDayName (day) {
+  getDayName(day) {
     const days = [
-        { name: 'Mon', value: "1", description: 'Monday' },
-        { name: 'Tue', value: "2", description: 'Tuesday' },
-        { name: 'Wed', value: "3", description: 'Wednesday' },
-        { name: 'Thu', value: "4", description: 'Thursday' },
-        { name: 'Fri', value: "5", description: 'Friday' },
-        { name: 'Sat', value: "6", description: 'Saturday' },
-        { name: 'Sun', value: "0", description: 'Sunday' }
+      { name: 'Mon', value: "1", description: 'Monday' },
+      { name: 'Tue', value: "2", description: 'Tuesday' },
+      { name: 'Wed', value: "3", description: 'Wednesday' },
+      { name: 'Thu', value: "4", description: 'Thursday' },
+      { name: 'Fri', value: "5", description: 'Friday' },
+      { name: 'Sat', value: "6", description: 'Saturday' },
+      { name: 'Sun', value: "0", description: 'Sunday' }
     ];
     const result = days.filter(d => {
       return d.value === day;
@@ -114,11 +114,6 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
 
   drawPunchCard() {
     if (this.data === undefined) { return; }
-      // try {
-      //   if (this.data.length === 0) { return; }
-      // } catch (e) {
-      //   return;
-      // }
 
     const localThis = this;
     // This was needed for the Incident Set Modal Test to pass.
@@ -140,7 +135,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     const selected = document.querySelectorAll(elementName);
 
     if (selected[0] == null) {
-      element = {clientWidth: 1000, clientHeight: 500};
+      element = { clientWidth: 1000, clientHeight: 500 };
     } else {
       element = selected[0];
     }
@@ -148,25 +143,13 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
 
     const xLabelHeight = element.clientHeight / this.data.length;
     const yLabelWidth = element.clientWidth / d3.max(
-      this.data.map(function(d) {
+      this.data.map(function (d) {
         return d.hour_volumes.length;
       }));
 
 
-    const width =
-      element.clientWidth - margin.left - margin.right - yLabelWidth;
-    const height =
-    element.clientHeight / 24 * 7 +
-      2 * xLabelHeight - margin.top - margin.bottom;
-
-    // console.log(selected);
-    // console.log(element.clientWidth);
-    // console.log(element.clientHeight);
-
-
-    //   if (this..changeHeight !== undefined ) {
-//       this..changeHeight(height + margin.top + margin.bottom + 2 * xLabelHeight);
-//  }
+    const width = element.clientWidth - margin.left - margin.right - yLabelWidth;
+    const height = element.clientHeight / 24 * 7 + 2 * xLabelHeight - margin.top - margin.bottom;
 
     const chart = d3
       .select(elementName)
@@ -184,13 +167,13 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     // array of all values in the data, for min maxing and length calculations
     const allValues = Array.prototype.concat.apply(
       [],
-      data.map(function(d) {
+      data.map(function (d) {
         return d.hour_volumes;
       })
     );
     // finds longest array in data
     const maxWidth = d3.max(
-      data.map(function(d) {
+      data.map(function (d) {
         return d.hour_volumes.length;
       })
     );
@@ -206,14 +189,14 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     // let xLabelHeight = height / maxR;
 
     // sort data and translate into human-readable
-    data.sort(function(a, b) {
-     return parseInt(a["day_of_week"]) > parseInt(b["day_of_week"]);
+    data.sort(function (a, b) {
+      return parseInt(a["day_of_week"]) > parseInt(b["day_of_week"]);
     });
 
     data.push(data.shift());
 
     if (data[0]["day_of_week"].length === 1) {
-      data = data.map(function(d) {
+      data = data.map(function (d) {
         d["day_of_week"] = localThis.getDayName(d["day_of_week"]);
         return d;
       });
@@ -225,7 +208,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     // calc total volumes per day, for sumsY label
     const sumsY = [];
     for (let i = 0; i < data.length; i++) {
-      const sum = data[i]["hour_volumes"].reduce(function(acc, val) {
+      const sum = data[i]["hour_volumes"].reduce(function (acc, val) {
         return acc + val;
       }, 0);
       sumsY.push(sum);
@@ -234,14 +217,14 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     // calc total volumes per hour, for sumsX label
     const sumsX = [];
     for (let i = 0; i < data[0]["hour_volumes"].length; i++) {
-      const sum = data.reduce(function(acc, val) {
+      const sum = data.reduce(function (acc, val) {
         return acc + val["hour_volumes"][i];
       }, 0);
       sumsX.push(sum);
     }
 
     // this essentially scales radius values according to the maxR
-    const sizeScale = function(d, dataset) {
+    const sizeScale = function (d, dataset) {
       if (d === 0) { return 0; }
       const f = d3.scaleSqrt()
         .domain([d3.min(dataset), d3.max(dataset)])
@@ -249,7 +232,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       return f(d);
     };
 
-    const colorScale = function(d, dataset) {
+    const colorScale = function (d, dataset) {
       const f = d3.scaleLinear()
         .domain([d3.min(dataset), d3.max(dataset)])
         .range([localThis.colors[7], localThis.colors[0]]);
@@ -257,7 +240,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       return f(d);
     };
 
-    const colorScaleAxes = function(d, dataset) {
+    const colorScaleAxes = function (d, dataset) {
       const f = d3.scaleLinear()
         .domain([d3.min(dataset), d3.max(dataset)])
         .range(localThis.axisColors);
@@ -290,13 +273,13 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       .attr("class", "punch-border, border-top");
 
     // creates rows according to data labels
-      const rows = chart.selectAll(".row").data(data, function(d) {
-        return d.day_of_week;
-      })
+    const rows = chart.selectAll(".row").data(data, function (d) {
+      return d.day_of_week;
+    })
       .enter()
       .append("g")
       .attr("class", "row")
-      .attr("transform", function(d, i) {
+      .attr("transform", function (d, i) {
         return (
           "translate(" +
           (yLabelWidth + 2 * maxR) +
@@ -308,37 +291,37 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
 
     // creating the elements that will hold and represent our data
     rows.selectAll("circle")
-      .data(function(d) {
+      .data(function (d) {
         return d.hour_volumes;
       })
       .enter()
       .append("circle")
       .attr("cy", 0)
       .style("fill", "transparent")
-      .text(function(d) {
+      .text(function (d) {
         return d;
       })
-      .attr("r", function(d) {
+      .attr("r", function (d) {
         return sizeScale(d, allValues);
       })
-      .attr("cx", function(d, i) {
+      .attr("cx", function (d, i) {
         return i * maxR * 2 + maxR;
       })
       .attr("shape-rendering", "auto")
-      .style("fill", function(d) {
+      .style("fill", function (d) {
         return colorScale(d, allValues);
       });
 
     // adds labels
-    const dotLabels = rows.selectAll(".dot-label").data(function(d) {
-      return d.hour_volumes.map(function(v, idx) {
+    const dotLabels = rows.selectAll(".dot-label").data(function (d) {
+      return d.hour_volumes.map(function (v, idx) {
         return [v, d.day_of_week, idx];
       });
     })
       .enter()
       .append("g")
       .attr("class", "dot-label")
-      .on("mouseover", function(d) {
+      .on("mouseover", function (d) {
         const selection = d3.select(this);
         if (d[0] > 0) {
           selection.style("cursor", "pointer");
@@ -355,7 +338,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
           .style("opacity", 1);
       })
 
-      .on("mouseout", function(d) {
+      .on("mouseout", function (d) {
         const selection = d3.select(this);
         selection.style("cursor", "default");
         selection
@@ -367,20 +350,20 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
           .transition()
           .style("opacity", 0);
       })
-      .on("click", function(d, i) {
+      .on("click", function (d, i) {
         localThis.clickEvent.emit(d);
       });
 
 
     dotLabels
       .append("circle")
-      .attr("r", function(d) {
+      .attr("r", function (d) {
         return maxR;
       })
-      .attr("cx", function(d, i) {
+      .attr("cx", function (d, i) {
         return maxR;
-        })
-      .attr("cy", function(d, i) {
+      })
+      .attr("cy", function (d, i) {
         return maxR;
       })
       .style("fill", localThis.colors[0])
@@ -397,11 +380,11 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
 
     // centers and resizes the text so it doesn't exceed its rect
     dotLabels
-      .attr("transform", function(d, i) {
+      .attr("transform", function (d, i) {
         return "translate(" + i * maxR * 2 + "," + -maxR + ")";
       })
       .select("text")
-      .text(function(d) {
+      .text(function (d) {
         return d[0];
       })
       .attr("y", maxR + 4)
@@ -416,7 +399,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     // creates labels for the x axis (hour)
     chart.selectAll(".xLabel")
       .data(labelsX)
-    // styling for the labels
+      // styling for the labels
       .enter()
       .append("text")
       .attr("y", xLabelHeight)
@@ -424,30 +407,30 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       .attr("class", "xLabel")
       .style("text-anchor", "middle")
       .style("fill-opacity", 0)
-      .text(function(d) {
+      .text(function (d) {
         return d;
       })
-      .attr("x", function(d, i) {
+      .attr("x", function (d, i) {
         return maxR * i * 2 + 3 * maxR + yLabelWidth;
       })
       .style("fill-opacity", 1);
 
     // creates labels for the y axis (day of week)
     const yLabels = chart.selectAll(".yLabel")
-      .data(data, function(d) {
+      .data(data, function (d) {
         return d.day_of_week;
       })
-    // y label creation
+      // y label creation
       .enter()
       .append("text")
-      .text(function(d) {
+      .text(function (d) {
         return d.day_of_week;
       })
       .attr("x", yLabelWidth)
       .attr("class", "yLabel")
       .style("text-anchor", "end")
       .style("fill-opacity", 0)
-      .attr("y", function(d, i) {
+      .attr("y", function (d, i) {
         return maxR * i * 2 + 3 * maxR + xLabelHeight;
       })
       .attr("transform", "translate(-6," + maxR / 2.5 + ")")
@@ -458,22 +441,22 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       .data(sumsY)
       .enter()
       .append("circle")
-      .text(function(d) {
+      .text(function (d) {
         return d;
       })
       .attr("cy", 0)
       .attr("class", "sums-y")
       .style("fill", "#ffffff")
       .style("fill-opacity", 0)
-      .attr("cy", function(d, i) {
+      .attr("cy", function (d, i) {
         return maxR * i * 2 + 3 * maxR + xLabelHeight;
       })
-      .attr("r", function(d) {
+      .attr("r", function (d) {
         return sizeScale(d, sumsY);
       })
       .attr("cx", yLabelWidth + maxR)
       .attr("shape-rendering", "auto")
-      .style("fill", function(d) {
+      .style("fill", function (d) {
         return colorScaleAxes(d, sumsY);
       })
       .style("fill-opacity", 1)
@@ -481,11 +464,11 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       .style("stroke-width", 1);
 
     const sumsYValues = chart.selectAll(".sums-y-value").data(sumsY)
-    // //adds mouseover transition
+      // //adds mouseover transition
       .enter()
       .append("g")
       .attr("class", "sums-y-value")
-      .on("mouseover", function(d) {
+      .on("mouseover", function (d) {
         const selection = d3.select(this);
         if (d > 0) {
           selection.style("cursor", "pointer");
@@ -501,7 +484,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
           .duration(0)
           .style("opacity", 1);
       })
-      .on("mouseout", function(d) {
+      .on("mouseout", function (d) {
         const selection = d3.select(this);
         selection.style("cursor", "default");
         selection
@@ -513,21 +496,21 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
           .transition()
           .style("opacity", 0);
       })
-      .on("click", function(d, i) {
+      .on("click", function (d, i) {
         const day = localThis.getDay(yLabels._groups[0][i].textContent);
-        localThis.clickEvent.emit({day: day, total: d});
+        localThis.clickEvent.emit({ day: day, total: d });
       });
 
     // creates the needed svg and text elements to make the labels actually readable
     sumsYValues
       .append("circle")
-      .attr("r", function(d) {
+      .attr("r", function (d) {
         return maxR;
       })
-      .attr("cx", function(d, i) {
+      .attr("cx", function (d, i) {
         return maxR;
-        })
-      .attr("cy", function(d, i) {
+      })
+      .attr("cy", function (d, i) {
         return maxR;
       })
       .style("fill", this.axisColors[1])
@@ -544,7 +527,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
 
     // centers and resizes the text so it doesn't exceed its rect
     sumsYValues
-      .attr("transform", function(d, i) {
+      .attr("transform", function (d, i) {
         return (
           "translate(" +
           yLabelWidth +
@@ -554,7 +537,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
         );
       })
       .select("text")
-      .text(function(d) {
+      .text(function (d) {
         return d;
       })
       .attr("y", maxR + 4)
@@ -589,7 +572,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     sumsXAxis
       .enter()
       .append("circle")
-      .text(function(d) {
+      .text(function (d) {
         return d;
       })
       .attr("cy", 0)
@@ -597,14 +580,14 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       .style("fill", "#ffffff")
       .style("fill-opacity", 0)
       .attr("cy", xLabelHeight + maxR)
-      .attr("r", function(d) {
+      .attr("r", function (d) {
         return sizeScale(d, sumsX);
       })
-      .attr("cx", function(d, i) {
+      .attr("cx", function (d, i) {
         return yLabelWidth + 3 * maxR + maxR * i * 2;
       })
       .attr("shape-rendering", "auto")
-      .style("fill", function(d) {
+      .style("fill", function (d) {
         return colorScaleAxes(d, sumsX);
       })
       .style("fill-opacity", 1)
@@ -612,11 +595,11 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       .style("stroke-width", 1);
 
     const sumsXValues = chart.selectAll(".sums-x-value").data(sumsX)
-    // //adds mouseover transition
+      // //adds mouseover transition
       .enter()
       .append("g")
       .attr("class", "sums-x-value")
-      .on("mouseover", function(d) {
+      .on("mouseover", function (d) {
         const selection = d3.select(this);
         if (d > 0) {
           selection.style("cursor", "pointer");
@@ -632,7 +615,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
           .duration(100)
           .style("opacity", 1);
       })
-      .on("mouseout", function(d) {
+      .on("mouseout", function (d) {
         const selection = d3.select(this);
         selection.style("cursor", "default");
         selection
@@ -644,20 +627,20 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
           .transition()
           .style("opacity", 0);
       })
-      .on("click", function(d, i) {
-        localThis.clickEvent.emit({hour: i, total: d});
+      .on("click", function (d, i) {
+        localThis.clickEvent.emit({ hour: i, total: d });
       });
 
     // creates the needed svg and text elements to make the labels actually readable
     sumsXValues
       .append("circle")
-      .attr("r", function(d) {
+      .attr("r", function (d) {
         return maxR;
       })
-      .attr("cx", function(d, i) {
+      .attr("cx", function (d, i) {
         return maxR;
-        })
-      .attr("cy", function(d, i) {
+      })
+      .attr("cy", function (d, i) {
         return maxR;
       })
       .style("fill", this.axisColors[1])
@@ -674,7 +657,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
 
     // centers and resizes the text so it doesn't exceed its rect
     sumsXValues
-      .attr("transform", function(d, i) {
+      .attr("transform", function (d, i) {
         return (
           "translate(" +
           (yLabelWidth + 2 * maxR * i + 2 * maxR) +
@@ -684,7 +667,7 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
         );
       })
       .select("text")
-      .text(function(d) {
+      .text(function (d) {
         return d;
       })
       .attr("y", maxR + 4)
@@ -722,20 +705,20 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       .attr("stroke-width", 1)
       .style("shape-rendering", "crispEdges")
       .style("stroke-opacity", 0)
-      .attr("x1", function(d, i) {
+      .attr("x1", function (d, i) {
         return maxR * i * 2 + yLabelWidth + 2 * maxR;
       })
-      .attr("x2", function(d, i) {
+      .attr("x2", function (d, i) {
         return maxR * i * 2 + yLabelWidth + 2 * maxR;
       })
       .attr("y1", xLabelHeight + borderWidth / 2)
       .attr("y2", height - (maxR * 5) + 10)
-      .style("stroke-opacity", function(d, i) {
+      .style("stroke-opacity", function (d, i) {
         return i ? 0.5 : 0;
       });
 
     chart.selectAll(".horiz")
-      .data(data, function(d) {
+      .data(data, function (d) {
         return d.day_of_week;
       })
       .enter()
@@ -747,13 +730,13 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
       .style("shape-rendering", "crispEdges")
       .style("stroke-opacity", 0)
       .attr("x2", (maxR * 25 * 2) + yLabelWidth)
-      .attr("y1", function(d, i) {
+      .attr("y1", function (d, i) {
         return ((i + 1) * (maxR * 2)) + xLabelHeight;
       })
-      .attr("y2", function(d, i) {
+      .attr("y2", function (d, i) {
         return ((i + 1) * (maxR * 2)) + xLabelHeight;
       })
-      .style("stroke-opacity", function(d, i) {
+      .style("stroke-opacity", function (d, i) {
         return i ? 0.5 : 0;
       });
 
@@ -761,11 +744,11 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     chart
       .append("line")
       .attr("x1", yLabelWidth + borderWidth / 2)
-      .attr("y1", function(d, i) {
+      .attr("y1", function (d, i) {
         return xLabelHeight / .34 + 1; // element.clientHeight - (maxR * 16) - xLabelHeight;
       })
       .attr("x2", maxR * 25 * 2 + yLabelWidth)
-      .attr("y2", function(d, i) {
+      .attr("y2", function (d, i) {
         return xLabelHeight / .34 + 1; // element.clientHeight - (maxR * 16) - xLabelHeight;
       })
       .attr("stroke-width", 3)
@@ -776,10 +759,10 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
     // outer border right
     chart
       .append("line")
-      .attr("x1", function(d, i) {
+      .attr("x1", function (d, i) {
         return (maxR * 25 * 2) + yLabelWidth; // +  width;
       })
-      .attr("x2", function(d, i) {
+      .attr("x2", function (d, i) {
         return (maxR * 25 * 2) + yLabelWidth; // + width;
       })
       .attr("y1", xLabelHeight + borderWidth / 2)

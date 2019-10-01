@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, HostListener, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked} from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual, zip, zipObject } from 'lodash';
 
@@ -43,12 +43,13 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   get dataModel() {
     if (this.data[0]["name"]) {
       return this.data.map(item => {
-        return {x: item["name"], y: item["value"]};
+        return { x: item["name"], y: item["value"] };
       });
     } else if (this.data[0]["x"]) {
       return this.data;
     }
   }
+
   get dataColors() {
     if (typeof this.colors[0] !== "string") {
       return this.colors;
@@ -65,7 +66,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
   }
 
-  get area () {
+  get area() {
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
@@ -74,7 +75,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       height = this.divHeight;
       width = this.divWidth;
     }
-    return {height: height, width: width};
+    return { height, width };
   }
 
 
@@ -84,8 +85,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
   ngAfterViewChecked() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
-    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
-    // console.log('viewcheck?');
+    const offsetWidth = document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
@@ -99,237 +100,236 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     }
   }
 
-  drawBarPlot () {
-        // console.log('drawing');
-        const data = this.dataModel,
-          id = this.propID,
-          yaxisvalue = this.yAxisLabel,
-          xaxisvalue =this.xAxisLabel;
-        const localThis = this;
-        d3.selectAll(`.${this.propID}_tooltip`).remove();
+  drawBarPlot() {
+    const data = this.dataModel,
+      id = this.propID,
+      yaxisvalue = this.yAxisLabel,
+      xaxisvalue = this.xAxisLabel;
+    const localThis = this;
+    d3.selectAll(`.${this.propID}_tooltip`).remove();
 
-        const selection_string = "#" + id;
-        if (document.querySelectorAll(selection_string + " svg")[0] != null) {
-          document.querySelectorAll(selection_string + " svg")[0].remove();
-        }
+    const selection_string = "#" + id;
+    if (document.querySelectorAll(selection_string + " svg")[0] != null) {
+      document.querySelectorAll(selection_string + " svg")[0].remove();
+    }
 
-        let element: any;
-        const selected = document.querySelectorAll(selection_string);
+    let element: any;
+    const selected = document.querySelectorAll(selection_string);
 
-        if (selected[0] == null) {
-          element = {clientWidth: 500, clientHeight: 500};
-        } else {
-          element = selected[0];
-        }
-        const margin = { top: 20, right: 30, bottom: 15, left: 40 };
-        if (this.xAxisAngle > 0) {
-          margin.bottom += (this.xAxisAngle / 2);
-        }
-        const width = element.clientWidth - margin.left - margin.right;
-        let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? (this.xAxisAngle / 2) : 0);
-        if (height < 0) {
-          height = 300;
-        }
-        if (this.title) {
-          height = height - 48;
-        }
-        const dataValues = this.dataModel.map(item => item["y"]);
-        const dataNames = this.dataModel.map(item => item["x"]);
-        const x = d3.scaleBand()
-          .range([0, width])
-          .domain(dataNames)
-          .paddingInner(.2)
-          .paddingOuter(.2);
+    if (selected[0] == null) {
+      element = { clientWidth: 500, clientHeight: 500 };
+    } else {
+      element = selected[0];
+    }
+    const margin = { top: 20, right: 30, bottom: 15, left: 40 };
+    if (this.xAxisAngle > 0) {
+      margin.bottom += (this.xAxisAngle / 2);
+    }
+    const width = element.clientWidth - margin.left - margin.right;
+    let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? (this.xAxisAngle / 2) : 0);
+    if (height < 0) {
+      height = 300;
+    }
+    if (this.title) {
+      height = height - 48;
+    }
+    const dataValues = this.dataModel.map(item => item["y"]);
+    const dataNames = this.dataModel.map(item => item["x"]);
+    const x = d3.scaleBand()
+      .range([0, width])
+      .domain(dataNames)
+      .paddingInner(.2)
+      .paddingOuter(.2);
 
-        const extent = d3.extent(dataValues).reverse();
-        const y = d3.scaleLinear()
-          .range([0, height - margin.bottom])
-          .domain(extent);
+    const extent = d3.extent(dataValues).reverse();
+    const y = d3.scaleLinear()
+      .range([0, height - margin.bottom])
+      .domain(extent);
 
-        const xAxis = d3.axisBottom()
-          .scale(x)
-          .tickSizeOuter(0);
+    const xAxis = d3.axisBottom()
+      .scale(x)
+      .tickSizeOuter(0);
 
-        const yAxis = d3.axisLeft()
-          .scale(y);
+    const yAxis = d3.axisLeft()
+      .scale(y);
 
-        if (this.showTicks) {
-          yAxis.tickSizeInner(-width);
-        }
+    if (this.showTicks) {
+      yAxis.tickSizeInner(-width);
+    }
 
-        const tooltip = d3
-          .select("body")
-          .append("div")
-          .attr("class", `d3_visuals_tooltip ${this.propID}_tooltip`)
-          .style("opacity", 0);
+    const tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", `d3_visuals_tooltip ${this.propID}_tooltip`)
+      .style("opacity", 0);
 
-        const chart = d3
-          .select(selection_string)
-          .append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    const chart = d3
+      .select(selection_string)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        chart
-          .append("g")
-          .attr("class", "x axis xaxis")
-          .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-          .call(xAxis)
-          .append("text")
-          .attr("class", "label x-label")
-          .attr("x", (width / 3) + margin.right)
-          .attr("y", 0)
-          .style("text-anchor", "middle")
-          .text(xaxisvalue);
+    chart
+      .append("g")
+      .attr("class", "x axis xaxis")
+      .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+      .call(xAxis)
+      .append("text")
+      .attr("class", "label x-label")
+      .attr("x", (width / 3) + margin.right)
+      .attr("y", 0)
+      .style("text-anchor", "middle")
+      .text(xaxisvalue);
 
-        const text = chart.selectAll("text");
+    const text = chart.selectAll("text");
 
-        if (this.xAxisAngle > 0) {
-            text
-                .attr("transform", `rotate(${this.xAxisAngle}) translate(0, ${margin.top})`)
-                .style("text-anchor", "middle");
+    if (this.xAxisAngle > 0) {
+      text
+        .attr("transform", `rotate(${this.xAxisAngle}) translate(0, ${margin.top})`)
+        .style("text-anchor", "middle");
 
-            const dimensions = text.node().getBBox();
-            const array = Array.from(text._groups[0]).map((item: any, index: number) => item.getBBox().width);
-            // const dimwid = d3.max(array);
+      const dimensions = text.node().getBBox();
+      const array = Array.from(text._groups[0]).map((item: any, index: number) => item.getBBox().width);
+      // const dimwid = d3.max(array);
 
-            if (this.xAxisAngle < 45) {
-              text.attr("x", function(a, b, c, d) {
-                    if (array[b] < margin.bottom) {
-                      return dimensions.width / 2;
-                    } else {
-                      return dimensions.width / 1.5;
-                    }
-                  })
-                  .attr("y", dimensions.height - margin.top);
-            }
-
-            if (this.xAxisAngle >= 45) {
-              text.attr("x", function(a, b, c, d) {
-                    if (array[b] < margin.bottom) {
-                      return dimensions.width - 15;
-                    } else {
-                      return dimensions.width - 10;
-                    }
-                  })
-                  .attr("y", dimensions.height - 10);
-            }
-
-            if (this.xAxisAngle === 90) {
-              text.attr("x", dimensions.width)
-                  .attr("y", -margin.left / 2 - 5);
-            }
-        }
-        const dataColors = this.dataColors;
-        chart
-          .append("g")
-          .attr("class", "y axis")
-          .call(yAxis)
-          .append("text")
-          .attr("class", "label")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 0)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
-          .text(yaxisvalue);
-
-          function hex2rgb(hex) {
-            // tslint:disable-next-line:no-bitwise
-            return [<any>'0x' + hex[1] + hex[2] | 0, <any>'0x' + hex[3] + hex[4] | 0, <any>'0x' + hex[5] + hex[6] | 0];
+      if (this.xAxisAngle < 45) {
+        text.attr("x", function (a, b, c, d) {
+          if (array[b] < margin.bottom) {
+            return dimensions.width / 2;
+          } else {
+            return dimensions.width / 1.5;
           }
+        })
+          .attr("y", dimensions.height - margin.top);
+      }
 
-        if (data.length > 0) {
-          chart
-            .selectAll(".bar")
-            .data(data)
-            .enter()
-            .append("rect")
-            .attr("class", "bar")
-            .attr("x", function(d) {
-              return x(d.x);
-            })
-            .attr("y", function(d) {
-              if (d.y < 0) {
-                return y(0);
-              } else {
-                return y(d.y);
-              }
-            })
-            .attr("height", function(d) {
-              if (dataValues.every(it => it > 0)) {
-                return height - y(d.y) - margin.bottom;
-              } else {
-                return Math.abs(y(d.y) - y(0));
-              }
-            })
-            .attr("width", x.bandwidth() - x.paddingInner())
-            .style("fill", function(d, i, c) {
-              return dataColors[d["x"]];
-            })
-            .on("mouseover", function(d) {
-              const yval = d.y;
-              tooltip
-                .transition()
-                .duration(100)
-                .style("opacity", 1);
-              tooltip
-                .html(
-                  xaxisvalue +
-                    ": <b>" +
-                    d.x + "</b><br>" +
-                  yaxisvalue +
-                    ": <b>" +
-                    yval + "</b>"
-                )
-                .style("left", d3.event.pageX + 5 + "px")
-                .style("top", d3.event.pageY - 28 + "px");
-              d3
-                .select(this)
-                .transition()
-                .duration(50)
-                .style("fill", function(dt, i) {
+      if (this.xAxisAngle >= 45) {
+        text.attr("x", function (a, b, c, d) {
+          if (array[b] < margin.bottom) {
+            return dimensions.width - 15;
+          } else {
+            return dimensions.width - 10;
+          }
+        })
+          .attr("y", dimensions.height - 10);
+      }
 
-                  let currentFill: any;
-                  currentFill = hex2rgb(dataColors[dt["x"]]);
-                  // if (currentFill.includes('#')){
-                  // } else {
-                  //   currentFill = currentFill.slice(0, currentFill.length -2).slice(4).split(', ')
-                  // }
-                  const darker = currentFill.map(item => {
-          // tslint:disable-next-line: radix
-                    return parseInt(item) * .75;
-                  });
-                  return `rgb(${darker[0]}, ${darker[1]}, ${darker[2]})`;
-                  });
-            })
-            .on("mouseout", function(d) {
-              d3
-                .select(this)
-                .transition()
-                .duration(100)
-                .style("fill", function(d2, i) {
-                   return dataColors[d2["x"]];
-                });
-              tooltip
-                .transition()
-                .duration(300)
-                .style("opacity", 0);
-            })
-            .on("click", function(d) {
-              localThis.clickEvent.emit(d);
+      if (this.xAxisAngle === 90) {
+        text.attr("x", dimensions.width)
+          .attr("y", -margin.left / 2 - 5);
+      }
+    }
+    const dataColors = this.dataColors;
+    chart
+      .append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+      .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text(yaxisvalue);
+
+    function hex2rgb(hex) {
+      // tslint:disable-next-line:no-bitwise
+      return [<any>'0x' + hex[1] + hex[2] | 0, <any>'0x' + hex[3] + hex[4] | 0, <any>'0x' + hex[5] + hex[6] | 0];
+    }
+
+    if (data.length > 0) {
+      chart
+        .selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", function (d) {
+          return x(d.x);
+        })
+        .attr("y", function (d) {
+          if (d.y < 0) {
+            return y(0);
+          } else {
+            return y(d.y);
+          }
+        })
+        .attr("height", function (d) {
+          if (dataValues.every(it => it > 0)) {
+            return height - y(d.y) - margin.bottom;
+          } else {
+            return Math.abs(y(d.y) - y(0));
+          }
+        })
+        .attr("width", x.bandwidth() - x.paddingInner())
+        .style("fill", function (d, i, c) {
+          return dataColors[d["x"]];
+        })
+        .on("mouseover", function (d) {
+          const yval = d.y;
+          tooltip
+            .transition()
+            .duration(100)
+            .style("opacity", 1);
+          tooltip
+            .html(
+              xaxisvalue +
+              ": <b>" +
+              d.x + "</b><br>" +
+              yaxisvalue +
+              ": <b>" +
+              yval + "</b>"
+            )
+            .style("left", d3.event.pageX + 5 + "px")
+            .style("top", d3.event.pageY - 28 + "px");
+          d3
+            .select(this)
+            .transition()
+            .duration(50)
+            .style("fill", function (dt, i) {
+
+              let currentFill: any;
+              currentFill = hex2rgb(dataColors[dt["x"]]);
+              // if (currentFill.includes('#')){
+              // } else {
+              //   currentFill = currentFill.slice(0, currentFill.length -2).slice(4).split(', ')
+              // }
+              const darker = currentFill.map(item => {
+                // tslint:disable-next-line: radix
+                return parseInt(item) * .75;
+              });
+              return `rgb(${darker[0]}, ${darker[1]}, ${darker[2]})`;
             });
+        })
+        .on("mouseout", function (d) {
+          d3
+            .select(this)
+            .transition()
+            .duration(100)
+            .style("fill", function (d2, i) {
+              return dataColors[d2["x"]];
+            });
+          tooltip
+            .transition()
+            .duration(300)
+            .style("opacity", 0);
+        })
+        .on("click", function (d) {
+          localThis.clickEvent.emit(d);
+        });
 
-            if (this.marker) {
-              chart.append("g").append("line")
-                  .attr("x1", 0).attr("y1", y(this.marker))
-                  .attr("x2", width).attr("y2", y(this.marker))
-                  .attr("stroke-width", this.markerWidth)
-                  .attr("class", "marker-line")
-                  .attr("stroke", this.markerColor);
-            }
-            
-        }
+      if (this.marker) {
+        chart.append("g").append("line")
+          .attr("x1", 0).attr("y1", y(this.marker))
+          .attr("x2", width).attr("y2", y(this.marker))
+          .attr("stroke-width", this.markerWidth)
+          .attr("class", "marker-line")
+          .attr("stroke", this.markerColor);
+      }
+
+    }
   }
 
 }

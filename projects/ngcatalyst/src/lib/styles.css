@@ -35,11 +35,12 @@ h2 {
   padding: 4px 8px;
   border-radius: 4px;
   border: solid #333 transparent;
-  background: rgba(0, 0, 0, .8);
+  background: rgba(0, 0, 0, 0.8);
   pointer-events: none;
 }
 
-.dot, .rect {
+.dot,
+.rect {
   stroke: #000;
   cursor: pointer;
   fill: blue;
@@ -51,17 +52,24 @@ h2 {
   stroke-width: 1.5px;
 }
 
-.small-axis{
+.small-axis {
   font-size: 9px;
 }
 
-.tick line{
-  opacity: .2;
+.tick line {
+  opacity: 0.2;
   stroke-width: 1.8px;
   shape-rendering: geometricPrecision;
 }
 
-eikos-pie-chart, eikos-bar-chart, eikos-line-plot, eikos-pie-chart, eikos-bubble-chart, eikos-heat-map, eikos-punch-card, eikos-sunburst  {
+eikos-pie-chart,
+eikos-bar-chart,
+eikos-line-plot,
+eikos-pie-chart,
+eikos-bubble-chart,
+eikos-heat-map,
+eikos-punch-card,
+eikos-sunburst {
   display: block;
   height: 100%;
   width: 100%;

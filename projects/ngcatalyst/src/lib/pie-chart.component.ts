@@ -31,19 +31,19 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     window.addEventListener('resize', this.drawPieChart.bind(this));
   }
 
-  get area () {
+  get area() {
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
     } else {
       height = this.divHeight;
     }
-    if (typeof this.divWidth === "number" ) {
+    if (typeof this.divWidth === "number") {
       width = this.divWidth + "px";
     } else {
       width = this.divWidth;
     }
-    return {height: height, width: width};
+    return { height, width };
   }
   // you might need a method like this to reformat given data with the appropriate field names,
   // get dataModel() {
@@ -56,7 +56,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     if (!changes.data.firstChange && changes.colors && !isEqual(changes.colors.previousValue, changes.colors.currentValue)) {
       this.savedColors = {};
       this.drawPieChart();
-    } else if (!changes.data.firstChange && changes.data && !isEqual(changes.data.previousValue, changes.data.currentValue) ) {
+    } else if (!changes.data.firstChange && changes.data && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawPieChart();
     }
   }
@@ -67,7 +67,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
   ngAfterViewChecked() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
-    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+    const offsetWidth = document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
 
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
@@ -78,7 +78,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
   drawPieChart() {
     if (this.total === 0 && this.data) {
-      this.data.forEach(el => {this.total += el['value']; });
+      this.data.forEach(el => { this.total += el['value']; });
     }
 
     // remove previous tooltips and chart before redrawing
@@ -94,7 +94,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
 
     if (selected[0] == null) {
-      element = {clientWidth: 500, clientHeight: 500};
+      element = { clientWidth: 500, clientHeight: 500 };
     } else {
       element = selected[0];
     }
@@ -105,13 +105,13 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
     const localThis = this;
 
-    const margin = {top: 10, right: 0, bottom: 20, left: 0},
+    const margin = { top: 10, right: 0, bottom: 20, left: 0 },
       width = element.clientWidth - margin.left - margin.right;
     let height = element.clientHeight - margin.top - margin.bottom;
     if (height < 0) {
       height = 300;
     }
-    let radius = height > width ?  width / 2 : height / 2;
+    let radius = height > width ? width / 2 : height / 2;
     let donutWidth = this.donutWidth;
     if (typeof donutWidth === "string") {
       donutWidth = (parseInt(donutWidth.split('%')[0]) / 100) * radius;
@@ -120,7 +120,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     }
     const svg = d3.select(selection_string)
       .append("svg")
-      .data([this.data], function(d) {
+      .data([this.data], function (d) {
         if (d) {
           return d.label;
         }
@@ -140,7 +140,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
     // create function that will be used to draw slices
     const pie = d3.pie()
-      .value(function(d) { return d.value; });
+      .value(function (d) { return d.value; });
 
     // Declare an arc generator function
     const arc = d3.arc()
@@ -151,38 +151,38 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     const arcs = svg.selectAll("g.slice")
       .data(pie)
       .enter()
-        .append("g")
-        .attr("class", "slice");
+      .append("g")
+      .attr("class", "slice");
 
-  // adds total # of data values to the center of the pie
-  if (this.donutWidth !== 0 && this.donutWidth !== "0%") {
-    svg
+    // adds total # of data values to the center of the pie
+    if (this.donutWidth !== 0 && this.donutWidth !== "0%") {
+      svg
         .append("text")
         .attr("class", "total")
         .attr("id", "centerText")
         .attr('font-size', '1em')
         .attr("transform", "translate(" + (-radius / 10) + "," + (radius / 13.75) + ")")
         .text(localThis.total);
-        // this starts at cennter so the translate is back a few px and up a few px, gotta be a better way to calc HTK
-  }
+      // this starts at cennter so the translate is back a few px and up a few px, gotta be a better way to calc HTK
+    }
 
     // add tooltip on mouseover of slice
-    arcs.on("mouseover", function(d) {
+    arcs.on("mouseover", function (d) {
       // calculate the percent of total for the slice
       d3.select(this).selectAll('path').
-        attr('fill', function(dt) {
+        attr('fill', function (dt) {
 
-            let currentFill = this.attributes.fill.value;
-         currentFill = hex2rgb(currentFill);
-        // if (currentFill.includes('#')){
-        // } else {
-        //   currentFill = currentFill.slice(0, currentFill.length -2).slice(4).split(', ')
-        // }
-        const darker = currentFill.map(item => {
-// tslint:disable-next-line: radix
-          return parseInt(item) * .75;
-        });
-        return `rgb(${darker[0]}, ${darker[1]}, ${darker[2]})`;
+          let currentFill = this.attributes.fill.value;
+          currentFill = hex2rgb(currentFill);
+          // if (currentFill.includes('#')){
+          // } else {
+          //   currentFill = currentFill.slice(0, currentFill.length -2).slice(4).split(', ')
+          // }
+          const darker = currentFill.map(item => {
+            // tslint:disable-next-line: radix
+            return parseInt(item) * .75;
+          });
+          return `rgb(${darker[0]}, ${darker[1]}, ${darker[2]})`;
 
         });
       const percent = Math.round(d.data.value / localThis.total * 100);
@@ -197,19 +197,19 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         .style("top", d3.event.pageY + "px");
 
     })
-      .on("mouseout", function(d) {
+      .on("mouseout", function (d) {
         tooltip.transition()
           .duration(300)
           .style("opacity", 0);
 
-      d3.select(this).selectAll('path').
-        attr('fill', function(dt) {
-          const label = dt.data ? dt.data.label : dt.label;
-          return localThis.savedColors[label];
+        d3.select(this).selectAll('path').
+          attr('fill', function (dt) {
+            const label = dt.data ? dt.data.label : dt.label;
+            return localThis.savedColors[label];
 
-        });
+          });
       })
-      .on("click", function(d) {
+      .on("click", function (d) {
         localThis.clickEvent.emit(d.data);
       });
 
@@ -237,13 +237,13 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     // let localThis = this;
     if (width > 800) {
       const legend = svg.selectAll(".legend")
-        .data(this.data, function(d) {
+        .data(this.data, function (d) {
           return d.label;
         })
         .enter()
         .append("g")
         .attr("class", "legend")
-        .attr("transform", function(d, i) { return "translate(30," + 25 * i + ")"; });
+        .attr("transform", function (d, i) { return "translate(30," + 25 * i + ")"; });
 
       legend.append("rect")
         .attr("x", radius + 20)
@@ -251,8 +251,8 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         .attr("width", 20)
         .attr("height", 20)
         .attr("fill", function (d, i) {
-            const length = colors.length;
-            let color;
+          const length = colors.length;
+          let color;
           if (localThis.savedColors[d.label]) {
             color = localThis.savedColors[d.label];
           } else {
@@ -271,43 +271,43 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         .attr("dy", ".35em")
         .attr("font-size", 14)
         .style("text-anchor", "start")
-        .text(function(d, i) {
+        .text(function (d, i) {
           return localThis.data[i]["label"];
         });
 
 
-        legend.on('mouseover', function(d) {
-          const local = localThis;
-          const currentLabel = d.label;
-          d3.selectAll('g.slice path').data([d], function(dt) {
-              return dt.data ? dt.data.label : dt.label;
-          })
-          .attr('fill', function(df) {
+      legend.on('mouseover', function (d) {
+        const local = localThis;
+        const currentLabel = d.label;
+        d3.selectAll('g.slice path').data([d], function (dt) {
+          return dt.data ? dt.data.label : dt.label;
+        })
+          .attr('fill', function (df) {
             if (df.label === currentLabel) {
               let currentFill = this.attributes.fill.value;
-               currentFill = hex2rgb(currentFill);
+              currentFill = hex2rgb(currentFill);
               const darker = currentFill.map(item => {
-// tslint:disable-next-line: radix
+                // tslint:disable-next-line: radix
                 return parseInt(item) * .75;
               });
               return `rgb(${darker[0]}, ${darker[1]}, ${darker[2]})`;
             } else {
-              return ;
+              return;
             }
           });
-        });
+      });
 
 
-        legend.on('mouseout', function(d) {
-          const local = localThis;
-          const currentLabel = d.label;
-          d3.selectAll('g.slice path').data([d], function(dt) {
-              return dt.data ? dt.data.label : dt.label;
-          })
-          .attr('fill', function(df) {
+      legend.on('mouseout', function (d) {
+        const local = localThis;
+        const currentLabel = d.label;
+        d3.selectAll('g.slice path').data([d], function (dt) {
+          return dt.data ? dt.data.label : dt.label;
+        })
+          .attr('fill', function (df) {
             return localThis.savedColors[df.label];
           });
-        });
+      });
     }
   }
 }

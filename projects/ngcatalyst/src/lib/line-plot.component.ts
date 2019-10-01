@@ -1,5 +1,7 @@
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input,
-  OnChanges, OnInit, Output, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+import {
+  AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, Input,
+  OnChanges, OnInit, Output, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, ViewContainerRef
+} from '@angular/core';
 import * as d3 from 'd3';
 import { isEqual } from 'lodash';
 
@@ -36,8 +38,8 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   @Input() xAxisAngle = 45;
   resized = false;
   // @Input() yAxisAngle = 45;
-  @ViewChildren('c', {read: ElementRef}) childComps: QueryList<ElementRef>;
-  @ViewChild('vc', {read: ViewContainerRef}) viewContainer: ViewContainerRef;
+  @ViewChildren('c', { read: ElementRef }) childComps: QueryList<ElementRef>;
+  @ViewChild('vc', { read: ViewContainerRef }) viewContainer: ViewContainerRef;
   @ViewChild(TemplateRef) template: TemplateRef<null>;
   // area = {height: "100%", width: "100%"};
   // @HostListener('window:resize', ['$event'])
@@ -45,27 +47,27 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
 
   constructor() {
     window.addEventListener('resize', this.drawLinePlot.bind(this));
-   }
+  }
 
-   ngOnInit() {
+  ngOnInit() {
     console.log('init');
     // this.viewContainer.createEmbeddedView(this.template);
 
-   }
+  }
 
-  get area () {
+  get area() {
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
     } else {
       height = this.divHeight;
     }
-    if (typeof this.divWidth === "number" ) {
+    if (typeof this.divWidth === "number") {
       width = this.divWidth + "px";
     } else {
       width = this.divWidth;
     }
-    return {height: height, width: width};
+    return { height, width };
   }
   // you might need a method like this to reformat given data with the appropriate field names,
   // get dataModel() {
@@ -85,7 +87,7 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   ngAfterViewChecked() {
     // console.log('viewcheck');
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
-    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+    const offsetWidth = document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
     if ((offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) && this.resized === false) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
@@ -103,12 +105,8 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   ngAfterViewInit() {
     this.drawLinePlot();
   }
-  // onClick() {
-  //   this.clickEvent.emit(event);
-  // }
+
   drawLinePlot() {
-    // console.log('redrawn?');
-    // debugger;
     const localThis = this;
     const selection_string = "#" + this.propID;
     // remove previous chart and tooltips if already drawn on the page
@@ -134,17 +132,17 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     // https://github.com/d3/d3-time-format to change how this is formatted - leave the parseDate because that's for sorting the data
     // format and sort data 
     if (this.type === "Date" && typeof data[0].date === 'string') {
-      data.forEach(function(d) {
+      data.forEach(function (d) {
         d.date = parseDate(d.date);
       });
-      data.sort(function(a, b) {
+      data.sort(function (a, b) {
         return a.date - b.date;
       });
     } else if (this.type === "Time" && typeof data[0].time === 'string') {
-      data.forEach(function(d) {
+      data.forEach(function (d) {
         d.time = parseTime(d.time);
       });
-      data.sort(function(a, b) {
+      data.sort(function (a, b) {
         return a.time - b.time;
       });
     }
@@ -152,34 +150,28 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
     const selected = document.querySelectorAll(selection_string);
 
     if (selected[0] == null) {
-      element = [{clientWidth: 500, clientHeight: 500}];
+      element = [{ clientWidth: 500, clientHeight: 500 }];
     } else {
       element = selected[0];
     }
 
     const margin = this.margins;
-    // if (this.xAxisAngle > 0) {
-    //   this.margins.bottom += 10;
-    // }
-    // console.log(element.clientHeight);
-    // console.log(margin);
     const width = element.clientWidth - margin.left - margin.right;
     let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0) - (this.title ? 50 : 0);
-    // console.log(height);
     if (height < 0) {
       height = 300;
     }
     // Account for panel heading height if the title exists.
 
     // create functions that will be used to process x and y values from the data
-    const xValue = function(d) {
+    const xValue = function (d) {
       if (localThis.type === "Date") {
         return d.date;
       } else if (localThis.type === "Time") {
         return d.time;
       }
     };
-    const yValue = function(d) {
+    const yValue = function (d) {
       return d.value;
     };
     // create the scales for the data and axes. range is the how big the axes will be and domain is what the 
@@ -189,10 +181,10 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
 
     // add tooltip to the DOM for the chart
     const tooltip = d3
-        .select("body")
-        .append("div")
-        .attr("class", `d3_visuals_tooltip ${this.propID}_tooltip`)
-        .style("opacity", 0);
+      .select("body")
+      .append("div")
+      .attr("class", `d3_visuals_tooltip ${this.propID}_tooltip`)
+      .style("opacity", 0);
 
     // format for x axis labels based on date or time, will be used to process raw data to readable dates/times
     let timeFormatLabel;
@@ -204,22 +196,22 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
 
     // create axes and line for data to be appended later to the DOM
     const yAxis = d3.axisLeft()
-        .tickSizeInner(-width)
-        .scale(y),
+      .tickSizeInner(-width)
+      .scale(y),
       xAxis = d3.axisBottom()
         .tickSizeInner(-height)
         .tickFormat(timeFormatLabel)
         .scale(x),
       line = d3.line()
         .curve(d3.curveLinear)
-        .x(function(d) {
+        .x(function (d) {
           if (localThis.type === "Date") {
             return x(d.date);
           } else if (localThis.type === "Time") {
             return x(d.time);
           }
-       })
-        .y(function(d) { return y(d.value); }),
+        })
+        .y(function (d) { return y(d.value); }),
       svg = d3
         .select(selection_string)
         .append("svg")
@@ -230,112 +222,113 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
 
     // Is this for the line changing color at a specific threshold?? LP
     const gradID = this.propID + "-gradient",
-        pathID = this.propID + "-path";
+      pathID = this.propID + "-path";
+      
     svg.append("linearGradient")
-        .attr("id", gradID)
-        .attr("gradientUnits", "userSpaceOnUse")
-        .attr("x1", 0).attr("y1", y(localThis.threshold))
-        .attr("x2", 0).attr("y2", y(localThis.threshold + 1))
+      .attr("id", gradID)
+      .attr("gradientUnits", "userSpaceOnUse")
+      .attr("x1", 0).attr("y1", y(localThis.threshold))
+      .attr("x2", 0).attr("y2", y(localThis.threshold + 1))
       .selectAll("stop")
-        .data([
-          {offset: "0%", color: localThis.colors[0]},
-          {offset: "50%", color: localThis.colors[1]}
-        ])
+      .data([
+        { offset: "0%", color: localThis.colors[0] },
+        { offset: "50%", color: localThis.colors[1] }
+      ])
       .enter().append("stop")
-        .attr("offset", function(d) {
-          return d.offset;
-        })
-        .attr("stop-color", function(d) { return d.color; });
+      .attr("offset", function (d) {
+        return d.offset;
+      })
+      .attr("stop-color", function (d) { return d.color; });
 
     // Do we need to assing this to a variable since we are just adding the axis to the svg?? LP
     const xLabel = svg.append("g")
-        .attr("class", "x axis x-axis xaxis")
-        .style('fill', 'grey')
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-        .append("text")
-        .attr("x", (width / 2))
-        .attr("y", 25)
-        .attr("dy", ".71em")
-        .style("fill", "black")
-        .style("text-anchor", "middle")
-        .attr("class", "xaxis-tick")
-        .attr("font-size", this.axisFontSize)
-        .text(this.xAxisLabel)
-        .attr("y", 40)
-        .attr("class", "axislabel x-axis-label");
+      .attr("class", "x axis x-axis xaxis")
+      .style('fill', 'grey')
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+      .append("text")
+      .attr("x", (width / 2))
+      .attr("y", 25)
+      .attr("dy", ".71em")
+      .style("fill", "black")
+      .style("text-anchor", "middle")
+      .attr("class", "xaxis-tick")
+      .attr("font-size", this.axisFontSize)
+      .text(this.xAxisLabel)
+      .attr("y", 40)
+      .attr("class", "axislabel x-axis-label");
 
-        const text = svg.selectAll("g.tick > text");
-        // angle the labels on x-axis if specified
-        if (this.xAxisAngle > 0) {
-            text
-                .attr("transform", `rotate(${this.xAxisAngle}) translate(${margin.top}, 0)`)
-                .style("text-anchor", "middle");
+    const text = svg.selectAll("g.tick > text");
+    // angle the labels on x-axis if specified
+    if (this.xAxisAngle > 0) {
+      text
+        .attr("transform", `rotate(${this.xAxisAngle}) translate(${margin.top}, 0)`)
+        .style("text-anchor", "middle");
 
-            const dimensions = text.node().getBBox();
-            const array = Array.from(text._groups[0]).map((item: any, index: number) => item.getBBox().width);
-            // const dimwid = d3.max(array);
+      const dimensions = text.node().getBBox();
+      const array = Array.from(text._groups[0]).map((item: any, index: number) => item.getBBox().width);
+      // const dimwid = d3.max(array);
 
-            if (this.xAxisAngle < 45) {
-              text.attr("x", function(a, b, c, d) {
-                    if (array[b] < margin.bottom) {
-                      return dimensions.width / 2;
-                    } else {
-                      return dimensions.width / 1.5;
-                    }
-                  })
-                  .attr("y", dimensions.height - margin.top);
-            }
+      if (this.xAxisAngle < 45) {
+        text.attr("x", function (a, b, c, d) {
+          if (array[b] < margin.bottom) {
+            return dimensions.width / 2;
+          } else {
+            return dimensions.width / 1.5;
+          }
+        })
+          .attr("y", dimensions.height - margin.top);
+      }
 
-            if (this.xAxisAngle >= 45) {
-              text.attr("x", function(a, b, c, d) {
-                    if (array[b] < margin.bottom) {
-                      return dimensions.width - 15;
-                    } else {
-                      return dimensions.width - 10;
-                    }
-                  })
-                  .attr("y", dimensions.height - 10);
-            }
+      if (this.xAxisAngle >= 45) {
+        text.attr("x", function (a, b, c, d) {
+          if (array[b] < margin.bottom) {
+            return dimensions.width - 15;
+          } else {
+            return dimensions.width - 10;
+          }
+        })
+          .attr("y", dimensions.height - 10);
+      }
 
-            if (this.xAxisAngle === 90) {
-              text.attr("x", dimensions.width)
-                  .attr("y", -margin.left / 2 - 5);
-            }
-        }
-        // Is this needed still????? LP
-        // xLabel.append("g")
-        //   .append("text")
-        //   .text(this.xAxisLabel)
-        //   .attr("x", (width / 2))
-        //   .attr("y", 25)
-        //   .attr("dy", ".71em")
-        //   .style("fill", "black")
-        //   .style("text-anchor", "middle");
+      if (this.xAxisAngle === 90) {
+        text.attr("x", dimensions.width)
+          .attr("y", -margin.left / 2 - 5);
+      }
+    }
+    // Is this needed still????? LP
+    // xLabel.append("g")
+    //   .append("text")
+    //   .text(this.xAxisLabel)
+    //   .attr("x", (width / 2))
+    //   .attr("y", 25)
+    //   .attr("dy", ".71em")
+    //   .style("fill", "black")
+    //   .style("text-anchor", "middle");
 
 
     svg.append("g")
-        .attr("class", "y axis y-axis")
-        .call(yAxis)
+      .attr("class", "y axis y-axis")
+      .call(yAxis)
       .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", -margin.left)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .style("fill", "black")
-        .attr("font-size", this.axisFontSize)
-        .text(this.yAxisLabel);
+      .attr("transform", "rotate(-90)")
+      .attr("y", -margin.left)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .style("fill", "black")
+      .attr("font-size", this.axisFontSize)
+      .text(this.yAxisLabel);
     svg.append("path")
-        .datum(data)
-        .attr("id", pathID)
-        .attr("class", "line linechartline")
-        .style("stroke", `url("#${gradID}")`)
-        .attr("d", line);
+      .datum(data)
+      .attr("id", pathID)
+      .attr("class", "line linechartline")
+      .style("stroke", `url("#${gradID}")`)
+      .attr("d", line);
 
     // document.querySelectorAll("#" + pathID)[0]["style"].stroke = `url("#${gradID}")`;
-// this.propID + "-gradient"
-    const xMap = function(d) {return  x(xValue(d)); };
-    const yMap = function(d) {return  y(yValue(d)); };
+    // this.propID + "-gradient"
+    const xMap = function (d) { return x(xValue(d)); };
+    const yMap = function (d) { return y(yValue(d)); };
     const clip_id = "clip-" + this.propID;
 
     // const detected_percent =
@@ -354,52 +347,52 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
 
     // add the dots at each data point and add events for mouseover/out to show/hide tooltips
     svg
-        .selectAll(".dot")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("class", "dot")
-        .attr("r", 5)
-        .attr("cx", xMap) // set the center of the dot using calculated x and y values
-        .attr("cy", yMap)
-        .attr("clip-path", "url(#" + clip_id + ")")
-        .attr("fill", "black")
-        .attr("opacity", 0)
-        .on("mouseover", function(d) {
-          tooltip
-            .transition()
-            .duration(100)
-            .style("opacity", 1);
-          tooltip
-            .html( localThis.xAxisLabel + ": " +
-              formatDate(d.date || d.time) +
-                "<br>" +
-                localThis.yAxisLabel +
-                ": " +
-                (yValue(d))
-            )
-            .style("left", d3.event.pageX + 5 + "px")
-            .style("top", d3.event.pageY - 28 + "px");
-          d3
-            .select(this)
-            .transition()
-            .duration(50)
-            .style("fill", "black")
-            .attr("opacity", 1);
+      .selectAll(".dot")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("r", 5)
+      .attr("cx", xMap) // set the center of the dot using calculated x and y values
+      .attr("cy", yMap)
+      .attr("clip-path", "url(#" + clip_id + ")")
+      .attr("fill", "black")
+      .attr("opacity", 0)
+      .on("mouseover", function (d) {
+        tooltip
+          .transition()
+          .duration(100)
+          .style("opacity", 1);
+        tooltip
+          .html(localThis.xAxisLabel + ": " +
+            formatDate(d.date || d.time) +
+            "<br>" +
+            localThis.yAxisLabel +
+            ": " +
+            (yValue(d))
+          )
+          .style("left", d3.event.pageX + 5 + "px")
+          .style("top", d3.event.pageY - 28 + "px");
+        d3
+          .select(this)
+          .transition()
+          .duration(50)
+          .style("fill", "black")
+          .attr("opacity", 1);
 
-        })
-        .on("mouseout", function(d) {
-          tooltip
-            .transition()
-            .duration(300)
-            .style("opacity", 0);
-          d3
-            .select(this)
-            .transition()
-            .duration(50)
-            .attr("opacity", 0);
-        })
-        .on("click", localThis.clickEvent.emit);
+      })
+      .on("mouseout", function (d) {
+        tooltip
+          .transition()
+          .duration(300)
+          .style("opacity", 0);
+        d3
+          .select(this)
+          .transition()
+          .duration(50)
+          .attr("opacity", 0);
+      })
+      .on("click", localThis.clickEvent.emit);
   }
 
 }

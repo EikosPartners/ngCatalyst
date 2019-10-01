@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked, HostListener } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -31,19 +31,19 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
     window.addEventListener('resize', this.draw.bind(this));
   }
   // helper function to get height and width
-  get area () {
+  get area() {
     let height, width;
     if (typeof this.divHeight === "number") {
       height = this.divHeight + "px";
     } else {
       height = this.divHeight;
     }
-    if (typeof this.divWidth === "number" ) {
+    if (typeof this.divWidth === "number") {
       width = this.divWidth + "px";
     } else {
       width = this.divWidth;
     }
-    return {height, width};
+    return { height, width };
   }
 
 
@@ -61,7 +61,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
 
   ngAfterViewChecked() {
     const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
-    const offsetWidth =  document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+    const offsetWidth = document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
       this.givenWidth = offsetWidth;
@@ -80,7 +80,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
         mag = item['magnitude'];
       }
 
-      const newItem = {x: xVal, magnitude: mag};
+      const newItem = { x: xVal, magnitude: mag };
       if (item['y']) {
         newItem['y'] = item['y'];
       }
@@ -96,14 +96,14 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
     return returner;
   }
 
-  draw () {
+  draw() {
     const data = this.dataModel.slice();
     const selection_string = "#" + this.propID;
     const component = document.querySelectorAll(selection_string)[0];
     const width = (typeof this.divWidth === "string") ? component.clientWidth : this.divWidth,
       height = (typeof this.divHeight === "string") ? component.clientHeight : this.divHeight,
       cellSize = width > 300 ? ((13 / 900) * (width)) : ((13 / 350) * width); // cell size
-    const week_days = [ , "Mon", , "Wed", , "Fri"];
+    const week_days = [, "Mon", , "Wed", , "Fri"];
     // const week_days = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
     const month = [
       "Jan",
@@ -131,8 +131,8 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
 
     let x_elems, y_elems;
     // calendar, get the range of years to display
-    if ( data !== undefined && data.length > 0 && localThis.dataType === 'calendar') {
-      data.forEach(function(datum) {
+    if (data !== undefined && data.length > 0 && localThis.dataType === 'calendar') {
+      data.forEach(function (datum) {
         // if (parseDate(datum['x']) == null) {console.log('why'); }
         const date_year = parseDate(datum['x']).getFullYear();
         min_value = date_year < min_value ? date_year : min_value;
@@ -143,8 +143,8 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
       y_elems = week_days;
     } else {
       // Get the range if not calendar.
-      x_elems = d3.set(data.map( function (item) { return item['x']; })).values();
-      y_elems = d3.set(data.map( function (item) { return item['y']; })).values();
+      x_elems = d3.set(data.map(function (item) { return item['x']; })).values();
+      y_elems = d3.set(data.map(function (item) { return item['y']; })).values();
     }
 
     d3.selectAll(`.${this.propID}_tooltip`).remove();
@@ -154,11 +154,11 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
 
 
     const xScale = d3.scaleBand()
-                  .domain(x_elems)
-                  .range([0, x_elems.length * cellSize]);
+      .domain(x_elems)
+      .range([0, x_elems.length * cellSize]);
     const yScale = d3.scaleBand()
-                  .domain(y_elems)
-                  .range([0, y_elems.length * cellSize]);
+      .domain(y_elems)
+      .range([0, y_elems.length * cellSize]);
 
     const svg = d3
       .select(selection_string)
@@ -178,7 +178,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
       .append("g")
       .attr("class", "g-class")
       .attr(
-        "transform", function(d) {
+        "transform", function (d) {
           if (width > 300 && height > 300) {
             if (localThis.dataType === "calendar") {
               return "translate(30,50)";
@@ -195,7 +195,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
       .append("text")
       .attr("transform", "translate(-38," + cellSize * 3.5 + ")rotate(-90)")
       .style("text-anchor", "middle")
-      .text(function(d) {
+      .text(function (d) {
         if (this.dataType === "calendar") { return d; }
       });
 
@@ -210,25 +210,25 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
 
     // "y" axis values
     if (height > 300) {
-    // add labels to the y axis
-    for (let i = 0; i < y_elems.length; i++) {
-      svg
-        .append("text")
-        .style("font-size", fontsize)
-        .attr("class", "y-axis-label axis-label")
-        .attr("transform", "translate(-5," + cellSize * (i + 1) + ")")
-        .style("text-anchor", "end")
-        .attr("dy", "-.25em")
-        .text(function(d) {
-          return y_elems[i];
-        });
+      // add labels to the y axis
+      for (let i = 0; i < y_elems.length; i++) {
+        svg
+          .append("text")
+          .style("font-size", fontsize)
+          .attr("class", "y-axis-label axis-label")
+          .attr("transform", "translate(-5," + cellSize * (i + 1) + ")")
+          .style("text-anchor", "end")
+          .attr("dy", "-.25em")
+          .text(function (d) {
+            return y_elems[i];
+          });
+      }
     }
-  }
 
     // "magnitudes"
     const rect = svg
       .selectAll(".day")
-      .data(function(d) {
+      .data(function (d) {
         if (localThis.dataType === 'calendar') {
           return d3.timeDays(new Date(d, 0, 1), new Date(d + 1, 0, 1));
         } else {
@@ -242,7 +242,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
       .style("font-size", fontsize)
       .attr("width", cellSize)
       .attr("height", cellSize)
-      .attr("x", function(d, i) {
+      .attr("x", function (d, i) {
         if (localThis.dataType === 'calendar') {
           return week(d) * cellSize;
         } else {
@@ -250,7 +250,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
           return xScale(d.x);
         }
       })
-      .attr("y", function(d, i) {
+      .attr("y", function (d, i) {
         if (localThis.dataType === 'calendar') {
           return day(d) * cellSize;
         } else {
@@ -265,56 +265,56 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
     // "x" axis values
     if (width > 300) {
 
-    const legend = svg
-      .selectAll(".legend")
-      .data(x_elems)
-      .enter()
-      .append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) {
-        if (localThis.dataType === 'calendar') {
-          return "translate(" + ((i + 1) * (cellSize / .24)) + ",0)";
-        } else {
-          let size = i * cellSize;
-          if (localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) {
-            size += 13;
-          }
+      const legend = svg
+        .selectAll(".legend")
+        .data(x_elems)
+        .enter()
+        .append("g")
+        .attr("class", "legend")
+        .attr("transform", function (d, i) {
+          if (localThis.dataType === 'calendar') {
+            return "translate(" + ((i + 1) * (cellSize / .24)) + ",0)";
+          } else {
+            let size = i * cellSize;
+            if (localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) {
+              size += 13;
+            }
 
-          return "translate(" + size + ",0)";
-        }
-      })
+            return "translate(" + size + ",0)";
+          }
+        })
         .append("text")
         .attr("class", "x-axis-label axis-label")
-        .attr("class", function(d, i) {
+        .attr("class", function (d, i) {
           return x_elems[i];
         })
         .style("text-anchor", `${(localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) ? 'start' : 'end'}`)
         .attr("transform", `rotate(${localThis.xAxisAngle})`)
         .attr("dy", "-.25em")
         .style("font-size", fontsize)
-        .text(function(d, i) {
+        .text(function (d, i) {
           return x_elems[i];
         });
 
-      }
+    }
 
 
     svg
       .selectAll(".month")
-      .data(function(d) {
+      .data(function (d) {
         return d3.timeMonths(new Date(d, 0, 1), new Date(d + 1, 0, 1));
       })
       .enter()
       .append("path")
       .attr("class", "month");
-      // .attr("id", function(d, i) {
-      //   return month[i];
-      // })
-      // .attr("d", this.monthPath);
+    // .attr("id", function(d, i) {
+    //   return month[i];
+    // })
+    // .attr("d", this.monthPath);
 
     // data
-    const count_Max = d3.max(data, function(d) {
-        return d.magnitude;
+    const count_Max = d3.max(data, function (d) {
+      return d.magnitude;
     });
 
     const maxColor = this.colors[7];
@@ -325,10 +325,10 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
 
     const ndata = d3
       .nest()
-      .key(function(d) {
+      .key(function (d) {
         return d.x;
       })
-      .rollup(function(d) {
+      .rollup(function (d) {
         if (localThis.dataType === 'calendar') {
           return Math.sqrt(d[0].magnitude / count_Max);
         } else {
@@ -340,7 +340,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
     // Filling in the boxes with data.
     rect
       .attr('stroke', 'black')
-      .filter(function(d) {
+      .filter(function (d) {
         if (localThis.dataType === 'calendar') {
           return ('$' + d in ndata); // && (ndata['$' + d] !== 0)
         } else {
@@ -348,7 +348,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
         }
       })
       .attr("class", "hasData")
-      .attr("fill", function(d) {
+      .attr("fill", function (d) {
         if (localThis.dataType === 'calendar') {
           return color(ndata['$' + d]);
         } else {
@@ -356,7 +356,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
         }
 
       })
-      .attr("data-title", function(d) {
+      .attr("data-title", function (d) {
         return localThis.alertText + " : " + ndata[d];
       })
       .on("mouseover", function (d) {
@@ -364,43 +364,43 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
           d = { x: d };
         }
 
-      const item = localThis.dataModel.filter(function(item2) {
-        return item2['x'] === d.x;
-      })[0];
+        const item = localThis.dataModel.filter(function (item2) {
+          return item2['x'] === d.x;
+        })[0];
 
-      let tooltipText = "Occurrences: " + "<b>" + item['magnitude'] + "</b>" + "<br>X: " + "<b>" + d.x + "</b></br>";
+        let tooltipText = "Occurrences: " + "<b>" + item['magnitude'] + "</b>" + "<br>X: " + "<b>" + d.x + "</b></br>";
 
-      if (d.y) {
-        tooltipText += "<b>Y: " + d.y + "</b>";
-      }
+        if (d.y) {
+          tooltipText += "<b>Y: " + d.y + "</b>";
+        }
 
-      tooltip
-        .html(tooltipText)
-        .style("left", d3.event.pageX + 5 + "px")
-        .style("top", d3.event.pageY - 28 + "px");
+        tooltip
+          .html(tooltipText)
+          .style("left", d3.event.pageX + 5 + "px")
+          .style("top", d3.event.pageY - 28 + "px");
 
-      tooltip
-        .transition()
-        .duration(100)
-        .style("opacity", 1);
+        tooltip
+          .transition()
+          .duration(100)
+          .style("opacity", 1);
 
-      d3
-        .select(tooltip[0])
-        .transition()
-        .duration(50)
-        .style("opacity", 1);
+        d3
+          .select(tooltip[0])
+          .transition()
+          .duration(50)
+          .style("opacity", 1);
         d3
           .select(this)
           .transition()
           .duration(50)
           .attr("fill", maxColor);
       })
-      .on("mouseout", function(d) {
+      .on("mouseout", function (d) {
         d3
           .select(this)
           .transition()
           .duration(100)
-          .attr("fill", function(d2) {
+          .attr("fill", function (d2) {
             if (localThis.dataType === 'calendar') {
               return color(ndata['$' + d]);
             } else {
@@ -412,7 +412,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
           .duration(300)
           .style("opacity", 0);
       })
-      .on("click", function(d) {
+      .on("click", function (d) {
         if (localThis.dataType !== 'calendar') {
           localThis.clickEvent.emit(d);
         } else {
