@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "dist/ngcatalyst",
+  "lib": {
+    "entryFile": "src/public_api.ts",
+    "styleIncludePaths": [
+      "./src/lib/styles.css",
+      "./src/lib/cardlist/card-list.component.scss"
+
+    ]
+  },
+  "whitelistedNonPeerDependencies": ["d3", "luxon", "@fortawesome/angular-fontawesome", "@fortawesome/free-solid-svg-icons", "@fortawesome/fontawesome-common-types", "@fortawesome/fontawesome-svg-core", "angular"]
+}
