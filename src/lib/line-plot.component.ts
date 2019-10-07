@@ -39,8 +39,8 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   resized = false;
   // @Input() yAxisAngle = 45;
   @ViewChildren('c', { read: ElementRef }) childComps: QueryList<ElementRef>;
-  @ViewChild('vc', { read: ViewContainerRef }) viewContainer: ViewContainerRef;
-  @ViewChild(TemplateRef) template: TemplateRef<null>;
+  @ViewChild('vc', { read: ViewContainerRef, static: false }) viewContainer: ViewContainerRef;
+  @ViewChild(TemplateRef, {static: false}) template: TemplateRef<null>;
   // area = {height: "100%", width: "100%"};
   // @HostListener('window:resize', ['$event'])
 

@@ -19,8 +19,8 @@ import { faAngleUp, faAngleRight, faAngleDown, faAngleLeft } from '@fortawesome/
   styleUrls: ['./card-list.component.scss']
 })
 export class CardListComponent implements AfterViewInit {
-  @ContentChild(TemplateRef) templateRef;
-  @ViewChild('cardListGroup', { read: ElementRef }) public cardListGroup: ElementRef<any>;
+  @ContentChild(TemplateRef, { static: false}) templateRef;
+  @ViewChild('cardListGroup', { read: ElementRef, static: false }) public cardListGroup: ElementRef<any>;
 
   @Input() items: any[];
   @Input() title: string;
