@@ -20,7 +20,7 @@ import { faAngleUp, faAngleRight, faAngleDown, faAngleLeft } from '@fortawesome/
 })
 export class CardListComponent implements AfterViewInit {
   @ContentChild(TemplateRef, { static: false}) templateRef;
-  @ViewChild('cardListGroup', { read: ElementRef, static: false }) public cardListGroup: ElementRef<any>;
+  @ViewChild('cardListGroup', { read: ElementRef, static: true }) public cardListGroup: ElementRef<any>;
 
   @Input() items: any[];
   @Input() title: string;
