@@ -8,7 +8,6 @@ import { isEqual } from 'lodash';
 @Component({
   selector: 'eikos-line-plot',
   template: `
-  <h2>{{title}}</h2>
   <!--   <ng-container #vc></ng-container> -->
   <div [ngStyle]="area">
     <!-- <ng-template> -->
@@ -22,7 +21,6 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'line';
   @Input() data: Array<{}>; // [{date: string, value: number}];
-  @Input() title: "Line Plot";
   @Input() colors = ["red", "green"];
   @Input() threshold = 0;
   @Input() yAxisLabel = 'Value';
@@ -157,11 +155,10 @@ export class LinePlotComponent implements OnInit, OnChanges, AfterViewInit, Afte
 
     const margin = this.margins;
     const width = element.clientWidth - margin.left - margin.right;
-    let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0) - (this.title ? 50 : 0);
+    let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0);
     if (height < 0) {
       height = 300;
     }
-    // Account for panel heading height if the title exists.
 
     // create functions that will be used to process x and y values from the data
     const xValue = function (d) {

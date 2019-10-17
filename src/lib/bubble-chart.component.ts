@@ -5,7 +5,6 @@ import luxon from 'luxon';
 @Component({
   selector: 'eikos-bubble-chart',
   template: `
-<h2>{{title}}</h2>
 <div [ngStyle]="area" >
     <div [id]="propID" style="width:100%;height:100%"> </div>
 </div>
@@ -19,7 +18,6 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'bubble';
   @Input() data: { label: string, value: number, x: number, y: number }[];
-  @Input() title = 'Bubble Chart';
   @Input() isTime = false;
   @Input() isDate = false;
   @Input() themeColors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB"];
@@ -173,10 +171,6 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
     const colors = this.themeColors;
     if (height < 0) {
       height = 300;
-    }
-    // Account for panel heading height if title exists.
-    if (this.title && height > 50) {
-      height -= 40;
     }
 
     let svg;

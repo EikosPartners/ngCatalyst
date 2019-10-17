@@ -5,7 +5,6 @@ import { isEqual } from 'lodash';
 @Component({
   selector: 'eikos-sunburst',
   template: `
-  <h2>{{title}}</h2>
   <div [ngStyle]="area" >
       <div [id]="propID" style="width:100%;height:100%"> </div>
   </div>
@@ -15,7 +14,6 @@ export class SunburstComponent implements OnChanges, AfterViewInit, AfterViewChe
 
   @Input() propID = 'burst';
   @Input() data: [{ name: string, children: [{ name: string, size: number }, { name: string, children: [] }] }];
-  @Input() title: string;
   @Input() divHeight: any = "100%";
   @Input() divWidth: any = "100%";
   // htk it seems that when one is bigger than the other that affects posiitioning in the div instead of actual size
@@ -81,11 +79,6 @@ export class SunburstComponent implements OnChanges, AfterViewInit, AfterViewChe
 
     const width = element.clientWidth;
     let height = element.clientHeight;
-
-    // Account for panel heading height if it exists.
-    // if (this.title) {
-    //   height -= 40;
-    // }
 
     if (height === undefined || height === 0) {
       height = width / 4;

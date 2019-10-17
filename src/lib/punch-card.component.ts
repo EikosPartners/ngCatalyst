@@ -10,7 +10,6 @@ import luxon from 'luxon';
     }
   `],
   template: `
-  <h2>{{title}}</h2>
   <div style="margin-left: 3%" [ngStyle]="area">
       <div [id]="propID" style="width:100%;height:100%"> </div>
   </div>
@@ -20,7 +19,6 @@ export class PunchCardComponent implements OnInit, OnChanges, AfterViewInit, Aft
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'punch';
   @Input() data: [{ day_of_week: string, hour_volumes: [] }];
-  @Input() title: string;
   @Input() axisColors = ["#e5b1a5", "#ff2b2b"];
   @Input() axisLabel = 'Date';
   @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];

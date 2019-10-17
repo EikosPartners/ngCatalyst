@@ -4,7 +4,6 @@ import * as d3 from 'd3';
 @Component({
   selector: 'eikos-heat-map',
   template: `
-<h2>{{title}}</h2>
 <div [ngStyle]="area">
     <div [id]="propID" style="width:100%;height:100%"> </div>
 </div>
@@ -13,7 +12,6 @@ import * as d3 from 'd3';
 export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() dataType = "calendar"; // alternately, "other"
-  @Input() title = "Heat Map";
   @Input() propID = 'heat-map';
   @Input() xAxisAngle = 0;
   @Input() alertText = "magnitude";

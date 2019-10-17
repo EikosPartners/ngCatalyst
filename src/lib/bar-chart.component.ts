@@ -6,7 +6,6 @@ import { isEqual, zip, zipObject } from 'lodash';
   selector: 'eikos-bar-chart',
   template: `
   <ng-container>
-  <h2>{{title}}</h2>
     <div [ngStyle]="area" >
       <div [id]="propID" style="width:100%;height:100%">
       </div>
@@ -26,7 +25,6 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() xAxisLabel = 'x';
   @Input() xAxisAngle = 45;
   @Input() yAxisAngle = 45;
-  @Input() title = "Bar Chart";
   @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
   @Input() divWidth: any = "100%";
   @Input() showTicks: Boolean = false;
@@ -130,9 +128,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     if (height < 0) {
       height = 300;
     }
-    if (this.title) {
-      height = height - 48;
-    }
+
     const dataValues = this.dataModel.map(item => item["y"]);
     const dataNames = this.dataModel.map(item => item["x"]);
     const x = d3.scaleBand()
