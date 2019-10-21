@@ -219,7 +219,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         if (localThis.savedColors[d.data.label]) {
           color = localThis.savedColors[d.data.label];
         } else {
-          i >= length ? color = colors[i - length] : color = colors[i];
+          i >= length ? color = colors[i % length] : color = colors[i];
           localThis.savedColors[d.data.label] = color;
 
         }

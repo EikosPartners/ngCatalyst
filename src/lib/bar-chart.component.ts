@@ -52,9 +52,11 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     if (typeof this.colors[0] !== "string") {
       return this.colors;
     } else {
-      let dataColors, localColor;
+      let dataColors, localColor = [];
       if (this.colors.length < this.data.length) {
-        localColor = this.colors.concat(this.colors).slice(0, this.data.length);
+        while (localColor.length < this.data.length) {
+          localColor = localColor.concat(this.colors)
+        }
       } else {
         localColor = this.colors;
       }
