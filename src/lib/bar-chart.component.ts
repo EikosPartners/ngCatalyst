@@ -1,28 +1,44 @@
-import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
-import * as d3 from 'd3';
-import { isEqual, zip, zipObject } from 'lodash';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  AfterViewInit,
+  AfterViewChecked
+} from "@angular/core";
+import * as d3 from "d3";
+import { isEqual, zip, zipObject } from "lodash";
 
 @Component({
-  selector: 'eikos-bar-chart',
+  selector: "eikos-bar-chart",
   template: `
-  <ng-container>
-    <div [ngStyle]="area" >
-      <div [id]="propID" style="width:100%;height:100%">
+    <ng-container>
+      <div [ngStyle]="area">
+        <div [id]="propID" style="width:100%;height:100%"></div>
       </div>
-    </div>
-  </ng-container>
+    </ng-container>
   `
 })
-
-export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChecked {
+export class BarChartComponent
+  implements OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() data: Array<{}>;
-  @Input() propID = 'barchart';
+  @Input() propID = "barchart";
   @Input() showMe = true;
-  @Input() color = '#2DA8C9';
-  @Input() colors = ["#9400D3", "#4B0082", "#0000FF", "#00FF00", "#FFFF00", "#FF7F00", "#FF0000"];
-  @Input() yAxisLabel = 'y';
-  @Input() xAxisLabel = 'x';
+  @Input() color = "#2DA8C9";
+  @Input() colors = [
+    "#9400D3",
+    "#4B0082",
+    "#0000FF",
+    "#00FF00",
+    "#FFFF00",
+    "#FF7F00",
+    "#FF0000"
+  ];
+  @Input() yAxisLabel = "y";
+  @Input() xAxisLabel = "x";
   @Input() xAxisAngle = 45;
   @Input() yAxisAngle = 45;
   @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
@@ -31,11 +47,16 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() marker: Number = 0;
   @Input() markerColor: String = "#000"; //default is black
   @Input() markerWidth: String = "1"; //default thickness of marker line
+  @Input() marginTop: number = 50;
+  @Input() marginRight: number = 50;
+  @Input() marginBottom: number = 50;
+  @Input() marginLeft: number = 50;
+
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
 
   constructor() {
-    window.addEventListener('resize', this.drawBarPlot.bind(this));
+    window.addEventListener("resize", this.drawBarPlot.bind(this));
   }
 
   get dataModel() {
@@ -52,10 +73,11 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     if (typeof this.colors[0] !== "string") {
       return this.colors;
     } else {
-      let dataColors, localColor = [];
+      let dataColors,
+        localColor = [];
       if (this.colors.length < this.data.length) {
         while (localColor.length < this.data.length) {
-          localColor = localColor.concat(this.colors)
+          localColor = localColor.concat(this.colors);
         }
       } else {
         localColor = this.colors;
@@ -63,7 +85,6 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       dataColors = zipObject(this.dataModel.map(item => item["x"]), localColor);
       return dataColors;
     }
-
   }
 
   get area() {
@@ -78,14 +99,17 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     return { height, width };
   }
 
-
   ngAfterViewInit() {
     this.drawBarPlot();
   }
 
   ngAfterViewChecked() {
-    const offsetHeight = document.querySelectorAll('#' + this.propID)[0]['offsetHeight'];
-    const offsetWidth = document.querySelectorAll('#' + this.propID)[0]['offsetWidth'];
+    const offsetHeight = document.querySelectorAll("#" + this.propID)[0][
+      "offsetHeight"
+    ];
+    const offsetWidth = document.querySelectorAll("#" + this.propID)[0][
+      "offsetWidth"
+    ];
 
     if (offsetHeight !== this.givenHeight || offsetWidth !== this.givenWidth) {
       this.givenHeight = offsetHeight;
@@ -95,7 +119,11 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.data && !changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
+    if (
+      changes.data &&
+      !changes.data.firstChange &&
+      !isEqual(changes.data.previousValue, changes.data.currentValue)
+    ) {
       this.drawBarPlot();
     }
   }
@@ -121,35 +149,40 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     } else {
       element = selected[0];
     }
-    const margin = { top: 20, right: 30, bottom: 15, left: 40 };
-    if (this.xAxisAngle > 0) {
-      margin.bottom += (this.xAxisAngle / 2);
-    }
-    const width = element.clientWidth - margin.left - margin.right;
-    let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? (this.xAxisAngle / 2) : 0);
+    const margin = {
+      top: this.marginTop,
+      right: this.marginRight,
+      bottom: this.marginBottom + d3.axisBottom().tickSizeInner(),
+      left: this.marginLeft + d3.axisLeft().tickSizeOuter()
+    };
+    const width = element.clientWidth - margin.left - margin.right - 0.5;
+    let height = element.clientHeight - margin.top - margin.bottom;
+
     if (height < 0) {
       height = 300;
     }
 
     const dataValues = this.dataModel.map(item => item["y"]);
     const dataNames = this.dataModel.map(item => item["x"]);
-    const x = d3.scaleBand()
+    const x = d3
+      .scaleBand()
       .range([0, width])
       .domain(dataNames)
-      .paddingInner(.2)
-      .paddingOuter(.2);
+      .paddingInner(0.2)
+      .paddingOuter(0.2);
 
     const extent = d3.extent(dataValues).reverse();
-    const y = d3.scaleLinear()
-      .range([0, height - margin.bottom])
+    const y = d3
+      .scaleLinear()
+      .range([0, height])
       .domain(extent);
 
-    const xAxis = d3.axisBottom()
+    const xAxis = d3
+      .axisBottom()
       .scale(x)
       .tickSizeOuter(0);
 
-    const yAxis = d3.axisLeft()
-      .scale(y);
+    const yAxis = d3.axisLeft().scale(y);
 
     if (this.showTicks) {
       yAxis.tickSizeInner(-width);
@@ -171,55 +204,47 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
     chart
       .append("g")
-      .attr("class", "x axis xaxis")
-      .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
       .call(xAxis)
       .append("text")
       .attr("class", "label x-label")
-      .attr("x", (width / 3) + margin.right)
+      .attr("x", width / 3 + margin.right)
       .attr("y", 0)
       .style("text-anchor", "middle")
       .text(xaxisvalue);
 
-    const text = chart.selectAll("text");
+    const xAxisText = chart.selectAll("g.x.axis g.tick text");
+    xAxisText.attr("class", "x-axis-text");
 
-    if (this.xAxisAngle > 0) {
-      text
-        .attr("transform", `rotate(${this.xAxisAngle}) translate(0, ${margin.top})`)
-        .style("text-anchor", "middle");
-
-      const dimensions = text.node().getBBox();
-      const array = Array.from(text._groups[0]).map((item: any, index: number) => item.getBBox().width);
-      // const dimwid = d3.max(array);
-
-      if (this.xAxisAngle < 45) {
-        text.attr("x", function (a, b, c, d) {
-          if (array[b] < margin.bottom) {
-            return dimensions.width / 2;
-          } else {
-            return dimensions.width / 1.5;
-          }
-        })
-          .attr("y", dimensions.height - margin.top);
-      }
-
-      if (this.xAxisAngle >= 45) {
-        text.attr("x", function (a, b, c, d) {
-          if (array[b] < margin.bottom) {
-            return dimensions.width - 15;
-          } else {
-            return dimensions.width - 10;
-          }
-        })
-          .attr("y", dimensions.height - 10);
-      }
-
-      if (this.xAxisAngle === 90) {
-        text.attr("x", dimensions.width)
-          .attr("y", -margin.left / 2 - 5);
-      }
+    if (this.xAxisAngle > 0 && this.xAxisAngle < 180) {
+      xAxisText
+        .attr("text-anchor", `${this.xAxisAngle <= 90 ? "start" : "end"}`)
+        .attr("transform-origin", `left ${xAxisText.attr("dy")}`)
+        .attr(
+          "transform",
+          `rotate(${
+            this.xAxisAngle <= 90 ? this.xAxisAngle : 90 - this.xAxisAngle
+          })`
+        );
     }
+
+    xAxisText.each(function() {
+      // truncate labels if the calculated size exceeds the allotted space
+      var self = d3.select(this),
+        textLength = self.node().getComputedTextLength(),
+        fullText = self.text(),
+        text = self.text();
+      while (textLength > localThis.marginBottom && text.length > 0) {
+        text = text.slice(0, -1);
+        self.text(text + "...");
+        textLength = self.node().getComputedTextLength();
+      }
+      self.append("svg:title").text(fullText);
+    });
+
     const dataColors = this.dataColors;
+
     chart
       .append("g")
       .attr("class", "y axis")
@@ -228,13 +253,33 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       .attr("class", "label")
       .attr("transform", "rotate(-90)")
       .attr("y", 0)
-      .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text(yaxisvalue);
 
+    const yAxisText = chart.selectAll("g.y.axis g.tick text");
+    yAxisText.attr("class", "y-axis-text");
+
+    yAxisText.each(function() {
+      // truncate labels if the calculated size exceeds the allotted space
+      var self = d3.select(this),
+        textLength = self.node().getComputedTextLength(),
+        fullText = self.text(),
+        text = self.text();
+      while (textLength > localThis.marginLeft && text.length > 0) {
+        text = text.slice(0, -1);
+        self.text(text + "...");
+        textLength = self.node().getComputedTextLength();
+      }
+      self.append("svg:title").text(fullText);
+    });
+
     function hex2rgb(hex) {
       // tslint:disable-next-line:no-bitwise
-      return [<any>'0x' + hex[1] + hex[2] | 0, <any>'0x' + hex[3] + hex[4] | 0, <any>'0x' + hex[5] + hex[6] | 0];
+      return [
+        (<any>"0x" + hex[1] + hex[2]) | 0,
+        (<any>"0x" + hex[3] + hex[4]) | 0,
+        (<any>"0x" + hex[5] + hex[6]) | 0
+      ];
     }
 
     if (data.length > 0) {
@@ -244,28 +289,28 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("x", function (d) {
+        .attr("x", function(d) {
           return x(d.x);
         })
-        .attr("y", function (d) {
+        .attr("y", function(d) {
           if (d.y < 0) {
             return y(0);
           } else {
             return y(d.y);
           }
         })
-        .attr("height", function (d) {
+        .attr("height", function(d) {
           if (dataValues.every(it => it > 0)) {
-            return height - y(d.y) - margin.bottom;
+            return height - y(d.y);
           } else {
             return Math.abs(y(d.y) - y(0));
           }
         })
         .attr("width", x.bandwidth() - x.paddingInner())
-        .style("fill", function (d, i, c) {
+        .style("fill", function(d, i, c) {
           return dataColors[d["x"]];
         })
-        .on("mouseover", function (d) {
+        .on("mouseover", function(d) {
           const yval = d.y;
           tooltip
             .transition()
@@ -274,39 +319,34 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
           tooltip
             .html(
               xaxisvalue +
-              ": <b>" +
-              d.x + "</b><br>" +
-              yaxisvalue +
-              ": <b>" +
-              yval + "</b>"
+                ": <b>" +
+                d.x +
+                "</b><br>" +
+                yaxisvalue +
+                ": <b>" +
+                yval +
+                "</b>"
             )
             .style("left", d3.event.pageX + 5 + "px")
             .style("top", d3.event.pageY - 28 + "px");
-          d3
-            .select(this)
+          d3.select(this)
             .transition()
             .duration(50)
-            .style("fill", function (dt, i) {
-
+            .style("fill", function(dt, i) {
               let currentFill: any;
               currentFill = hex2rgb(dataColors[dt["x"]]);
-              // if (currentFill.includes('#')){
-              // } else {
-              //   currentFill = currentFill.slice(0, currentFill.length -2).slice(4).split(', ')
-              // }
               const darker = currentFill.map(item => {
                 // tslint:disable-next-line: radix
-                return parseInt(item) * .75;
+                return parseInt(item) * 0.75;
               });
               return `rgb(${darker[0]}, ${darker[1]}, ${darker[2]})`;
             });
         })
-        .on("mouseout", function (d) {
-          d3
-            .select(this)
+        .on("mouseout", function(d) {
+          d3.select(this)
             .transition()
             .duration(100)
-            .style("fill", function (d2, i) {
+            .style("fill", function(d2, i) {
               return dataColors[d2["x"]];
             });
           tooltip
@@ -314,20 +354,22 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
             .duration(300)
             .style("opacity", 0);
         })
-        .on("click", function (d) {
+        .on("click", function(d) {
           localThis.clickEvent.emit(d);
         });
 
       if (this.marker) {
-        chart.append("g").append("line")
-          .attr("x1", 0).attr("y1", y(this.marker))
-          .attr("x2", width).attr("y2", y(this.marker))
+        chart
+          .append("g")
+          .append("line")
+          .attr("x1", 0)
+          .attr("y1", y(this.marker))
+          .attr("x2", width)
+          .attr("y2", y(this.marker))
           .attr("stroke-width", this.markerWidth)
           .attr("class", "marker-line")
           .attr("stroke", this.markerColor);
       }
-
     }
   }
-
 }

@@ -19,10 +19,14 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
   @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"]; // need 10 hex colors;
   @Input() divHeight: any = "100%";
   @Input() divWidth: any = "100%";
-  givenHeight = this.divHeight;
-  givenWidth = this.divWidth;
+  @Input() marginTop: number = 50;
+  @Input() marginRight: number = 50;
+  @Input() marginBottom: number = 50;
+  @Input() marginLeft: number = 50;
   // should maybe have a min-width or min-height to prevent it from going SUPER TINY?
   // also since it's preserveAspectRatio maybe only @Input one of the dimensions? HTK
+  givenHeight = this.divHeight;
+  givenWidth = this.divWidth;
 
 
   constructor() {
@@ -98,9 +102,8 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
     const data = this.dataModel.slice();
     const selection_string = "#" + this.propID;
     const component = document.querySelectorAll(selection_string)[0];
-    const width = (typeof this.divWidth === "string") ? component.clientWidth : this.divWidth,
-      height = (typeof this.divHeight === "string") ? component.clientHeight : this.divHeight,
-      cellSize = width > 300 ? ((13 / 900) * (width)) : ((13 / 350) * width); // cell size
+    const width = (typeof this.divWidth === "string") ? component.clientWidth : this.divWidth;
+    const height = (typeof this.divHeight === "string") ? component.clientHeight : this.divHeight;
     const week_days = [, "Mon", , "Wed", , "Fri"];
     // const week_days = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
     const month = [
@@ -150,6 +153,8 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
       document.querySelectorAll(selection_string + " svg")[0].remove();
     }
 
+    // equally divide the cells into the alloted space, accounting for the margin area(s)
+    const cellSize = localThis.dataType === 'calendar' ? ((width - this.marginLeft - this.marginRight) / 53) : ((width - this.marginLeft - this.marginRight) / x_elems.length);
 
     const xScale = d3.scaleBand()
       .domain(x_elems)
@@ -175,19 +180,7 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
       // .style('fill', 'black')
       .append("g")
       .attr("class", "g-class")
-      .attr(
-        "transform", function (d) {
-          if (width > 300 && height > 300) {
-            if (localThis.dataType === "calendar") {
-              return "translate(30,50)";
-            } else {
-              return "translate(100, 50)";
-            }
-          } else {
-            return "translate(0, 50)";
-          }
-        }
-      );
+      .attr("transform", `translate(${this.marginLeft}, ${this.marginTop})`);
 
     svg
       .append("text")
@@ -207,20 +200,30 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
     const fontsize = area > 525 ? "12px" : "9px";
 
     // "y" axis values
-    if (height > 300) {
-      // add labels to the y axis
-      for (let i = 0; i < y_elems.length; i++) {
-        svg
-          .append("text")
-          .style("font-size", fontsize)
-          .attr("class", "y-axis-label axis-label")
-          .attr("transform", "translate(-5," + cellSize * (i + 1) + ")")
-          .style("text-anchor", "end")
-          .attr("dy", "-.25em")
-          .text(function (d) {
-            return y_elems[i];
-          });
-      }
+    for (let i = 0; i < y_elems.length; i++) {
+      svg
+        .append("text")
+        .style("font-size", fontsize)
+        .attr("class", "y-axis-label axis-label")
+        .attr("transform", "translate(-5," + cellSize * (i + 1) + ")")
+        .style("text-anchor", "end")
+        .attr("dy", "-.25em")
+        .text(function (d) {
+          return y_elems[i];
+        })
+        .each(function () {
+          // truncate labels if the calculated size exceeds the allotted space
+          var self = d3.select(this),
+            textLength = self.node().getComputedTextLength(),
+            text = self.text();
+          while (textLength > localThis.marginLeft - 5 && text.length > 0) {
+            text = text.slice(0, -1);
+            self.text(text + '...');
+            textLength = self.node().getComputedTextLength();
+          }
+        })
+        .append("svg:title")
+        .text(y_elems[i]);
     }
 
     // "magnitudes"
@@ -260,42 +263,53 @@ export class HeatMapComponent implements OnChanges, AfterViewInit, AfterViewChec
     if (this.dataType === 'calendar') {
       rect.datum(format);
     }
+
     // "x" axis values
-    if (width > 300) {
-
-      const legend = svg
-        .selectAll(".legend")
-        .data(x_elems)
-        .enter()
-        .append("g")
-        .attr("class", "legend")
-        .attr("transform", function (d, i) {
-          if (localThis.dataType === 'calendar') {
-            return "translate(" + ((i + 1) * (cellSize / .24)) + ",0)";
-          } else {
-            let size = i * cellSize;
-            if (localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) {
-              size += 13;
-            }
-
-            return "translate(" + size + ",0)";
+    svg
+      .selectAll(".legend")
+      .data(x_elems)
+      .enter()
+      .append("g")
+      .attr("class", "legend")
+      .attr("transform", function (d, i) {
+        if (localThis.dataType === 'calendar') {
+          return "translate(" + ((i + 1) * (cellSize / .24)) + ",0)";
+        } else {
+          let size = i * cellSize;
+          if (localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) {
+            size += 13;
           }
-        })
-        .append("text")
-        .attr("class", "x-axis-label axis-label")
-        .attr("class", function (d, i) {
-          return x_elems[i];
-        })
-        .style("text-anchor", `${(localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) ? 'start' : 'end'}`)
-        .attr("transform", `rotate(${localThis.xAxisAngle})`)
-        .attr("dy", "-.25em")
-        .style("font-size", fontsize)
-        .text(function (d, i) {
-          return x_elems[i];
-        });
 
-    }
-
+          return "translate(" + size + ",0)";
+        }
+      })
+      .append("text")
+      .attr("class", "x-axis-label axis-label")
+      .attr("class", function (d, i) {
+        return x_elems[i];
+      })
+      .style("text-anchor", `${(localThis.xAxisAngle < 0 || localThis.xAxisAngle === 270) ? 'start' : 'end'}`)
+      .attr("transform", `rotate(${localThis.xAxisAngle})`)
+      .attr("dy", "-.25em")
+      .style("font-size", fontsize)
+      .text(function (d, i) {
+        return x_elems[i];
+      })
+      .each(function () {
+        // truncate labels if the calculated size exceeds the allotted space
+        var self = d3.select(this),
+          textLength = self.node().getComputedTextLength(),
+          text = self.text();
+        while (textLength > localThis.marginTop && text.length > 0) {
+          text = text.slice(0, -1);
+          self.text(text + '...');
+          textLength = self.node().getComputedTextLength();
+        }
+      })
+      .append("svg:title")
+      .text(function (d, i) {
+        return x_elems[i]
+      });
 
     svg
       .selectAll(".month")

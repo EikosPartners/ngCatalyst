@@ -76,6 +76,9 @@ In your `app.component.html`
 </eikos-bar-chart>
 ```
 
+#### Local Development
+In terminal, use ```npm run dev``` to watch for file edits, and automatically re-package the project for local development and change detection.
+
 
 ## Check out the examples repo
 
