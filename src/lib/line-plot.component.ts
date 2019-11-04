@@ -21,7 +21,8 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'line';
   @Input() data: Object; // {"line data label": [{date: string, value: number}]}
-  @Input() colors = ["red", "green"];
+  @Input() thresholdColors = ["red", "green"]; // these are the colors that will be used for the threshold if it is passed
+  @Input() lineColors; // array of color strings to be used for the lines. they will be mapped in order to the data
   @Input() threshold = null;
   @Input() yAxisLabel = 'Value';
   @Input() xAxisLabel = 'Date';
@@ -225,6 +226,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       .style("opacity", 0);
 
     // format for x axis labels based on date or time, will be used to process raw data to readable dates/times
+    // the format can be passed as a prop or is set by default whether the data type is data or time
     let timeFormatLabel;
     if (localThis.axisLabelFormat) {
       timeFormatLabel = d3.timeFormat(localThis.dateTimeConversion[localThis.axisLabelFormat])
@@ -269,8 +271,8 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
         .attr("x2", 0).attr("y2", y(localThis.threshold + 1))
         .selectAll("stop")
         .data([
-          { offset: "0%", color: localThis.colors[0] },
-          { offset: "50%", color: localThis.colors[1] }
+          { offset: "0%", color: localThis.thresholdColors[0] },
+          { offset: "50%", color: localThis.thresholdColors[1] }
         ])
         .enter().append("stop")
         .attr("offset", function (d) {
@@ -296,44 +298,34 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       .attr("y", 40)
       .attr("class", "axislabel x-axis-label");
 
-    const text = svg.selectAll("g.tick > text");
-    // angle the labels on x-axis if specified
-    if (this.xAxisAngle > 0) {
-      text
-        .attr("transform", `rotate(${this.xAxisAngle}) translate(${margin.top}, 0)`)
-        .style("text-anchor", "middle");
+    const xAxisText = svg.selectAll("g.x.axis g.tick text");
+    xAxisText.attr("class", "x-axis-text");
 
-      const dimensions = text.node().getBBox();
-      const array = Array.from(text._groups[0]).map((item: any, index: number) => item.getBBox().width);
-      // const dimwid = d3.max(array);
-
-      if (this.xAxisAngle < 45) {
-        text.attr("x", function (a, b, c, d) {
-          if (array[b] < margin.bottom) {
-            return dimensions.width / 2;
-          } else {
-            return dimensions.width / 1.5;
-          }
-        })
-          .attr("y", dimensions.height - margin.top);
-      }
-
-      if (this.xAxisAngle >= 45) {
-        text.attr("x", function (a, b, c, d) {
-          if (array[b] < margin.bottom) {
-            return dimensions.width - 15;
-          } else {
-            return dimensions.width - 10;
-          }
-        })
-          .attr("y", dimensions.height - 10);
-      }
-
-      if (this.xAxisAngle === 90) {
-        text.attr("x", dimensions.width)
-          .attr("y", -margin.left / 2 - 5);
-      }
+    if (this.xAxisAngle > 0 && this.xAxisAngle < 180) {
+      xAxisText
+        .attr("text-anchor", `${this.xAxisAngle <= 90 ? "start" : "end"}`)
+        .attr("transform-origin", `left ${xAxisText.attr("dy")}`)
+        .attr(
+          "transform",
+          `rotate(${
+            this.xAxisAngle <= 90 ? this.xAxisAngle : 90 - this.xAxisAngle
+          })`
+        );
     }
+
+    xAxisText.each(function() {
+      // truncate labels if the calculated size exceeds the allotted space
+      var self = d3.select(this),
+        textLength = self.node().getComputedTextLength(),
+        fullText = self.text(),
+        text = self.text();
+      while (textLength > localThis.margins.bottom && text.length > 0) {
+        text = text.slice(0, -1);
+        self.text(text + "...");
+        textLength = self.node().getComputedTextLength();
+      }
+      self.append("svg:title").text(fullText);
+    });
 
     svg.append("g")
       .attr("class", "y axis y-axis")
@@ -346,6 +338,39 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       .style("fill", "black")
       .attr("font-size", this.axisFontSize)
       .text(this.yAxisLabel);
+
+    const yAxisText = svg.selectAll("g.y.axis g.tick text");
+    yAxisText.attr("class", "y-axis-text");
+
+    yAxisText.each(function() {
+      // truncate labels if the calculated size exceeds the allotted space
+      var self = d3.select(this),
+        textLength = self.node().getComputedTextLength(),
+        fullText = self.text(),
+        text = self.text();
+      while (textLength > localThis.margins.left && text.length > 0) {
+        text = text.slice(0, -1);
+        self.text(text + "...");
+        textLength = self.node().getComputedTextLength();
+      }
+      self.append("svg:title").text(fullText);
+    });
+
+    // create color map object to map labeled data with color supplied
+    let colorMap = {};
+    if (this.lineColors && Array.isArray(this.lineColors)) {
+        Object.keys(data).forEach((key, ind) => {
+          if (localThis.lineColors.length <= ind) {
+            colorMap[key] = localThis.lineColors[localThis.lineColors.length % ind];
+          } else {
+            colorMap[key] = localThis.lineColors[ind];
+          }
+          
+        })
+    } else if (this.lineColors && typeof this.lineColors === 'object') {
+      colorMap = this.lineColors;
+    }
+    
 
     if (localThis.threshold !== null) {
       for (let key in data) {
@@ -362,7 +387,10 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
             .datum(data[key])
             .attr("id", pathID + key)
             .attr("class", "line linechartline")
-            .attr("d", line);
+            .attr("d", line)
+            .attr("stroke", () => {
+              return colorMap[key] || "auto"
+            });
       }
     }
 
