@@ -30,7 +30,6 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() divWidth: any = "100%";
   @Input() axisFontSize: any = "14px";
   @Input() margins = { top: 20, right: 30, bottom: 60, left: 50 };
-  @Input() type = "Date"; // (alternate option is time)
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
   @Input() xAxisAngle = 45;
@@ -148,7 +147,10 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   drawLinePlot() {
     const localThis = this;
     const selection_string = "#" + this.propID;
-    const dataKey = localThis.type.toLowerCase();
+    // grab data for a line to determine the datakey for x axis
+    const dataSample = this.data[Object.keys(this.data)[0]];
+    // get datakey for the x axis by finding keys of data point and filtering out value key
+    const dataKey = Object.keys(dataSample[0]).filter(key => key !== "value")[0];
     // remove previous chart and tooltips if already drawn on the page
     d3.selectAll(`.${this.propID}_tooltip`).remove();
     if (document.querySelectorAll(selection_string + " svg")[0] != null) {
@@ -171,14 +173,14 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     if (this.tooltipLabelFormat) {
       formatDate = d3.timeFormat(this.dateTimeConversion[this.tooltipLabelFormat]);
     } else {
-      if (localThis.type === "Date") {
+      if (dataKey === "date") {
         formatDate = d3.timeFormat('%B %-d %Y');
-      } else if (localThis.type === "Time") {
+      } else if (dataKey === "time") {
         formatDate = d3.timeFormat('%I:%M %p');
       }
     }
     
-    // sort the data go through each key value pair for line and sorts the data array
+    // format dates and sort the data go through each key value pair for line and sorts the data array
     for (let key in data) {
       data[key].forEach(el => {
         el[dataKey] = dateTimeParser(el[dataKey]);
@@ -231,9 +233,9 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     if (localThis.axisLabelFormat) {
       timeFormatLabel = d3.timeFormat(localThis.dateTimeConversion[localThis.axisLabelFormat])
     } else {
-      if (localThis.type === "Date") {
+      if (dataKey === "date") {
         timeFormatLabel = d3.timeFormat('%b');
-      } else if (localThis.type === "Time") {
+      } else if (dataKey === "time") {
         timeFormatLabel = d3.timeFormat('%I:%M');
       }
     }
@@ -421,7 +423,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
               .html(
                 key + "<br>" + 
                 localThis.xAxisLabel + ": " +
-                formatDate(d.date || d.time) +
+                formatDate(d[dataKey]) +
                 "<br>" +
                 localThis.yAxisLabel +
                 ": " +
