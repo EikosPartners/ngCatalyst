@@ -190,7 +190,8 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       data[key] = copy;
     }
 
-    let timeFormatLabel = null;
+    let timeFormatLabel = null,
+      formatTooltipDate;
     if (dataKey === 'date' || dataKey === 'time') {
       // create parsers to format the data for display in graph
       const dateTimeParser = d3.timeParse(this.dateTimeConversion[this.dateTimeFormat])
@@ -207,20 +208,18 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       if (this.axisLabelFormat) {
         timeFormatLabel = d3.timeFormat(this.dateTimeConversion[this.axisLabelFormat])
       }
-    }
 
-    //create date/time formatter to format text on tooltip
-    let formatDate;
-    if (this.tooltipLabelFormat) {
-      formatDate = d3.timeFormat(this.dateTimeConversion[this.tooltipLabelFormat]);
-    } else {
-      if (dataKey === "date") {
-        formatDate = d3.timeFormat('%B %-d %Y');
-      } else if (dataKey === "time") {
-        formatDate = d3.timeFormat('%I:%M %p');
+      //create date/time formatter to format text on tooltip
+      if (this.tooltipLabelFormat) {
+        formatTooltipDate = d3.timeFormat(this.dateTimeConversion[this.tooltipLabelFormat]);
+      } else {
+        if (dataKey === "date") {
+          formatTooltipDate = d3.timeFormat('%B %-d %Y');
+        } else if (dataKey === "time") {
+          formatTooltipDate = d3.timeFormat('%I:%M %p');
+        }
       }
     }
-    
 
     d3.selectAll(`.${this.propID}_tooltip`).remove();
 
@@ -422,7 +421,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
                 key + "<br>" +
                   xaxisvalue +
                   ": <b>" +
-                  (formatDate ? formatDate(d[dataKey]) : d[dataKey]) +
+                  (formatTooltipDate ? formatTooltipDate(d[dataKey]) : d[dataKey]) +
                   "</b><br>" +
                   yaxisvalue +
                   ": <b>" +
