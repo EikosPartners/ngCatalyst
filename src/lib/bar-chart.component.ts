@@ -310,11 +310,13 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis)
       .append("text")
-      .attr("class", "label x-label")
-      .attr("x", width / 3 + margin.right)
-      .attr("y", 0)
+      .attr("class", "label x-axis-label")
+      .attr("x", width / 2)
+      .attr("y", this.marginBottom)
       .style("text-anchor", "middle")
       .text(xaxisvalue);
+
+    const xAxisLabelHeight = chart.select(".label.x-axis-label").node().getBBox().height + 5;
 
     const xAxisText = chart.selectAll("g.x.axis g.tick text");
     xAxisText.attr("class", "x-axis-text");
@@ -337,7 +339,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         textLength = self.node().getComputedTextLength(),
         fullText = self.text(),
         text = self.text();
-      while (textLength > localThis.marginBottom && text.length > 0) {
+      while (textLength > (localThis.marginBottom - xAxisLabelHeight) && text.length > 0) {
         text = text.slice(0, -1);
         self.text(text + "...");
         textLength = self.node().getComputedTextLength();
@@ -347,14 +349,17 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
     chart
       .append("g")
-      .attr("class", "y axis")
+      .attr("class", "y axis y-axis")
       .call(yAxis)
       .append("text")
-      .attr("class", "label")
+      .attr("class", "label y-axis-label")
       .attr("transform", "rotate(-90)")
-      .attr("y", 0)
+      .attr("y", -this.marginLeft)
+      .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text(yaxisvalue);
+
+    const yAxisLabelHeight = chart.select(".label.y-axis-label").node().getBBox().height + 5;
 
     const yAxisText = chart.selectAll("g.y.axis g.tick text");
     yAxisText.attr("class", "y-axis-text");
@@ -365,7 +370,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         textLength = self.node().getComputedTextLength(),
         fullText = self.text(),
         text = self.text();
-      while (textLength > localThis.marginLeft && text.length > 0) {
+      while (textLength > (localThis.marginLeft - yAxisLabelHeight) && text.length > 0) {
         text = text.slice(0, -1);
         self.text(text + "...");
         textLength = self.node().getComputedTextLength();

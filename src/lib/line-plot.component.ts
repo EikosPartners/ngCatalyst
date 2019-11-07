@@ -298,7 +298,9 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       .attr("font-size", this.axisFontSize)
       .text(this.xAxisLabel)
       .attr("y", 40)
-      .attr("class", "axislabel x-axis-label");
+      .attr("class", "label axislabel x-axis-label");
+
+    const xAxisLabelHeight = svg.select(".label.x-axis-label").node().getBBox().height + 5;
 
     const xAxisText = svg.selectAll("g.x.axis g.tick text");
     xAxisText.attr("class", "x-axis-text");
@@ -321,7 +323,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
         textLength = self.node().getComputedTextLength(),
         fullText = self.text(),
         text = self.text();
-      while (textLength > localThis.margins.bottom && text.length > 0) {
+      while (textLength > (localThis.margins.bottom - xAxisLabelHeight) && text.length > 0) {
         text = text.slice(0, -1);
         self.text(text + "...");
         textLength = self.node().getComputedTextLength();
@@ -336,10 +338,13 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       .attr("transform", "rotate(-90)")
       .attr("y", -margin.left)
       .attr("dy", ".71em")
+      .attr("class", "label y-axis-label")
       .style("text-anchor", "end")
       .style("fill", "black")
       .attr("font-size", this.axisFontSize)
       .text(this.yAxisLabel);
+
+    const yAxisLabelHeight = svg.select(".label.y-axis-label").node().getBBox().height + 5;
 
     const yAxisText = svg.selectAll("g.y.axis g.tick text");
     yAxisText.attr("class", "y-axis-text");
@@ -350,7 +355,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
         textLength = self.node().getComputedTextLength(),
         fullText = self.text(),
         text = self.text();
-      while (textLength > localThis.margins.left && text.length > 0) {
+      while (textLength > (localThis.margins.left - yAxisLabelHeight) && text.length > 0) {
         text = text.slice(0, -1);
         self.text(text + "...");
         textLength = self.node().getComputedTextLength();
