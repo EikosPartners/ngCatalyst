@@ -16,6 +16,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() data: Array<{}>;
   @Input() colors = ["#081A4E", "#092369", "#1A649F", "#2485B4", "#2DA8C9", "#5DC1D0", "#9AD5CD", "#D5E9CB", "#64B5F6", "#01579B"];
   // need 10 hex colors;
+  @Input() margins;
   @Input() donutWidth: any = 0; // in pixels or %
   @Input() divHeight: any = "100%";
   @Input() divWidth: any = "100%";
@@ -103,7 +104,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
     const localThis = this;
 
-    const margin = { top: 10, right: 0, bottom: 20, left: 0 },
+    const margin = Object.assign({ top: 10, right: 0, bottom: 20, left: 0 }, this.margins),
       width = element.clientWidth - margin.left - margin.right;
     let height = element.clientHeight - margin.top - margin.bottom;
     if (height < 0) {
@@ -275,9 +276,8 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
 
       legend.on('mouseover', function (d) {
-        const local = localThis;
         const currentLabel = d.label;
-        d3.selectAll('g.slice path').data([d], function (dt) {
+        svg.selectAll('g.slice path').data([d], function (dt) {
           return dt.data ? dt.data.label : dt.label;
         })
           .attr('fill', function (df) {
@@ -297,9 +297,7 @@ export class PieChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
 
       legend.on('mouseout', function (d) {
-        const local = localThis;
-        const currentLabel = d.label;
-        d3.selectAll('g.slice path').data([d], function (dt) {
+        svg.selectAll('g.slice path').data([d], function (dt) {
           return dt.data ? dt.data.label : dt.label;
         })
           .attr('fill', function (df) {

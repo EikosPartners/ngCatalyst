@@ -30,7 +30,6 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() divWidth: any = "100%";
   @Input() axisFontSize: any = "14px";
   @Input() margins = { top: 20, right: 30, bottom: 60, left: 50 };
-  @Input() type = "Date"; // (alternate option is time)
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
   @Input() xAxisAngle = 45;
@@ -148,7 +147,10 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   drawLinePlot() {
     const localThis = this;
     const selection_string = "#" + this.propID;
-    const dataKey = localThis.type.toLowerCase();
+    // grab data for a line to determine the datakey for x axis
+    const dataSample = this.data[Object.keys(this.data)[0]];
+    // get datakey for the x axis by finding keys of data point and filtering out value key
+    const dataKey = Object.keys(dataSample[0]).filter(key => key !== "value")[0];
     // remove previous chart and tooltips if already drawn on the page
     d3.selectAll(`.${this.propID}_tooltip`).remove();
     if (document.querySelectorAll(selection_string + " svg")[0] != null) {
@@ -171,14 +173,14 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     if (this.tooltipLabelFormat) {
       formatDate = d3.timeFormat(this.dateTimeConversion[this.tooltipLabelFormat]);
     } else {
-      if (localThis.type === "Date") {
+      if (dataKey === "date") {
         formatDate = d3.timeFormat('%B %-d %Y');
-      } else if (localThis.type === "Time") {
+      } else if (dataKey === "time") {
         formatDate = d3.timeFormat('%I:%M %p');
       }
     }
     
-    // sort the data go through each key value pair for line and sorts the data array
+    // format dates and sort the data go through each key value pair for line and sorts the data array
     for (let key in data) {
       data[key].forEach(el => {
         el[dataKey] = dateTimeParser(el[dataKey]);
@@ -197,7 +199,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       element = selected[0];
     }
 
-    const margin = this.margins;
+    const margin = Object.assign({ top: 50, bottom: 50, right: 50, left: 50 }, this.margins);
     const width = element.clientWidth - margin.left - margin.right;
     let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0);
     if (height < 0) {
@@ -231,9 +233,9 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     if (localThis.axisLabelFormat) {
       timeFormatLabel = d3.timeFormat(localThis.dateTimeConversion[localThis.axisLabelFormat])
     } else {
-      if (localThis.type === "Date") {
+      if (dataKey === "date") {
         timeFormatLabel = d3.timeFormat('%b');
-      } else if (localThis.type === "Time") {
+      } else if (dataKey === "time") {
         timeFormatLabel = d3.timeFormat('%I:%M');
       }
     }
@@ -296,7 +298,9 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       .attr("font-size", this.axisFontSize)
       .text(this.xAxisLabel)
       .attr("y", 40)
-      .attr("class", "axislabel x-axis-label");
+      .attr("class", "label axislabel x-axis-label");
+
+    const xAxisLabelHeight = svg.select(".label.x-axis-label").node().getBBox().height + 5;
 
     const xAxisText = svg.selectAll("g.x.axis g.tick text");
     xAxisText.attr("class", "x-axis-text");
@@ -319,7 +323,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
         textLength = self.node().getComputedTextLength(),
         fullText = self.text(),
         text = self.text();
-      while (textLength > localThis.margins.bottom && text.length > 0) {
+      while (textLength > (localThis.margins.bottom - xAxisLabelHeight) && text.length > 0) {
         text = text.slice(0, -1);
         self.text(text + "...");
         textLength = self.node().getComputedTextLength();
@@ -334,10 +338,13 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       .attr("transform", "rotate(-90)")
       .attr("y", -margin.left)
       .attr("dy", ".71em")
+      .attr("class", "label y-axis-label")
       .style("text-anchor", "end")
       .style("fill", "black")
       .attr("font-size", this.axisFontSize)
       .text(this.yAxisLabel);
+
+    const yAxisLabelHeight = svg.select(".label.y-axis-label").node().getBBox().height + 5;
 
     const yAxisText = svg.selectAll("g.y.axis g.tick text");
     yAxisText.attr("class", "y-axis-text");
@@ -348,7 +355,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
         textLength = self.node().getComputedTextLength(),
         fullText = self.text(),
         text = self.text();
-      while (textLength > localThis.margins.left && text.length > 0) {
+      while (textLength > (localThis.margins.left - yAxisLabelHeight) && text.length > 0) {
         text = text.slice(0, -1);
         self.text(text + "...");
         textLength = self.node().getComputedTextLength();
@@ -421,7 +428,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
               .html(
                 key + "<br>" + 
                 localThis.xAxisLabel + ": " +
-                formatDate(d.date || d.time) +
+                formatDate(d[dataKey]) +
                 "<br>" +
                 localThis.yAxisLabel +
                 ": " +
