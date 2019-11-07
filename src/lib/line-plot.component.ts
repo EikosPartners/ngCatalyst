@@ -199,7 +199,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       element = selected[0];
     }
 
-    const margin = this.margins;
+    const margin = Object.assign({ top: 50, bottom: 50, right: 50, left: 50 }, this.margins);
     const width = element.clientWidth - margin.left - margin.right;
     let height = element.clientHeight - margin.top - margin.bottom - (this.xAxisAngle ? 10 : 0);
     if (height < 0) {

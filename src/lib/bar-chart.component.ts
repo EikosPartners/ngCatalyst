@@ -46,10 +46,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() marker: Number;
   @Input() markerColor: String = "#000"; //default is black
   @Input() markerWidth: String = "1"; //default thickness of marker line
-  @Input() marginTop: number = 50;
-  @Input() marginRight: number = 50;
-  @Input() marginBottom: number = 50;
-  @Input() marginLeft: number = 50;
+  @Input() margins = { top: 50, bottom: 50, right: 50, left: 50 }
   @Input() dateTimeFormat;
   @Input() axisLabelFormat;
   @Input() tooltipLabelFormat;
@@ -236,12 +233,12 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     } else {
       element = selected[0];
     }
-    const margin = {
-      top: this.marginTop,
-      right: this.marginRight,
-      bottom: this.marginBottom + d3.axisBottom().tickSizeInner(),
-      left: this.marginLeft + d3.axisLeft().tickSizeOuter()
-    };
+    const margin = Object.assign({
+      top: 50, 
+      bottom: 50 + d3.axisBottom().tickSizeInner(), 
+      right: 50, 
+      left: 50 + d3.axisLeft().tickSizeOuter()
+    }, this.margins)
     const width = element.clientWidth - margin.left - margin.right - 0.5;
     let height = element.clientHeight - margin.top - margin.bottom;
 
@@ -312,7 +309,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       .append("text")
       .attr("class", "label x-axis-label")
       .attr("x", width / 2)
-      .attr("y", this.marginBottom)
+      .attr("y", this.margins.bottom)
       .style("text-anchor", "middle")
       .text(xaxisvalue);
 
@@ -339,7 +336,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         textLength = self.node().getComputedTextLength(),
         fullText = self.text(),
         text = self.text();
-      while (textLength > (localThis.marginBottom - xAxisLabelHeight) && text.length > 0) {
+      while (textLength > (localThis.margins.bottom - xAxisLabelHeight) && text.length > 0) {
         text = text.slice(0, -1);
         self.text(text + "...");
         textLength = self.node().getComputedTextLength();
@@ -354,7 +351,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       .append("text")
       .attr("class", "label y-axis-label")
       .attr("transform", "rotate(-90)")
-      .attr("y", -this.marginLeft)
+      .attr("y", -this.margins.left)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text(yaxisvalue);
@@ -370,7 +367,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
         textLength = self.node().getComputedTextLength(),
         fullText = self.text(),
         text = self.text();
-      while (textLength > (localThis.marginLeft - yAxisLabelHeight) && text.length > 0) {
+      while (textLength > (localThis.margins.left - yAxisLabelHeight) && text.length > 0) {
         text = text.slice(0, -1);
         self.text(text + "...");
         textLength = self.node().getComputedTextLength();

@@ -26,7 +26,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   @Input() xAxisLabel = 'Date';
   @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
   @Input() divWidth: any = "100%";
-  @Input() margin = { top: 40, right: 20, bottom: 40, left: 20 }; // maybe make this a calc based on radius so if x or y is 0 it will show whole bubble?;
+  @Input() margin = { top: 50, right: 50, bottom: 50, left: 50 }; // maybe make this a calc based on radius so if x or y is 0 it will show whole bubble?;
   dateFormat = '%Y-%m-%d';
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
@@ -160,7 +160,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
       element = selected[0];
     }
 
-    const margin = this.margin;
+    const margin = Object.assign({ top: 50, bottom: 50, right: 50, left: 50 }, this.margin);
     const elementWidth = element.clientWidth;
     const elementHeight = element.clientHeight;
     const ternaryWidth = (elementWidth > 0 && elementWidth < window.innerWidth) ? elementWidth : window.innerWidth;
