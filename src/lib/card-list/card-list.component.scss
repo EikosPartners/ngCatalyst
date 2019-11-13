@@ -11,6 +11,10 @@ $primary10: darken($primary, 10%);
 $primary15: darken($primary, 15%);
 $primary20: darken($primary, 20%);
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 .fixed-button {
   position: absolute;
   &.fixed-top {
@@ -69,7 +73,7 @@ $primary20: darken($primary, 20%);
 .card-list-content {
   position: relative;
   .card-list-group {
-    overflow: hidden;
+    overflow: scroll;
     display: flex;
     flex-direction: column;
     &.inverse-layout {
