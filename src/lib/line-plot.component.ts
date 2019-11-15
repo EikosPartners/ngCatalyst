@@ -20,16 +20,44 @@ import { isEqual, flatten } from 'lodash';
 export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'line';
-  @Input() data: Object; // {"line data label": [{date: string, value: number}]}
-  @Input() thresholdColors = ["red", "green"]; // these are the colors that will be used for the threshold if it is passed
-  @Input() lineColors; // array of color strings to be used for the lines. they will be mapped in order to the data
-  @Input() threshold = null;
+  @Input() data: Object; // {"line data label": [{date: string, value: number}]} Data should be an object, each key will be a label for the dataset and line. The value of the key should be an array of objects (array like the data array that the line plot used to take). each of these objects is a data point
+  /* {
+      "Company 1": [
+        { "date": "11-15-2019", "value": 200}, ...
+      ],
+      "Company 2": [
+        { "date": "11-15-2019", "value": 150}, ...
+      ], ...
+    }
+    The x axis scale does not have to be the same between the datasets. For example "Company 1" data could go to cover just the month of November, and "Company 2" data could cover October and November
+    The key for the X axis does not have to be date or time anymore, the component will now infer what the key is
+    The key for the Y axis MUST be "value".
+      Example datapoint: {"anyStringYouWant": "11-15-2019", "value": 14}
+    */
+  
+  @Input() thresholdColors = ["red", "green"]; // these are the colors that will be used for the threshold if it is passed. Only used if the threshold value is passed
+  @Input() lineColors; // Array of color strings to be used for the lines or Object mapping dataset keys with color stings.
+  /* If an Array is passed then the colors will be matched in order of the keys of the data Object (order is not guaranteed). 
+     If an Object is used then format should be like this 
+     {
+       "Company 1": "blue",
+       "Company 2": "red", 
+       ...
+     } 
+     The key must match the data key in the data Object prop
+  */
+  @Input() threshold = null; // data value (y axis value) at which the line color will change to show a threshold in the data
   @Input() yAxisLabel = 'Value';
   @Input() xAxisLabel = 'Date';
   @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
   @Input() divWidth: any = "100%";
   @Input() axisFontSize: any = "14px";
-  @Input() margins = { top: 20, right: 30, bottom: 60, left: 50 };
+  @Input() margins = { top: 20, right: 30, bottom: 60, left: 50 }; // margins object. These are the base values that will be used but you amy pass an Object with one or more keys to overwrite only the vaules you pass
+  /* An example is you pass an Object like this 
+      { top: 50 }
+    This Object will be merged into the base margins Object passed above and will only change the top margin from 20 to 50
+    Result will be { top: 50, right: 30, bottom: 60, left: 50 }
+  */
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
   @Input() xAxisAngle = 45;
@@ -37,9 +65,21 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   @ViewChildren('c', { read: ElementRef }) childComps: QueryList<ElementRef>;
   @ViewChild('vc', { read: ViewContainerRef, static: false }) viewContainer: ViewContainerRef;
   @ViewChild(TemplateRef, {static: false}) template: TemplateRef<null>;
-  @Input() dateTimeFormat: string; //the format of the date or time data in a Moment String
-  @Input() axisLabelFormat: string; //the format the x axis label should be in a Moment String
-  @Input() tooltipLabelFormat: string; //the format the tooltip should display the dat/time data in a Moment String
+  @Input() dateTimeFormat: string; //the format of the X axis data in a Moment string. Example is "MM-DD-YYYY" 
+  /* Now you do not need to preformat your data to be passed into the component
+     The date or time value for the X axis can be in any format and must match the format here.
+     It will then automatically be formatted to the correct D3 date or time format to be used in the Chart
+   */
+  @Input() axisLabelFormat: string; // This is the date or time format of the label that will be displayed on the X axis "MM/DD"
+  /* Before the only values possible was shortened month name ("Nov") if it was a date or hour and minute ("9:45") depending on the data format
+     Now you can customize it to any format just pass the Moment string for the format
+     If no format is passed then it will fallback to previous baked in values as default ("Nov" or "9:45")
+  */
+  @Input() tooltipLabelFormat: string; //This is the date or time format of the data that will be  displayed in the tooltip
+  /* Before the only values possible were Month Day Year ("November 15 2019") if date or Hour: Minute and am/pm ("9:45 am")
+     Now you can customize it to any format just pass the Moment string for the format
+     If no format is passed the it will fallback to the previous baked in values as default
+  */
   dateTimeConversion: Object = {
     'HH:mm:ss': '%H:%M:%S',
     'H:mm:ss': '%H:%M:%S',

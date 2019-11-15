@@ -23,11 +23,35 @@ import { isEqual, flatten } from "lodash";
 })
 export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
-  @Input() data: Object;
+  @Input() data: Object; // {"bar data label": [{dateOrOtherLabel: string, value: number}]} Data should be an object, each key will be a label for the dataset and bar. The value of the key should be an array of objects (array like the data array that the bar chart used to take). each of these objects is a data point
+  /* {
+      "Company 1": [
+        { "name": "11-15-2019", "value": 200}, ...
+      ],
+      "Company 2": [
+        { "date": "11-15-2019", "value": 150}, ...
+      ], ...
+    } 
+    OR
+    {
+      "Company 1": [
+        { "dataType": "PnL", "value": 200}, 
+        { "dataType": "Exposure", "value": 250}, ...
+      ],
+      "Company 2": [
+        { "dataType": "PnL", "value": 150}, 
+        { "dataType": "Exposure", "value": 200}, ...
+      ], ...
+    }
+    The bar chart now supports Time series for the X axis to visualize data over time.
+    The key for the data does not need to be "date" or "time", but you must pass the dateTimeFormat prop so that the component knows it is time related data
+    The key for the Y axis MUST be "value".
+    Example datapoint: {"anyStringYouWant": "11-15-2019", "value": 14} ***MUST PASS dateTimeFormat
+                                OR
+                      {"anyStringYouWant": "Exposure", "value": 14}
+    */
   @Input() propID = "barchart";
-  @Input() showMe = true;
-  @Input() color = "#2DA8C9";
-  @Input() colors = [
+  @Input() colors: any = [ //This is the array of colors that will be used by the bar chart
     "#9400D3",
     "#4B0082",
     "#0000FF",
@@ -35,7 +59,17 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     "#FFFF00",
     "#FF7F00",
     "#FF0000"
-  ];
+  ]; 
+  /* This can either be an Array of color strings or an Object
+   If an Array is passed then the colors will be matched in order of the keys of the data Object (order is not guaranteed). 
+     If an Object is used then format should be like this 
+     {
+       "Company 1": "blue",
+       "Company 2": "red", 
+       ...
+     } 
+     The key must match the data key in the data Object prop
+  */
   @Input() yAxisLabel = "y";
   @Input() xAxisLabel = "x";
   @Input() xAxisAngle = 45;
@@ -43,13 +77,25 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   @Input() divHeight: any = "100%"; // for a % you need a container div with a non-% height and width;
   @Input() divWidth: any = "100%";
   @Input() showTicks: Boolean = false;
-  @Input() marker: Number;
-  @Input() markerColor: String = "#000"; //default is black
+  @Input() marker: Number; // The Y axis value where you would like a marker line to be drawn
+  @Input() markerColor: String = "#000"; //the color of the marker line, default is black
   @Input() markerWidth: String = "1"; //default thickness of marker line
-  @Input() margins = { top: 50, bottom: 50, right: 50, left: 50 }
-  @Input() dateTimeFormat;
-  @Input() axisLabelFormat;
-  @Input() tooltipLabelFormat;
+  @Input() margins = { top: 50, bottom: 50, right: 50, left: 50 } // margins object. These are the base values that will be used but you amy pass an Object with one or more keys to overwrite only the vaules you pass
+  /* An example is you pass an Object like this 
+      { top: 10 }
+    This Object will be merged into the base margins Object passed above and will only change the top margin from 20 to 50
+    Result will be { top: 10, bottom: 50, right: 50, left: 50 }
+  */
+  @Input() dateTimeFormat; //the format of the X axis data in a Moment string. Example is "MM-DD-YYYY" 
+  /* Now you do not need to preformat your data to be passed into the component
+     The date or time value for the X axis can be in any format and must match the format here.
+     It will then automatically be formatted to the correct D3 date or time format to be used in the Chart
+   */
+  @Input() axisLabelFormat; // This is the date or time format of the label that will be displayed on the X axis (Ex:"MM/DD")
+  // You can customize it to any format just pass the Moment string for the format
+
+  @Input() tooltipLabelFormat; //This is the date or time format of the data that will be  displayed in the tooltip
+  //You can customize it to any format just pass the Moment string for the format
 
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
@@ -189,7 +235,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
 
     let timeFormatLabel = null,
       formatTooltipDate;
-    if (dataKey === 'date' || dataKey === 'time') {
+    if (this.dateTimeFormat) {
       // create parsers to format the data for display in graph
       const dateTimeParser = d3.timeParse(this.dateTimeConversion[this.dateTimeFormat])
       for (let key in data) {
