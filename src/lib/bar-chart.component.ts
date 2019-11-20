@@ -69,6 +69,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
        ...
      } 
      The key must match the data key in the data Object prop
+     You can also pass an array of colors as the value of the key. the chart will then use this array and cycle through the colors for each bar of that one dataset
   */
   @Input() yAxisLabel = "y";
   @Input() xAxisLabel = "x";
@@ -100,70 +101,33 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
   givenHeight = this.divHeight;
   givenWidth = this.divWidth;
 
-  dateTimeConversion: Object = {
-    'HH:mm:ss': '%H:%M:%S',
-    'H:mm:ss': '%H:%M:%S',
-    'hh:mm:ss': '%I:%M:%S',
-    'h:mm:ss': '%I:%M:%S',
-    'hh:mm a': '%I:%M %p',
-    'hh:mm:ss a': '%I:%M:%S %p',
-    'h:mm:ss a': '%I:%M:%S %p',
-    'MM/YYYY': '%m/%Y',
-    'M/YYYY': '%m/%Y',
-    'M/YY': '%m/%y',
-    'MMM YYYY': '%b %Y',
-    'MMM YY': '%b %y',
-    'MM/DD/YY': '%m/%d/%y',
-    'MM/DD/YYYY': '%m/%d/%Y',
-    'MM-DD-YY': '%m-%d-%y',
-    'MM-DD-YYYY': '%m-%d-%Y',
-    'MMMM YYYY': '%B %Y',
-    'MMMM YY': '%B %y',
-    'M/DD/YY': '%m/%d/%y',
-    'M/DD/YYYY': '%m/%d/%Y',
-    'M-DD-YY': '%m-%d-%y',
-    'M-DD-YYYY': '%m-%d-%Y',
-    'M/D/YY': '%m/%e/%y',
-    'M/D/YYYY': '%m/%e/%Y',
-    'M-D-YY': '%m-%e-%y',
-    'M-D-YYYY': '%m-%e-%Y',
-    'MM/D/YY': '%m/%e/%y',
-    'MM/D/YYYY': '%m/%e/%Y',
-    'MM-D-YY': '%m-%e-%y',
-    'MM-D-YYYY': '%m-%e-%Y',
-    'YYYY-MM-DD': '%Y-%m-%d',
-    'YYYY-DD-MM': '%Y-%d-%m',
-    'D-MMM-YY': '%d-%b-%y',
+  timeDictionary: Object = {
+    'HH': '%H',
+    'H': '%H',
+    'hh': '%I',
+    'h': '%I',
+    'MM': '%m',
+    'mm': '%M',
+    'm': '%M',
+    'ss': '%S',
+    's': '%S',
+    'a': '%p',
+    'A': '%p',
+    'DD': '%d',
+    'D': '%e',
+    'DDD': '%j',
+    'DDDD': '%j',
     'MMMM': '%B',
     'MMM': '%b',
+    'M': '%m',
     'ddd': '%a',
     'dddd': '%A',
-    'D/MM/YY': '%e/%m/%y',
-    'D/MM/YYYY': '%e/%m/%Y',
-    'D-MM-YY': '%e-%m-%y',
-    'D-MM-YYYY': '%e-%m-%Y',
-    'D/M/YY': '%e/%m/%y',
-    'D/M/YYYY': '%e/%m/%Y',
-    'D-M-YY': '%e-%m-%y',
-    'D-M-YYYY': '%e-%m-%Y',
-    'DD/M/YY': '%d/%m/%y',
-    'DD/M/YYYY': '%d/%m/%Y',
-    'DD-M-YY': '%d-%m-%y',
-    'DD-M-YYYY': '%d-%m-%Y',
-    'DD/MM/YY': '%d/%m/%y',
-    'DD/MM/YYYY': '%d/%m/%Y',
-    'DD-MM-YY': '%d-%m-%y',
-    'DD-MM-YYYY': '%d-%m-%Y',
-    'MMMM D': '%B %e',
-    'MMM D': '%b %e',
-    'M/D': '%m/%e',
-    "MMM DD YYYY HH:mm:ss": '%b %d %Y %H:%M:%S',
-    'DD MMM': '%d %b',
-    'D MMM': '%e %b',
-    'DD MMMM': '%d %B',
-    'D MMMM': '%e %B'
+    'YY': '%y',
+    'YYYY': '%Y',
+    'Q': '%q',
+    'X': '%s',
+    'x': '%Q'
   }
-
 
   constructor() {
     window.addEventListener("resize", this.drawBarPlot.bind(this));
@@ -181,7 +145,21 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
     return { height, width };
   }
 
+  momentToD3(timeString: string) {
+    let subStrings = timeString.match(/\w+|\s+|[^\s\w]+/g)
+    subStrings = subStrings.map(str => {
+      if (this.timeDictionary[str]) {
+        str = this.timeDictionary[str]
+      }
+      return str
+    })
+    return subStrings.join('')
+  }
+
   ngAfterViewInit() {
+    if (!this.data || Array.isArray(this.data) || this.data === null) {
+      console.error('Data must be an object')
+    }
     this.drawBarPlot();
   }
 
@@ -237,7 +215,7 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       formatTooltipDate;
     if (this.dateTimeFormat) {
       // create parsers to format the data for display in graph
-      const dateTimeParser = d3.timeParse(this.dateTimeConversion[this.dateTimeFormat])
+      const dateTimeParser = d3.timeParse(this.momentToD3(this.dateTimeFormat))
       for (let key in data) {
         data[key].forEach(el => {
           el[dataKey] = dateTimeParser(el[dataKey]);
@@ -249,12 +227,12 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
       // format for x axis labels based on date or time, will be used to process raw data to readable dates/times
       // the format can be passed as a prop or is set by default whether the data type is data or time
       if (this.axisLabelFormat) {
-        timeFormatLabel = d3.timeFormat(this.dateTimeConversion[this.axisLabelFormat])
+        timeFormatLabel = d3.timeFormat(this.momentToD3(this.axisLabelFormat))
       }
 
       //create date/time formatter to format text on tooltip
       if (this.tooltipLabelFormat) {
-        formatTooltipDate = d3.timeFormat(this.dateTimeConversion[this.tooltipLabelFormat]);
+        formatTooltipDate = d3.timeFormat(this.momentToD3(this.tooltipLabelFormat));
       } else {
         if (dataKey === "date") {
           formatTooltipDate = d3.timeFormat('%B %-d %Y');
@@ -455,10 +433,14 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
             }
           })
           .attr("width", (x.bandwidth() - x.paddingInner()) / Object.keys(data).length)
-          .style("fill", () => {
+          .style("fill", (d, i) => {
+            if (Array.isArray(colorMap[key])) {
+              return colorMap[key][i] || colorMap[key][i % colorMap[key].length];
+            } 
             return colorMap[key] || "auto"
           })
-          .on("mouseover", function(d) {
+          .on("mouseover", function(d, i ) {
+            const index = i;
             const yval = d.value;
             tooltip
               .transition()
@@ -483,7 +465,13 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
               .duration(50)
               .style("fill", function(dt, i) {
                 let currentFill: any;
-                currentFill = hex2rgb(colorMap[key]);
+                if (Array.isArray(colorMap[key])) {
+                  currentFill =  colorMap[key][index] || colorMap[key][index % colorMap[key].length];
+                } else {
+                  currentFill = colorMap[key]
+                }
+                
+                currentFill = hex2rgb(currentFill);
                 const darker = currentFill.map(item => {
                   // tslint:disable-next-line: radix
                   return parseInt(item) * 0.75;
@@ -491,11 +479,15 @@ export class BarChartComponent implements OnChanges, AfterViewInit, AfterViewChe
                 return `rgb(${darker[0]}, ${darker[1]}, ${darker[2]})`;
               });
           })
-          .on("mouseout", function(d) {
+          .on("mouseout", function(d, i) {
+            const index = i;
             d3.select(this)
               .transition()
               .duration(100)
               .style("fill", () => {
+                if (Array.isArray(colorMap[key])) {
+                  return colorMap[key][i] || colorMap[key][i % colorMap[key].length];
+                } 
                 return colorMap[key] || "auto"
               });
             tooltip

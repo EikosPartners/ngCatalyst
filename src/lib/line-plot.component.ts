@@ -36,7 +36,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     */
   
   @Input() thresholdColors = ["red", "green"]; // these are the colors that will be used for the threshold if it is passed. Only used if the threshold value is passed
-  @Input() lineColors; // Array of color strings to be used for the lines or Object mapping dataset keys with color stings.
+  @Input() lineColors; // Array of color strings to be used for the lines or Object mapping dataset keys with color strings.
   /* If an Array is passed then the colors will be matched in order of the keys of the data Object (order is not guaranteed). 
      If an Object is used then format should be like this 
      {
@@ -80,68 +80,32 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
      Now you can customize it to any format just pass the Moment string for the format
      If no format is passed the it will fallback to the previous baked in values as default
   */
-  dateTimeConversion: Object = {
-    'HH:mm:ss': '%H:%M:%S',
-    'H:mm:ss': '%H:%M:%S',
-    'hh:mm:ss': '%I:%M:%S',
-    'h:mm:ss': '%I:%M:%S',
-    'hh:mm a': '%I:%M %p',
-    'hh:mm:ss a': '%I:%M:%S %p',
-    'h:mm:ss a': '%I:%M:%S %p',
-    'MM/YYYY': '%m/%Y',
-    'M/YYYY': '%m/%Y',
-    'M/YY': '%m/%y',
-    'MMM YYYY': '%b %Y',
-    'MMM YY': '%b %y',
-    'MM/DD/YY': '%m/%d/%y',
-    'MM/DD/YYYY': '%m/%d/%Y',
-    'MM-DD-YY': '%m-%d-%y',
-    'MM-DD-YYYY': '%m-%d-%Y',
-    'MMMM YYYY': '%B %Y',
-    'MMMM YY': '%B %y',
-    'M/DD/YY': '%m/%d/%y',
-    'M/DD/YYYY': '%m/%d/%Y',
-    'M-DD-YY': '%m-%d-%y',
-    'M-DD-YYYY': '%m-%d-%Y',
-    'M/D/YY': '%m/%e/%y',
-    'M/D/YYYY': '%m/%e/%Y',
-    'M-D-YY': '%m-%e-%y',
-    'M-D-YYYY': '%m-%e-%Y',
-    'MM/D/YY': '%m/%e/%y',
-    'MM/D/YYYY': '%m/%e/%Y',
-    'MM-D-YY': '%m-%e-%y',
-    'MM-D-YYYY': '%m-%e-%Y',
-    'YYYY-MM-DD': '%Y-%m-%d',
-    'YYYY-DD-MM': '%Y-%d-%m',
-    'D-MMM-YY': '%d-%b-%y',
+  timeDictionary: Object = {
+    'HH': '%H',
+    'H': '%H',
+    'hh': '%I',
+    'h': '%I',
+    'MM': '%m',
+    'mm': '%M',
+    'm': '%M',
+    'ss': '%S',
+    's': '%S',
+    'a': '%p',
+    'A': '%p',
+    'DD': '%d',
+    'D': '%e',
+    'DDD': '%j',
+    'DDDD': '%j',
     'MMMM': '%B',
     'MMM': '%b',
+    'M': '%m',
     'ddd': '%a',
     'dddd': '%A',
-    'D/MM/YY': '%e/%m/%y',
-    'D/MM/YYYY': '%e/%m/%Y',
-    'D-MM-YY': '%e-%m-%y',
-    'D-MM-YYYY': '%e-%m-%Y',
-    'D/M/YY': '%e/%m/%y',
-    'D/M/YYYY': '%e/%m/%Y',
-    'D-M-YY': '%e-%m-%y',
-    'D-M-YYYY': '%e-%m-%Y',
-    'DD/M/YY': '%d/%m/%y',
-    'DD/M/YYYY': '%d/%m/%Y',
-    'DD-M-YY': '%d-%m-%y',
-    'DD-M-YYYY': '%d-%m-%Y',
-    'DD/MM/YY': '%d/%m/%y',
-    'DD/MM/YYYY': '%d/%m/%Y',
-    'DD-MM-YY': '%d-%m-%y',
-    'DD-MM-YYYY': '%d-%m-%Y',
-    'MMMM D': '%B %e',
-    'MMM D': '%b %e',
-    'M/D': '%m/%e',
-    "MMM DD YYYY HH:mm:ss": '%b %d %Y %H:%M:%S',
-    'DD MMM': '%d %b',
-    'D MMM': '%e %b',
-    'DD MMMM': '%d %B',
-    'D MMMM': '%e %B'
+    'YY': '%y',
+    'YYYY': '%Y',
+    'Q': '%q',
+    'X': '%s',
+    'x': '%Q'
   }
 
   constructor() {
@@ -163,6 +127,17 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     return { height, width };
   }
 
+  momentToD3(timeString: string) {
+    let subStrings = timeString.match(/\w+|\s+|[^\s\w]+/g)
+    subStrings = subStrings.map(str => {
+      if (this.timeDictionary[str]) {
+        str = this.timeDictionary[str]
+      }
+      return str
+    })
+    return subStrings.join('')
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.data.firstChange && !isEqual(changes.data.previousValue, changes.data.currentValue)) {
       this.drawLinePlot();
@@ -181,6 +156,15 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   }
 
   ngAfterViewInit() {
+    if (!this.data || Array.isArray(this.data) || this.data === null) {
+      console.error('Data must be an object')
+    }
+    if (!this.dateTimeFormat) {
+      console.error('dateTimeFormat prop must be supplied. This is the date format of your data')
+    }
+    if (!this.lineColors && !this.thresholdColors) {
+      console.error('Either lineColors prop or thresholdColors must be supplied.')
+    }
     this.drawLinePlot();
   }
 
@@ -207,11 +191,11 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     }
 
     // create parsers to format the data for display in graph
-    const dateTimeParser = d3.timeParse(this.dateTimeConversion[this.dateTimeFormat])
+    const dateTimeParser = d3.timeParse(this.momentToD3(this.dateTimeFormat))
     //create date/time formatter to format text on tooltip
     let formatDate;
     if (this.tooltipLabelFormat) {
-      formatDate = d3.timeFormat(this.dateTimeConversion[this.tooltipLabelFormat]);
+      formatDate = d3.timeFormat(this.momentToD3(this.tooltipLabelFormat));
     } else {
       if (dataKey === "date") {
         formatDate = d3.timeFormat('%B %-d %Y');
@@ -271,7 +255,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
     // the format can be passed as a prop or is set by default whether the data type is data or time
     let timeFormatLabel;
     if (localThis.axisLabelFormat) {
-      timeFormatLabel = d3.timeFormat(localThis.dateTimeConversion[localThis.axisLabelFormat])
+      timeFormatLabel = d3.timeFormat(localThis.momentToD3(localThis.axisLabelFormat))
     } else {
       if (dataKey === "date") {
         timeFormatLabel = d3.timeFormat('%b');
