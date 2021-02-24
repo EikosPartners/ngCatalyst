@@ -10,7 +10,7 @@
         <fa-icon [icon]="faAngleRight" size="2x"></fa-icon>
       </button>
     </div>
-    <div class="fixed-button fixed-bottom"  *ngIf="showScrollDown()">
+    <div class="fixed-button fixed-bottom" *ngIf="showScrollDown()">
       <button class="scroll-button" (click)="scrollDown()">
         <fa-icon [icon]="faAngleDown" size="2x"></fa-icon>
       </button>
@@ -26,18 +26,16 @@
     [ngClass]="{ 'inverse-layout': inverseLayout, 'card-view': cardView }"
     [style.height.px]="listHeight"
     (scroll)="onCardListScroll($event)"
-    #cardListGroup>
+    #cardListGroup
+  >
     <div
       class="card-list-group-item"
       [ngClass]="{ 'active': this.findObjectIndex(this.selectedItems, item) > -1 }"
       *ngFor="let item of items"
       (click)="onListItemClick(item, $event)"
-      #cardListGroupItem>
-      <ng-template
-        [ngTemplateOutlet]="templateRef"
-        [ngTemplateOutletContext]="{ item: item }">
-      </ng-template>
+      #cardListGroupItem
+    >
+      <ng-template [ngTemplateOutlet]="templateRef" [ngTemplateOutletContext]="{ item: item }"> </ng-template>
     </div>
   </div>
-
 </div>

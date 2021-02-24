@@ -19,7 +19,7 @@ import { faAngleUp, faAngleRight, faAngleDown, faAngleLeft } from '@fortawesome/
   styleUrls: ['./card-list.component.scss']
 })
 export class CardListComponent implements AfterViewInit {
-  @ContentChild(TemplateRef, { static: false}) templateRef;
+  @ContentChild(TemplateRef, { static: false }) templateRef;
   @ViewChild('cardListGroup', { read: ElementRef, static: true }) public cardListGroup: ElementRef<any>;
 
   @Input() items: any[];
@@ -38,75 +38,75 @@ export class CardListComponent implements AfterViewInit {
   faAngleDown = faAngleDown;
   faAngleLeft = faAngleLeft;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
     this.changeDetectorRef.detectChanges();
   }
 
-  showScrollUp () {
+  showScrollUp() {
     const scrollTop = this.cardListGroup.nativeElement.scrollTop;
-
     return scrollTop > 0;
   }
 
-  showScrollRight () {
+  showScrollRight() {
     const clientWidth = this.cardListGroup.nativeElement.clientWidth;
     const scrollWidth = this.cardListGroup.nativeElement.scrollWidth;
     const scrollLeft = this.cardListGroup.nativeElement.scrollLeft;
-
     return clientWidth + scrollLeft < scrollWidth;
   }
 
-  showScrollDown () {
+  showScrollDown() {
     const clientHeight = this.cardListGroup.nativeElement.clientHeight;
     const scrollHeight = this.cardListGroup.nativeElement.scrollHeight;
     const scrollTop = this.cardListGroup.nativeElement.scrollTop;
-
     return clientHeight + scrollTop < scrollHeight;
   }
 
-  showScrollLeft () {
+  showScrollLeft() {
     const scrollLeft = this.cardListGroup.nativeElement.scrollLeft;
-
     return scrollLeft > 0;
   }
 
-  scrollUp () {
+  scrollUp() {
     const scrollAmount = this.cardListGroup.nativeElement.clientHeight * -0.5;
     const scrollToPosition = this.cardListGroup.nativeElement.scrollTop + scrollAmount;
 
-    this.cardListGroup.nativeElement.scroll({ top: (scrollToPosition), behavior: 'smooth' });
+    this.cardListGroup.nativeElement.scroll({ top: scrollToPosition, behavior: 'smooth' });
+    this.changeDetectorRef.detectChanges();
   }
 
-  scrollRight () {
+  scrollRight() {
     const scrollAmount = this.cardListGroup.nativeElement.clientWidth * 0.5;
     const scrollToPosition = this.cardListGroup.nativeElement.scrollLeft + scrollAmount;
 
-    this.cardListGroup.nativeElement.scroll({ left: (scrollToPosition), behavior: 'smooth' });
+    this.cardListGroup.nativeElement.scroll({ left: scrollToPosition, behavior: 'smooth' });
+    this.changeDetectorRef.detectChanges();
   }
 
-  scrollDown () {
+  scrollDown() {
     const scrollAmount = this.cardListGroup.nativeElement.clientHeight * 0.5;
     const scrollToPosition = this.cardListGroup.nativeElement.scrollTop + scrollAmount;
 
-    this.cardListGroup.nativeElement.scroll({ top: (scrollToPosition), behavior: 'smooth' });
+    this.cardListGroup.nativeElement.scroll({ top: scrollToPosition, behavior: 'smooth' });
+    this.changeDetectorRef.detectChanges();
   }
 
-  scrollLeft () {
+  scrollLeft() {
     const scrollAmount = this.cardListGroup.nativeElement.clientWidth * -0.5;
     const scrollToPosition = this.cardListGroup.nativeElement.scrollLeft + scrollAmount;
 
-    this.cardListGroup.nativeElement.scroll({ left: (scrollToPosition), behavior: 'smooth' });
+    this.cardListGroup.nativeElement.scroll({ left: scrollToPosition, behavior: 'smooth' });
+    this.changeDetectorRef.detectChanges();
   }
 
-  onCardListScroll (event) {
+  onCardListScroll(event) {
     /* these variables are not used, but are required for scroll buttons to show/hide properly */
     const scrollTop = event.path[0].scrollTop;
     const scrollLeft = event.path[0].scrollLeft;
   }
 
-  toggleSelectedItems (item) {
+  toggleSelectedItems(item) {
     const index = this.findObjectIndex(this.selectedItems, item);
 
     /* if item was alread selected, remove it from the selected items array */
@@ -125,7 +125,7 @@ export class CardListComponent implements AfterViewInit {
     this.itemSelected.emit(item);
   }
 
-  findObjectIndex (arr, obj) {
+  findObjectIndex(arr, obj) {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] === obj) {
         return i;
@@ -134,17 +134,17 @@ export class CardListComponent implements AfterViewInit {
     return -1;
   }
 
-  onListItemClick (item, e) {
+  onListItemClick(item, e) {
     /* prevent the page from scrolling to top on item click */
     e.preventDefault();
     this.toggleSelectedItems(item);
   }
 
-  onPrimaryActionClick () {
+  onPrimaryActionClick() {
     this.primaryActionClicked.emit(this.selectedItems);
   }
 
-  onClearActionClick () {
+  onClearActionClick() {
     this.selectedItems = [];
   }
 }
