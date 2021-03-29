@@ -121,6 +121,9 @@ export class CardListComponent implements AfterViewInit {
       this.selectedItems.push(item);
     }
 
+    /* insert index property in selected item */
+    item.index = index;
+
     /* emit an event that will be handled by the component where rows are defined */
     this.itemSelected.emit(item);
   }
