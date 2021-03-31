@@ -1,5 +1,5 @@
 {
-  "name": "ngcatalyst",
+  "name": "@lightpointfinancialtechnology/ngcatalyst",
   "version": "1.0.12",
   "description": "Eikos Partners presents D3 data visualizations in Angular",
   "license": "SEE LICENSE IN LICENSE",
@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/EikosPartners/ngCatalyst"
+    "url": "git://github.com/LightPointFinancialTechnology/lpToolkit-src"
   },
   "dependencies": {
     "@angular/common": ">=8.0.0",
