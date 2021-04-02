@@ -48,7 +48,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       Example datapoint: {"anyStringYouWant": "11-15-2019", "value": 14}
     */
 
-  @Input() thresholdColors = ['red', 'green']; // these are the colors that will be used for the threshold if it is passed. Only used if the threshold value is passed
+  @Input() thresholdColors = ['#1e9552', 'red']; // these are the colors that will be used for the threshold if it is passed. Only used if the threshold value is passed
   @Input() lineColors; // Array of color strings to be used for the lines or Object mapping dataset keys with color strings.
   /* If an Array is passed then the colors will be matched in order of the keys of the data Object (order is not guaranteed). 
      If an Object is used then format should be like this 
@@ -94,6 +94,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
      If no format is passed the it will fallback to the previous baked in values as default
   */
   @Input() displayTooltip = true;
+  @Input() strockWidth = 2;
 
   timeDictionary: Object = {
     HH: '%H',
@@ -306,22 +307,17 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
         .attr('id', gradID)
         .attr('gradientUnits', 'userSpaceOnUse')
         .attr('x1', 0)
-        .attr('y1', y(localThis.threshold))
+        .attr('y1', 0)
         .attr('x2', 0)
-        .attr('y2', y(localThis.threshold + 1))
+        .attr('y2', height)
         .selectAll('stop')
         .data([
-          { offset: '0%', color: localThis.thresholdColors[0] },
-          { offset: '50%', color: localThis.thresholdColors[1] }
+          { offset: y(localThis.threshold) / height, color: this.thresholdColors[0] }, // Green
+          { offset: y(localThis.threshold) / height, color: this.thresholdColors[1] } // Red
         ])
-        .enter()
-        .append('stop')
-        .attr('offset', function (d) {
-          return d.offset;
-        })
-        .attr('stop-color', function (d) {
-          return d.color;
-        });
+        .join('stop')
+        .attr('offset', d => d.offset)
+        .attr('stop-color', d => d.color);
     }
 
     svg
@@ -420,9 +416,11 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
         svg
           .append('path')
           .datum(data[key])
-          .attr('id', pathID + key)
-          .attr('class', 'line linechartline')
-          .style('stroke', `url("#${gradID}")`)
+          .attr('fill', 'none')
+          .attr('stroke', `url("#${gradID}")`)
+          .attr('stroke-width', localThis.strockWidth)
+          .attr('stroke-linejoin', 'round')
+          .attr('stroke-linecap', 'round')
           .attr('d', line);
       }
     } else {
@@ -435,7 +433,8 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
           .attr('d', line)
           .attr('stroke', () => {
             return colorMap[key] || 'auto';
-          });
+          })
+          .attr('stroke-width', localThis.strockWidth);
       }
     }
 
