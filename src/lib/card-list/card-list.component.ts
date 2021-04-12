@@ -30,6 +30,7 @@ export class CardListComponent implements AfterViewInit {
   @Input() multiSelect = false;
 
   @Output() itemSelected = new EventEmitter();
+  @Output() rightClickEvent = new EventEmitter();
   @Output() primaryActionClicked = new EventEmitter();
 
   selectedItems = [];
@@ -141,6 +142,12 @@ export class CardListComponent implements AfterViewInit {
     /* prevent the page from scrolling to top on item click */
     e.preventDefault();
     this.toggleSelectedItems(item);
+  }
+
+  onRightClick(item, e) {
+    /* prevent the page from scrolling to top on item click */
+    e.preventDefault();
+    this.rightClickEvent.emit(item);
   }
 
   onPrimaryActionClick() {

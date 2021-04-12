@@ -33,6 +33,7 @@
       [ngClass]="{ 'active': this.findObjectIndex(this.selectedItems, item) > -1 }"
       *ngFor="let item of items"
       (click)="onListItemClick(item, $event)"
+      (contextmenu)="onRightClick(item, $event)"
       #cardListGroupItem
     >
       <ng-template [ngTemplateOutlet]="templateRef" [ngTemplateOutletContext]="{ item: item }"> </ng-template>
