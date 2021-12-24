@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
-import luxon from 'luxon';
+import {Duration} from 'luxon';
 
 @Component({
   selector: 'eikos-bubble-chart',
@@ -109,7 +109,7 @@ export class BubbleChartComponent implements OnInit, OnChanges, AfterViewInit, A
   }
 
   pretty_duration(d) {
-    return luxon.duration.fromObject({ "seconds": d }).normalize().toObject(); // this.moment??
+    return Duration.fromObject({ "seconds": d }).normalize().toObject(); // this.moment??
   }
 
   get_min_bubble_size(max_value_size, cutoff, min_pixels) {

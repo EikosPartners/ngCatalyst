@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, OnInit, Input, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
 import * as d3 from 'd3';
-import luxon from 'luxon';
+// import luxon from 'luxon';
 
 @Component({
   selector: 'eikos-punch-card',
