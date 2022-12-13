@@ -33,7 +33,9 @@ import { isEqual, flatten } from 'lodash';
 export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @Output() clickEvent = new EventEmitter<any>();
   @Input() propID = 'line';
-  @Input() data: Object; // {"line data label": [{date: string, value: number}]} Data should be an object, each key will be a label for the dataset and line. The value of the key should be an array of objects (array like the data array that the line plot used to take). each of these objects is a data point
+  @Input() data: Object;
+  @Input() secondaryData?: []; // this data will be used for scattered dots on chart without line
+  // {"line data label": [{date: string, value: number}]} Data should be an object, each key will be a label for the dataset and line. The value of the key should be an array of objects (array like the data array that the line plot used to take). each of these objects is a data point
   /* {
       "Company 1": [
         { "date": "11-15-2019", "value": 200}, ...
@@ -205,7 +207,10 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       });
       data[key] = copy;
     }
-
+    
+    // make copy of the secondary data for dots
+    let dotsData = this.secondaryData ? JSON.parse(JSON.stringify(this.secondaryData)) : [];
+    
     // create parsers to format the data for display in graph
     const dateTimeParser = d3.timeParse(this.momentToD3(this.dateTimeFormat));
 
@@ -221,16 +226,56 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       }
     }
 
+    let firstDateElement: any;
+    let lastDateElement: any;
+
+    let firstValueElement: any;
+    let lastValueElement: any;
+
+
     // format dates and sort the data go through each key value pair for line and sorts the data array
     for (let key in data) {
       data[key].forEach(el => {
         el[dataKey] = dateTimeParser(el[dataKey]);
       });
+
+      // first sort by values
+      data[key] = data[key].sort(function (a, b) {
+        return a.value - b.value;
+      });
+
+      firstValueElement = data[key][0];
+      lastValueElement = data[key][data[key].length - 1];
+
+      // now sort by dates
       data[key] = data[key].sort(function (a, b) {
         return a[dataKey] - b[dataKey];
       });
+
+      firstDateElement = data[key][0];
+      lastDateElement = data[key][data[key].length - 1];
     }
 
+    if (this.secondaryData) {
+      // format and sort secondary data for dots if available
+      dotsData.forEach(el => {
+        el[dataKey] = dateTimeParser(el[dataKey]);
+      });
+
+      dotsData.sort(function (a, b) {
+        return a[dataKey] - b[dataKey];
+      });
+
+      // filter out dots data so dots remian within domain of dates (x-axis) and value of price (y-axis)
+      dotsData = dotsData.filter(
+        (x) =>
+          (new Date(x.date).valueOf() >= new Date(firstDateElement.date).valueOf()) &&
+          (new Date(x.date).valueOf() <= new Date(lastDateElement.date).valueOf()) &&
+          (x.value >= firstValueElement.value) &&
+          (x.value <= lastValueElement.value)
+      );  
+    }
+      
     let element: any;
     const selected = document.querySelectorAll(selection_string);
 
@@ -438,6 +483,10 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       }
     }
 
+    const clip_id = 'clip-' + this.propID;
+      // add tooltip to the DOM for the chart
+      const tooltip = d3.select('body').append('div').attr('class', `d3_visuals_tooltip ${this.propID}_tooltip`).style('opacity', 0);
+
     if (this.displayTooltip) {
       const xMap = function (d) {
         return x(xValue(d));
@@ -445,10 +494,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
       const yMap = function (d) {
         return y(yValue(d));
       };
-      const clip_id = 'clip-' + this.propID;
-      // add tooltip to the DOM for the chart
-      const tooltip = d3.select('body').append('div').attr('class', `d3_visuals_tooltip ${this.propID}_tooltip`).style('opacity', 0);
-
+  
       // add the dots at each data point and add events for mouseover/out to show/hide tooltips
       for (let key in data) {
         svg
@@ -468,14 +514,14 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
             tooltip
               .html(
                 key +
-                  '<br>' +
-                  localThis.xAxisLabel +
-                  ': ' +
-                  formatDate(d[dataKey]) +
-                  '<br>' +
-                  localThis.yAxisLabel +
-                  ': ' +
-                  localThis.decimalPipe.transform(d.value)
+                '<br>' +
+                localThis.xAxisLabel +
+                ': ' +
+                formatDate(d[dataKey]) +
+                '<br>' +
+                localThis.yAxisLabel +
+                ': ' +
+                localThis.decimalPipe.transform(d.value)
               )
               .style('left', d3.event.pageX + 5 + 'px')
               .style('top', d3.event.pageY - 28 + 'px');
@@ -488,5 +534,52 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
           .on('click', localThis.clickEvent.emit);
       }
     }
+
+    // SPECEFIC TO TRADE HISTORY DATA input
+    const getDotColor = function (d) {
+      // RED for SELL and SHORT types & GREEN for BUY and COVER types
+      if (d.side === 'SELL' || d.side === 'SHORT')
+        return '#f5051d';
+      else
+        return ' #07fc03';
+    };
+
+    // apply scattered dots on chart if secondary data is coming
+    // also add tooltip for dots data 
+    // NOTE: THIS SECONDARY DATA TOOLTIP IS SEPECIFIC FOR TRADE HISTORY DATA OF WEBPORTAL 
+    //       AND NOT GENERIC LIKE ABOVE TOOLTIPS OF MAIN CHART
+    if (this.secondaryData) {
+      svg
+        .selectAll(".dot")
+        .data(dotsData)
+        .enter()
+        .append("circle")
+        .attr('class', 'secondaryDots')
+        .attr("cx", function (d) { return x(xValue(d)); })
+        .attr("cy", function (d) { return y(yValue(d)); })
+        .attr("r", 4)
+        .style("fill", getDotColor)
+        .on('mouseover', function (d) {
+          tooltip.transition().duration(100).style('opacity', 1);
+          tooltip
+            .html(
+              d.symbol +
+              '<br>' +
+              'Date' + ': ' + formatDate(d[dataKey]) +
+              '<br>' +
+              'Price' + ': ' + localThis.decimalPipe.transform(d.value) +
+              '<br>' +
+              'Side' + ': ' + d.side +
+              '<br>' +
+              'Quantity' + ': ' + localThis.decimalPipe.transform(d.quantity)
+            )
+            .style('left', d3.event.pageX + 5 + 'px')
+            .style('top', d3.event.pageY - 28 + 'px');
+        })
+        .on('mouseout', function (d) {
+          tooltip.transition().duration(300).style('opacity', 0);
+        })
+        .on('click', localThis.clickEvent.emit);
+    }   
   }
 }
