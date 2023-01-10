@@ -29,7 +29,7 @@
     "@angular/platform-browser": ">=8.0.0",
     "@angular/platform-browser-dynamic": ">=8.0.0",
     "@angular/router": ">=8.0.0",
-    "d3": "^5.9.2",
+    "d3": "^7.8.0",
     "luxon": "^1.16.0"
   },
   "repository": {
@@ -48,7 +48,7 @@
     "@fortawesome/fontawesome-common-types": "^0.2.22",
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
     "@fortawesome/free-solid-svg-icons": "^5.10.2",
-    "d3": "^5.9.2",
+    "d3": "^7.8.0",
     "luxon": "^1.16.0"
   },
   "devDependencies": {
