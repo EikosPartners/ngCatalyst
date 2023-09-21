@@ -146,7 +146,7 @@ export class LinePlotComponent implements OnChanges, AfterViewInit, AfterViewChe
   }
 
   momentToD3(timeString: string) {
-    let subStrings = timeString.match(/\w+|\s+|[^\s\w]+/g);
+    let subStrings: string[] = timeString.match(/\w+|\s+|[^\s\w]+/g);
     subStrings = subStrings.map(str => {
       if (this.timeDictionary[str]) {
         str = this.timeDictionary[str];

@@ -9,5 +9,13 @@
 
     ]
   },
-  "whitelistedNonPeerDependencies": ["d3", "luxon", "@fortawesome/angular-fontawesome", "@fortawesome/free-solid-svg-icons", "@fortawesome/fontawesome-common-types", "@fortawesome/fontawesome-svg-core", "angular"]
+  "allowedNonPeerDependencies": [
+    "angular",
+    "@fortawesome/angular-fontawesome",
+    "@fortawesome/fontawesome-common-types",
+    "@fortawesome/fontawesome-svg-core",
+    "@fortawesome/free-solid-svg-icons",
+    "d3",
+    "luxon"
+  ]
 }
